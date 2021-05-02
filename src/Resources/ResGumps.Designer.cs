@@ -412,6 +412,24 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bigger Gems.
+        /// </summary>
+        public static string BiggerGems {
+            get {
+                return ResourceManager.GetString("BiggerGems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bigger Reagents.
+        /// </summary>
+        public static string BiggerReagents {
+            get {
+                return ResourceManager.GetString("BiggerReagents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Black &amp; White mode for dead player.
         /// </summary>
         public static string BlackWhiteModeForDeadPlayer {

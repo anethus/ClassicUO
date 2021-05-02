@@ -31,6 +31,8 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 using ClassicUO.Game.Managers;
 using ClassicUO.Game.Scenes;
@@ -137,11 +139,44 @@ namespace ClassicUO.Game.GameObjects
                 {
                     return MultiGraphic;
                 }
+                else if (ProfileManager.CurrentProfile.BiggerReagents && BiggerRegsGraph.ContainsKey(Graphic))
+                {
+                    return BiggerRegsGraph[Graphic];
+                }
+                else if (ProfileManager.CurrentProfile.BiggerGems && BiggerGemsGraph.ContainsKey(Graphic))
+                {
+                    return BiggerGemsGraph[Graphic];
+                }
 
                 return Graphic;
             }
             set => _displayedGraphic = value;
         }
+
+        private readonly Dictionary<ushort, ushort> BiggerGemsGraph = new Dictionary<ushort, ushort>
+        {
+            { 3877, 47570 },
+            { 3862, 47567 },
+            { 3861, 47566 },
+            { 3878, 47571 },
+            { 3856, 47564 },
+            { 3859, 47565 },
+            { 3865, 47568 },
+            { 3873, 47569 },
+            { 3885, 47563 } 
+        };
+
+        private readonly Dictionary<ushort, ushort> BiggerRegsGraph = new Dictionary<ushort, ushort>
+        {
+            { 3962, 5002 },
+            { 3963, 5003 },
+            { 3980, 5004 },
+            { 3981, 5005 },
+            { 3972, 5006 },
+            { 3973, 5007 },
+            { 3974, 5008 },
+            { 3976, 5009 },
+        };
 
         public bool IsLocked => (Flags & Flags.Movable) == 0 && ItemData.Weight > 90;
 

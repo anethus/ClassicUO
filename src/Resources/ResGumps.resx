@@ -657,6 +657,12 @@ when amount is or exceeds</value>
   <data name="DisableArrowsPlayerMovement" xml:space="preserve">
     <value>Disable arrows &amp; numlock arrows (player moving)</value>
   </data>
+  <data name="BiggerReagents" xml:space="preserve">
+    <value>Bigger Reagents</value>
+  </data>
+  <data name="BiggerGems" xml:space="preserve">
+    <value>Bigger Gems</value>
+  </data>
   <data name="DisableTab" xml:space="preserve">
     <value>Disable TAB (toggle warmode)</value>
   </data>

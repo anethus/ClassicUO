@@ -66,7 +66,7 @@ namespace ClassicUO.Game.UI.Gumps
         private InputField _autoOpenCorpseRange;
 
         //experimental
-        private Checkbox _autoOpenDoors, _autoOpenCorpse, _skipEmptyCorpse, _disableTabBtn, _disableCtrlQWBtn, _disableDefaultHotkeys, _disableArrowBtn, _disableAutoMove, _overrideContainerLocation, _smoothDoors, _showTargetRangeIndicator, _customBars, _customBarsBBG, _saveHealthbars;
+        private Checkbox _autoOpenDoors, _autoOpenCorpse, _skipEmptyCorpse, _disableTabBtn, _disableCtrlQWBtn, _disableDefaultHotkeys, _disableArrowBtn, _disableAutoMove, _overrideContainerLocation, _smoothDoors, _showTargetRangeIndicator, _customBars, _customBarsBBG, _saveHealthbars, _biggerReagents, _biggerGems;
         private Checkbox _buffBarTime, _castSpellsByOneClick, _queryBeforAttackCheckbox, _queryBeforeBeneficialCheckbox, _spellColoringCheckbox, _spellFormatCheckbox;
         private HSliderBar _cellSize;
         private Checkbox _containerScaleItems, _containerDoubleClickToLoot, _relativeDragAnDropItems, _useLargeContianersGumps, _highlightContainersWhenMouseIsOver;
@@ -2981,6 +2981,27 @@ namespace ClassicUO.Game.UI.Gumps
 
             startY += _disableAutoMove.Height + 2;
 
+            startX = 5;
+            _biggerReagents = AddCheckBox
+            (
+                rightArea,
+                ResGumps.BiggerReagents,
+                _currentProfile.BiggerReagents,
+                startX,
+                startY
+            );
+
+            startY += _biggerReagents.Height + 2;
+
+            _biggerGems = AddCheckBox
+            (
+                rightArea,
+                ResGumps.BiggerGems,
+                _currentProfile.BiggerGems,
+                startX,
+                startY
+            );
+
             Add(rightArea, PAGE);
         }
 
@@ -3950,6 +3971,9 @@ namespace ClassicUO.Game.UI.Gumps
             _currentProfile.OverrideContainerLocationSetting = _overrideContainerLocationSetting.SelectedIndex;
 
             _currentProfile.ShowTargetRangeIndicator = _showTargetRangeIndicator.IsChecked;
+
+            _currentProfile.BiggerReagents = _biggerReagents.IsChecked;
+            _currentProfile.BiggerGems = _biggerGems.IsChecked;
 
 
             bool updateHealthBars = _currentProfile.CustomBarsToggled != _customBars.IsChecked;
