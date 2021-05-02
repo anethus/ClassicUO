@@ -2611,6 +2611,14 @@ namespace ClassicUO.Resources {
             }
         }
         
+        ///   Looks up a localized string similar to New Sails.
+        /// </summary>
+        public static string NewSails {
+            get {
+                return ResourceManager.GetString("NewSails", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to New Sails.
         /// </summary>
@@ -3077,6 +3085,15 @@ namespace ClassicUO.Resources {
         public static string Remove {
             get {
                 return ResourceManager.GetString("Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace Sails.
+        /// </summary>
+        public static string SailType {
+            get {
+                return ResourceManager.GetString("SailType", resourceCulture);
             }
         }
         
