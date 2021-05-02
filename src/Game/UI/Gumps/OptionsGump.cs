@@ -971,17 +971,17 @@ namespace ClassicUO.Game.UI.Gumps
                 )
             );
 
-            section3.Add
-            (
-                _saveHealthbars = AddCheckBox
-                (
-                    null,
-                    ResGumps.SaveHPBarsOnLogout,
-                    _currentProfile.SaveHealthbars,
-                    0,
-                    0
-                )
-            );
+            //section3.Add
+            //(
+            //    _saveHealthbars = AddCheckBox
+            //    (
+            //        null,
+            //        ResGumps.SaveHPBarsOnLogout,
+            //        _currentProfile.SaveHealthbars,
+            //        0,
+            //        0
+            //    )
+            //);
 
             section3.PushIndent();
             section3.Add(AddLabel(null, ResGumps.CloseHPGumpWhen, 0, 0));
@@ -3982,7 +3982,7 @@ namespace ClassicUO.Game.UI.Gumps
             }
 
             _currentProfile.CBBlackBGToggled = _customBarsBBG.IsChecked;
-            _currentProfile.SaveHealthbars = _saveHealthbars.IsChecked;
+            //_currentProfile.SaveHealthbars = _saveHealthbars.IsChecked;
 
 
             // infobar

@@ -297,9 +297,6 @@
   <data name="SallosEasyGrab" xml:space="preserve">
     <value>Sallos easy grab</value>
   </data>
-  <data name="SaveHPBarsOnLogout" xml:space="preserve">
-    <value>Save healthbars on logout</value>
-  </data>
   <data name="ShiftContext" xml:space="preserve">
     <value>Hold Shift for Context Menus</value>
   </data>

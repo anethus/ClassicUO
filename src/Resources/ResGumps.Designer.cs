@@ -2919,15 +2919,6 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Save healthbars on logout.
-        /// </summary>
-        public static string SaveHPBarsOnLogout {
-            get {
-                return ResourceManager.GetString("SaveHPBarsOnLogout", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Save Journal to file in game folder.
         /// </summary>
         public static string SaveJournalToFileInGameFolder {
