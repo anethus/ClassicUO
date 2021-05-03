@@ -265,7 +265,6 @@ namespace ClassicUO.Configuration
         public bool HighlightContainerWhenSelected { get; set; }
 
         public bool ShowHouseContent { get; set; }
-        
         public bool SaveHealthbars { get; set; }
         public bool TextFading { get; set; } = true;
 

@@ -120,12 +120,9 @@ namespace ClassicUO.Game.UI.Gumps
         {
             base.Save(writer);
 
-            if (!CUOEnviroment.IsOutlands)
+            if (ProfileManager.CurrentProfile.SaveHealthbars && !CUOEnviroment.IsOutlands)
             {
-                if (ProfileManager.CurrentProfile.SaveHealthbars)
-                {
-                    writer.WriteAttributeString("name", _name);
-                }
+                writer.WriteAttributeString("name", _name);
             }
             
         }
