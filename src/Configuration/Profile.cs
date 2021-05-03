@@ -265,8 +265,8 @@ namespace ClassicUO.Configuration
         public bool HighlightContainerWhenSelected { get; set; }
 
         public bool ShowHouseContent { get; set; }
-        // Disabled on Outlands : https://github.com/UOOutlands/Issues/issues/6
-        //public bool SaveHealthbars { get; set; }
+        
+        public bool SaveHealthbars { get; set; }
         public bool TextFading { get; set; } = true;
 
         public bool UseSmoothBoatMovement { get; set; } = false;

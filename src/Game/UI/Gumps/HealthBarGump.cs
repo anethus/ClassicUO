@@ -120,10 +120,14 @@ namespace ClassicUO.Game.UI.Gumps
         {
             base.Save(writer);
 
-            //if (ProfileManager.CurrentProfile.SaveHealthbars)
-            //{
-            //    writer.WriteAttributeString("name", _name);
-            //}
+            if (!CUOEnviroment.IsOutlands)
+            {
+                if (ProfileManager.CurrentProfile.SaveHealthbars)
+                {
+                    writer.WriteAttributeString("name", _name);
+                }
+            }
+            
         }
 
         public override void Restore(XmlElement xml)
@@ -135,12 +139,12 @@ namespace ClassicUO.Game.UI.Gumps
                 _name = World.Player.Name;
                 BuildGump();
             }
-            //else if (ProfileManager.CurrentProfile.SaveHealthbars)
-            //{
-            //    _name = xml.GetAttribute("name");
-            //    _outOfRange = true;
-            //    BuildGump();
-            //}
+            else if (ProfileManager.CurrentProfile.SaveHealthbars && !CUOEnviroment.IsOutlands)
+            {
+                _name = xml.GetAttribute("name");
+                _outOfRange = true;
+                BuildGump();
+            }
             else
             {
                 Dispose();
