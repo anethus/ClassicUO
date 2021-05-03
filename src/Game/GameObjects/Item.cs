@@ -139,11 +139,11 @@ namespace ClassicUO.Game.GameObjects
                 {
                     return MultiGraphic;
                 }
-                else if (ProfileManager.CurrentProfile.BiggerReagents && BiggerRegsGraph.ContainsKey(Graphic))
+                else if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.BiggerReagents && BiggerRegsGraph.ContainsKey(Graphic))
                 {
                     return BiggerRegsGraph[Graphic];
                 }
-                else if (ProfileManager.CurrentProfile.BiggerGems && BiggerGemsGraph.ContainsKey(Graphic))
+                else if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.BiggerGems && BiggerGemsGraph.ContainsKey(Graphic))
                 {
                     return BiggerGemsGraph[Graphic];
                 }

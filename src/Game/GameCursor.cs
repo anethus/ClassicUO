@@ -586,7 +586,7 @@ namespace ClassicUO.Game
                     ref hue
                 );
 
-                if (ItemHold.Amount > 1 && ItemHold.DisplayedGraphic == ItemHold.Graphic && ItemHold.IsStackable)
+                if (ItemHold.Amount > 1 && ItemHold.IsStackable && !ItemHold.IsCoin)
                 {
                     x += 5;
                     y += 5;

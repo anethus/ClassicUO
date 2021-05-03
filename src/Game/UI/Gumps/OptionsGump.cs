@@ -2981,27 +2981,30 @@ namespace ClassicUO.Game.UI.Gumps
 
             startY += _disableAutoMove.Height + 2;
 
-            startX = 5;
-            _biggerReagents = AddCheckBox
-            (
-                rightArea,
-                ResGumps.BiggerReagents,
-                _currentProfile.BiggerReagents,
-                startX,
-                startY
-            );
+            if (CUOEnviroment.IsOutlands)
+            {
+                startX = 5;
+                _biggerReagents = AddCheckBox
+                (
+                    rightArea,
+                    ResGumps.BiggerReagents,
+                    _currentProfile.BiggerReagents,
+                    startX,
+                    startY
+                );
 
-            startY += _biggerReagents.Height + 2;
+                startY += _biggerReagents.Height + 2;
 
-            _biggerGems = AddCheckBox
-            (
-                rightArea,
-                ResGumps.BiggerGems,
-                _currentProfile.BiggerGems,
-                startX,
-                startY
-            );
-
+                _biggerGems = AddCheckBox
+                (
+                    rightArea,
+                    ResGumps.BiggerGems,
+                    _currentProfile.BiggerGems,
+                    startX,
+                    startY
+                );
+            }
+            
             Add(rightArea, PAGE);
         }
 
@@ -3972,8 +3975,11 @@ namespace ClassicUO.Game.UI.Gumps
 
             _currentProfile.ShowTargetRangeIndicator = _showTargetRangeIndicator.IsChecked;
 
-            _currentProfile.BiggerReagents = _biggerReagents.IsChecked;
-            _currentProfile.BiggerGems = _biggerGems.IsChecked;
+            if (CUOEnviroment.IsOutlands)
+            {
+                _currentProfile.BiggerReagents = _biggerReagents.IsChecked;
+                _currentProfile.BiggerGems = _biggerGems.IsChecked;
+            }
 
 
             bool updateHealthBars = _currentProfile.CustomBarsToggled != _customBars.IsChecked;
