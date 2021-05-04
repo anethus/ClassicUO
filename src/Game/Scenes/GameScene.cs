@@ -493,7 +493,7 @@ namespace ClassicUO.Game.Scenes
 
                 if (light.Color != 0)
                 {
-                    light.Color++;
+                    light.Color--;
                 }
 
                 light.DrawX = x;

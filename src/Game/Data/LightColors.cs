@@ -288,7 +288,7 @@ namespace ClassicUO.Game.Data
                 color = 0;
             }
 
-            return color;
+            return 39;
         }
     }
 }
