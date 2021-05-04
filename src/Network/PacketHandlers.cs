@@ -197,6 +197,7 @@ namespace ClassicUO.Network
             Handlers.Add(0xDF, BuffDebuff);
             Handlers.Add(0xE2, NewCharacterAnimation);
             Handlers.Add(0xE3, KREncryptionResponse);
+            Handlers.Add(0xE4, OnHTMLGump);
             Handlers.Add(0xE5, DisplayWaypoint);
             Handlers.Add(0xE6, RemoveWaypoint);
             Handlers.Add(0xF0, KrriosClientSpecial);
@@ -5151,6 +5152,17 @@ namespace ClassicUO.Network
                     AddMegaClilocRequest(serial);
                 }
             }
+        }
+
+        private static void OnHTMLGump(ref PacketBufferReader p)
+        {
+            uint serial = p.ReadUInt();
+            ushort width = p.ReadUShort();
+            ushort height = p.ReadUShort();
+
+            var len = p.ReadByte();
+            byte[] data = p.ReadArray(len);
+            var s = Encoding.UTF8.GetString(data);
         }
 
         private static void OpenCompressedGump(ref PacketBufferReader p)
