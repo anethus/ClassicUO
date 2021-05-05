@@ -49,10 +49,6 @@ using ClassicUO.Utility.Collections;
 using ClassicUO.Utility.Logging;
 using ClassicUO.Utility.Platforms;
 using Microsoft.Xna.Framework;
-using ImpromptuNinjas.UltralightSharp;
-using ImpromptuNinjas.UltralightSharp.Enums;
-using Settings = ClassicUO.Configuration.Settings;
-using System.IO;
 
 namespace ClassicUO.Network
 {
@@ -5165,66 +5161,6 @@ namespace ClassicUO.Network
             var len = p.ReadByte();
             byte[] data = p.ReadArray(len);
             var s = Encoding.UTF8.GetString(data);
-
-            var asmPath = new Uri(typeof(GameController).Assembly.CodeBase).LocalPath;
-            var asmDir = Path.GetDirectoryName(asmPath);
-            var tempDir = Path.GetTempPath();
-
-            string storagePath;
-            do
-            {
-                storagePath = Path.Combine(tempDir, Guid.NewGuid().ToString());
-            } while (Directory.Exists(storagePath) || File.Exists(storagePath));
-
-            var cfg = Config.Create();
-            {
-                var cachePath = ImpromptuNinjas.UltralightSharp.String.Create(Path.Combine(storagePath, "Cache"));
-                cfg->SetCachePath(cachePath);
-                cachePath->Destroy();
-            }
-
-            {
-                var resourcePath = ImpromptuNinjas.UltralightSharp.String.Create(Path.Combine(asmDir, "resources"));
-                cfg->SetResourcePath(resourcePath);
-                resourcePath->Destroy();
-            }
-
-            cfg->SetUseGpuRenderer(false);
-            cfg->SetEnableImages(true);
-            cfg->SetEnableJavaScript(false);
-
-            AppCore.EnablePlatformFontLoader();
-            {
-                var assetsPath = ImpromptuNinjas.UltralightSharp.String.Create(Path.Combine(asmDir, "assets"));
-                AppCore.EnablePlatformFileSystem(assetsPath);
-                assetsPath->Destroy();
-            }
-
-            var renderer = ImpromptuNinjas.UltralightSharp.Renderer.Create(cfg);
-            var sessionName = ImpromptuNinjas.UltralightSharp.String.Create("Demo");
-            var session = Session.Create(renderer, false, sessionName);
-
-            var view = View.Create(renderer, 640, 480, false, session);
-
-            {
-                var htmlString = ImpromptuNinjas.UltralightSharp.String.Create("<i>Loading...</i>");
-                Console.WriteLine($"Loading HTML: {htmlString->Read()}");
-                view->LoadHtml(htmlString);
-                htmlString->Destroy();
-            }
-
-            var loaded = true;
-
-            while (!loaded)
-            {
-                Ultralight.Update(renderer);
-                Ultralight.Render(renderer);
-            }
-
-            view->LoadUrl(ImpromptuNinjas.UltralightSharp.String.Create("http://google.com"));
-
-            renderer->Update();
-            renderer->Render();
 
             var gump = new Gump(3, serial)
             {

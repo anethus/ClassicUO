@@ -136,6 +136,8 @@ namespace ClassicUO.Game.Scenes
             Hotkeys = new HotkeysManager();
             Macros = new MacroManager();
 
+            UltralightWrpper.Init();
+
             // #########################################################
             // [FILE_FIX]
             // TODO: this code is a workaround to port old macros to the new xml system.
