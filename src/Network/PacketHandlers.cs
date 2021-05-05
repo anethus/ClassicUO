@@ -32,8 +32,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using ClassicUO.Configuration;
 using ClassicUO.Game;
@@ -51,10 +49,14 @@ using ClassicUO.Utility.Collections;
 using ClassicUO.Utility.Logging;
 using ClassicUO.Utility.Platforms;
 using Microsoft.Xna.Framework;
+using ImpromptuNinjas.UltralightSharp;
+using ImpromptuNinjas.UltralightSharp.Enums;
+using Settings = ClassicUO.Configuration.Settings;
+using System.IO;
 
 namespace ClassicUO.Network
 {
-    internal class PacketHandlers
+    internal unsafe class PacketHandlers
     {
         public delegate void OnPacketBufferReader(ref PacketBufferReader p);
 
@@ -5163,6 +5165,95 @@ namespace ClassicUO.Network
             var len = p.ReadByte();
             byte[] data = p.ReadArray(len);
             var s = Encoding.UTF8.GetString(data);
+
+            var asmPath = new Uri(typeof(GameController).Assembly.CodeBase).LocalPath;
+            var asmDir = Path.GetDirectoryName(asmPath);
+            var tempDir = Path.GetTempPath();
+
+            string storagePath;
+            do
+            {
+                storagePath = Path.Combine(tempDir, Guid.NewGuid().ToString());
+            } while (Directory.Exists(storagePath) || File.Exists(storagePath));
+
+            var cfg = Config.Create();
+            {
+                var cachePath = ImpromptuNinjas.UltralightSharp.String.Create(Path.Combine(storagePath, "Cache"));
+                cfg->SetCachePath(cachePath);
+                cachePath->Destroy();
+            }
+
+            {
+                var resourcePath = ImpromptuNinjas.UltralightSharp.String.Create(Path.Combine(asmDir, "resources"));
+                cfg->SetResourcePath(resourcePath);
+                resourcePath->Destroy();
+            }
+
+            cfg->SetUseGpuRenderer(false);
+            cfg->SetEnableImages(true);
+            cfg->SetEnableJavaScript(false);
+
+            AppCore.EnablePlatformFontLoader();
+            {
+                var assetsPath = ImpromptuNinjas.UltralightSharp.String.Create(Path.Combine(asmDir, "assets"));
+                AppCore.EnablePlatformFileSystem(assetsPath);
+                assetsPath->Destroy();
+            }
+
+            var renderer = ImpromptuNinjas.UltralightSharp.Renderer.Create(cfg);
+            var sessionName = ImpromptuNinjas.UltralightSharp.String.Create("Demo");
+            var session = Session.Create(renderer, false, sessionName);
+
+            var view = View.Create(renderer, 640, 480, false, session);
+
+            {
+                var htmlString = ImpromptuNinjas.UltralightSharp.String.Create("<i>Loading...</i>");
+                Console.WriteLine($"Loading HTML: {htmlString->Read()}");
+                view->LoadHtml(htmlString);
+                htmlString->Destroy();
+            }
+
+            var loaded = true;
+
+            while (!loaded)
+            {
+                Ultralight.Update(renderer);
+                Ultralight.Render(renderer);
+            }
+
+            view->LoadUrl(ImpromptuNinjas.UltralightSharp.String.Create("http://google.com"));
+
+            renderer->Update();
+            renderer->Render();
+
+            var gump = new Gump(3, serial)
+            {
+                    X = 10,
+                    Y = 10,
+                    CanMove = true,
+                    CanCloseWithRightClick = true,
+                    CanCloseWithEsc = true,
+                    InvalidateContents = false,
+                    IsFromServer = true
+                };
+
+            var param = new List<string>
+            {
+                "ignore",
+                "0",
+                "0",
+                "5054",
+                width.ToString(),
+                height.ToString()
+            };
+            UIManager.SavePosition(serial, new Point(10, 10));
+
+            gump.Add(new ResizePic(param), 0);
+
+            UIManager.Add(gump);
+
+            gump.Update(Time.Ticks, 0);
+            gump.SetInScreen();
         }
 
         private static void OpenCompressedGump(ref PacketBufferReader p)
@@ -5316,7 +5407,7 @@ namespace ClassicUO.Network
 
                         if (descriptionCliloc != 0)
                         {
-                            description = "\n" + ClilocLoader.Instance.Translate((int) descriptionCliloc, String.IsNullOrEmpty(args_2) ? args : args_2, true);
+                            description = "\n" + ClilocLoader.Instance.Translate((int) descriptionCliloc, string.IsNullOrEmpty(args_2) ? args : args_2, true);
 
                             if (description.Length < 2)
                             {
@@ -5330,7 +5421,7 @@ namespace ClassicUO.Network
 
                         if (wtfCliloc != 0)
                         {
-                            wtf = ClilocLoader.Instance.Translate((int) wtfCliloc, String.IsNullOrEmpty(args_3) ? args : args_3, true);
+                            wtf = ClilocLoader.Instance.Translate((int) wtfCliloc, string.IsNullOrEmpty(args_3) ? args : args_3, true);
 
                             if (!string.IsNullOrWhiteSpace(wtf))
                             {
