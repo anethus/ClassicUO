@@ -116,18 +116,10 @@ namespace ClassicUO.Game
             isLoaded = false;
 
             // Load default page
-            view->LoadUrl(String.Create("http://google.pl"));
+            view->LoadUrl(String.Create("https://tenor.com/view/blink-blinking-glasses-stare-gif-5182689"));
             view->Focus();
 
-            Reload();
-
-            {
-                surface = view->GetSurface();
-                bitmap = surface->GetBitmap();
-                var pixels = bitmap->LockPixels();
-                texture = GetTextureFromBmp(pixels, (int)bitmap->GetWidth(), (int)bitmap->GetHeight());
-                bitmap->UnlockPixels();
-            }
+            ReloadRenderer();
         }
 
         /// <summary>
@@ -136,12 +128,11 @@ namespace ClassicUO.Game
         /// <param name="batcher">Ultima 2D Batcher</param>
         public static void Draw(UltimaBatcher2D batcher)
         {
-            batcher.Begin();
-            var hue = new Vector3(0, 0, 0);
-            batcher.Draw2D(texture, 10, 10, ref hue);
-            batcher.End();
+            ReloadView();
+
+            DrawFrame(batcher);
         }
-        
+
         /// <summary>
         /// Create Texture2D from Bmp
         /// </summary>
@@ -153,21 +144,18 @@ namespace ClassicUO.Game
         {
             var tempTexture = new Texture2D(Client.Game.GraphicsDevice, w, h);
             uint[] pixelsArray = new uint[w * h];
-            unsafe
-            {
-                var pPixels = (byte*)pixels;
+            var pPixels = (byte*)pixels;
                 
-                Color[] data = new Color[w * h];
+            Color[] data = new Color[w * h];
 
-                for (int i = 0; i < data.Length; i++)
-                {
-                    // Go through every color and reverse red and blue channels
-                    data[i] = new Color(pPixels[2], pPixels[1], pPixels[0], pPixels[3]);
-                    pPixels += 4;
-                }
-
-                tempTexture.SetData(data);
+            for (int i = 0; i < data.Length; i++)
+            {
+                // Go through every color and reverse red and blue channels
+                data[i] = new Color(pPixels[2], pPixels[1], pPixels[0], pPixels[3]);
+                pPixels += 4;
             }
+
+            tempTexture.SetData(pixelsArray);
             return tempTexture;
         }
 
@@ -197,15 +185,42 @@ namespace ClassicUO.Game
         }
 
         /// <summary>
+        /// Draw Single Frame using UltimaBatcher2D
+        /// </summary>
+        /// <param name="batcher">Ultima Batcher 2D</param>
+        public static void DrawFrame(UltimaBatcher2D batcher)
+        {
+            batcher.Begin();
+            var hue = new Vector3(0, 0, 0);
+            batcher.Draw2D(texture, 10, 10, ref hue);
+            batcher.End();
+        }
+
+        /// <summary>
+        /// Reload Single Frame
+        /// </summary>
+        public static void ReloadView()
+        {
+            renderer->Update();
+            renderer->Render();
+
+            {
+                surface = view->GetSurface();
+                bitmap = surface->GetBitmap();
+                var pixels = bitmap->LockPixels();
+                texture = GetTextureFromBmp(pixels, (int)bitmap->GetWidth(), (int)bitmap->GetHeight());
+                bitmap->UnlockPixels();
+            }
+        }
+
+        /// <summary>
         /// Reload Renderer
         /// </summary>
-        public static void Reload()
+        public static void ReloadRenderer()
         {
             while (!isLoaded)
             {
-                //Ultralight.Update(renderer);
                 renderer->Update();
-                //Ultralight.Render(renderer);
                 renderer->Render();
             }
         }
