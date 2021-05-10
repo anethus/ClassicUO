@@ -973,6 +973,11 @@ namespace ClassicUO.Game.Scenes
 
             batcher.GraphicsDevice.Viewport = r_viewport;
 
+            if (World.InGame && UltralightWrpper.IsLoaded())
+            {
+                UltralightWrpper.Draw(batcher);
+            }
+
             return base.Draw(batcher);
         }
 
