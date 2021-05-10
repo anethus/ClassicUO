@@ -1,13 +1,14 @@
 ﻿using ClassicUO.Renderer;
+using ClassicUO.Utility.Logging;
 using ImpromptuNinjas.UltralightSharp;
-using ImpromptuNinjas.UltralightSharp.Enums;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
+using ImpromptuNinjas.UltralightSharp.Enums;
 using String = ImpromptuNinjas.UltralightSharp.String;
 
-namespace ClassicUO.Game
+namespace ClassicUO.Game.UI
 {
     /// <summary>
     /// Wrapper for Ultralight
@@ -15,51 +16,44 @@ namespace ClassicUO.Game
     internal unsafe class UltralightWrpper
     {
         /// <summary>
-        /// Config for Ultraligh
+        /// Config for Ultralight
         /// </summary>
-        private static Config* cfg = null;
+        private static Config* _cfg = null;
         /// <summary>
         /// Renderer
         /// </summary>
-        private static ImpromptuNinjas.UltralightSharp.Renderer* renderer = null;
+        private static ImpromptuNinjas.UltralightSharp.Renderer* _renderer = null;
         /// <summary>
         /// SessionName
         /// </summary>
-        private static String* sessionName;
+        private static String* _sessionName;
         /// <summary>
         /// Session
         /// </summary>
-        private static Session* session;
+        private static Session* _session;
         /// <summary>
         /// View
         /// </summary>
-        private static View* view;
+        private static View* _view;
         /// <summary>
         /// Surface
         /// </summary>
-        private static Surface* surface;
+        private static Surface* _surface;
         /// <summary>
         /// Bitmap
         /// </summary>
-        private static Bitmap* bitmap;
+        private static Bitmap* _bitmap;
         /// <summary>
         /// Texture
         /// </summary>
-        private static Texture2D texture;
-        /// <summary>
-        /// Indictor when page is lodaed
-        /// </summary>
-        private static bool isLoaded = false;
+        private static Texture2D _texture;
 
         /// <summary>
         /// Initialize Ultralight
         /// </summary>
-        public static unsafe void Init()
+        public static void Init()
         {
-            LoggerLogMessageCallback cb = LoggerCallback;
-            Ultralight.SetLogger(new Logger { LogMessage = cb });
-            
-            // Get assemly dir 
+            // Get assembly dir 
             var asmPath = new Uri(typeof(GameController).Assembly.CodeBase).LocalPath;
             var asmDir = Path.GetDirectoryName(asmPath);
             // Get temp dir
@@ -72,65 +66,87 @@ namespace ClassicUO.Game
             } while (Directory.Exists(storagePath) || File.Exists(storagePath));
 
             // Set config
-            cfg = Config.Create();
+            _cfg = Config.Create();
             {
                 var cachePath = String.Create(Path.Combine(storagePath, "Cache"));
-                cfg->SetCachePath(cachePath);
+                _cfg->SetCachePath(cachePath);
                 cachePath->Destroy();
-                cfg->SetUseGpuRenderer(false);
-                cfg->SetEnableImages(true);
-                cfg->SetEnableJavaScript(true);
+                _cfg->SetUseGpuRenderer(false);
+                _cfg->SetEnableImages(true);
+                _cfg->SetEnableJavaScript(true);
+                _cfg->SetUserAgent(String.Create("Mozilla/5.0"));
             }
 
             // Load resources
             {
-                var resourcePath = String.Create(Path.Combine(asmDir, "resources"));
-                cfg->SetResourcePath(resourcePath);
-                resourcePath->Destroy();
+                if (asmDir != null)
+                {
+                    var resourcePath = String.Create(Path.Combine(asmDir, "resources"));
+                    _cfg->SetResourcePath(resourcePath);
+                    resourcePath->Destroy();
+                }
             }
-            
+
             // Set Font Loader
             AppCore.EnablePlatformFontLoader();
 
             {
-                var assetsPath = String.Create(Path.Combine(asmDir, "assets"));
-                AppCore.EnablePlatformFileSystem(assetsPath);
-                assetsPath->Destroy();
+                if (asmDir != null)
+                {
+                    var assetsPath = String.Create(Path.Combine(asmDir, "assets"));
+                    AppCore.EnablePlatformFileSystem(assetsPath);
+                    assetsPath->Destroy();
+                }
             }
 
             // Create Renderer
-            renderer = ImpromptuNinjas.UltralightSharp.Renderer.Create(cfg);
-            sessionName = String.Create("ClassicUO");
-            session = Session.Create(renderer, false, sessionName);
+            _renderer = ImpromptuNinjas.UltralightSharp.Renderer.Create(_cfg);
+            _sessionName = String.Create("ClassicUO");
+            _session = Session.Create(_renderer, false, _sessionName);
 
             // Create View
-            view = View.Create(renderer, 640, 480, false, session);
+            _view = View.Create(_renderer, 640, 480, false, _session);
 
             // Set finishing Loading Callback
-            view->SetFinishLoadingCallback((data, caller, frameId, isMainFrame, url) => {
-                Console.WriteLine($"Loading Finished, URL: 0x{(ulong)url:X8}  {url->Read()}");
-
-                isLoaded = true;
+            _view->SetFinishLoadingCallback((data, caller, frameId, isMainFrame, url) =>
+            {
+                Log.Info($"Loading Finished, URL: 0x{(ulong)url:X8}  {url->Read()}");
             }, null);
-            
-            isLoaded = false;
 
-            // Load default page
-            view->LoadUrl(String.Create("https://tenor.com/view/blink-blinking-glasses-stare-gif-5182689"));
-            view->Focus();
-
-            ReloadRenderer();
         }
 
         /// <summary>
         /// Draw Loaded Page
         /// </summary>
         /// <param name="batcher">Ultima 2D Batcher</param>
-        public static void Draw(UltimaBatcher2D batcher)
+        /// <param name="x">X position</param>
+        /// <param name="y">Y position</param>
+        public static void Draw(UltimaBatcher2D batcher, int x, int y)
         {
             ReloadView();
+            DrawFrame(batcher, x, y);
+        }
 
-            DrawFrame(batcher);
+        /// <summary>
+        /// Draw Dynamic Loaded Page
+        /// </summary>
+        /// <param name="batcher">Ultima 2D Batcher</param>
+        /// <param name="x">X position</param>
+        /// <param name="y">Y position</param>
+        public static void DrawDynamic(UltimaBatcher2D batcher, int x, int y)
+        {
+            ReloadDynamicView();
+            DrawFrame(batcher, x, y);
+        }
+
+        /// <summary>
+        /// Resize view
+        /// </summary>
+        /// <param name="width">Width</param>
+        /// <param name="height">Height</param>
+        public static void ResizeView(int width, int height)
+        {
+            _view->Resize((uint)width, (uint)height);
         }
 
         /// <summary>
@@ -143,9 +159,8 @@ namespace ClassicUO.Game
         private static Texture2D GetTextureFromBmp(void* pixels, int w, int h)
         {
             var tempTexture = new Texture2D(Client.Game.GraphicsDevice, w, h);
-            uint[] pixelsArray = new uint[w * h];
             var pPixels = (byte*)pixels;
-                
+
             Color[] data = new Color[w * h];
 
             for (int i = 0; i < data.Length; i++)
@@ -165,72 +180,85 @@ namespace ClassicUO.Game
         /// <param name="url">Url string</param>
         public static void LoadUrl(string url)
         {
-            isLoaded = false;
-
             {
                 var urlString = String.Create(url);
-                Console.WriteLine($"Loading URL: {urlString->Read()}");
-                view->LoadUrl(urlString);
+                _view->LoadUrl(urlString);
                 urlString->Destroy();
             }
-        }
-
-        /// <summary>
-        /// Is Page Loaded
-        /// </summary>
-        /// <returns>Indictor is page loaded</returns>
-        public static bool IsLoaded()
-        {
-            return isLoaded;
         }
 
         /// <summary>
         /// Draw Single Frame using UltimaBatcher2D
         /// </summary>
         /// <param name="batcher">Ultima Batcher 2D</param>
-        public static void DrawFrame(UltimaBatcher2D batcher)
+        /// <param name="x">X position</param>
+        /// <param name="y">Y position</param>
+        private static void DrawFrame(UltimaBatcher2D batcher, int x, int y)
         {
-            batcher.Begin();
             var hue = new Vector3(0, 0, 0);
-            batcher.Draw2D(texture, 10, 10, ref hue);
-            batcher.End();
+            batcher.Draw2D(_texture, x, y, ref hue);
         }
 
         /// <summary>
         /// Reload Single Frame
         /// </summary>
-        public static void ReloadView()
+        private static void ReloadView()
         {
-            renderer->Update();
-            renderer->Render();
+            _renderer->Update();
+            _renderer->Render();
 
             {
-                surface = view->GetSurface();
-                bitmap = surface->GetBitmap();
-                var pixels = bitmap->LockPixels();
-                texture = GetTextureFromBmp(pixels, (int)bitmap->GetWidth(), (int)bitmap->GetHeight());
-                bitmap->UnlockPixels();
+                _surface = _view->GetSurface();
+
+                if (_surface->GetDirtyBounds().IsEmpty())
+                {
+                    return;
+                }
+
+                _bitmap = _surface->GetBitmap();
+                var pixels = _bitmap->LockPixels();
+                _texture = GetTextureFromBmp(pixels, (int)_bitmap->GetWidth(), (int)_bitmap->GetHeight());
+                _bitmap->UnlockPixels();
+                _surface->ClearDirtyBounds();
             }
         }
 
         /// <summary>
-        /// Reload Renderer
+        /// Reload Dynamic View
+        /// Since GetDirtyBounds for dynamic views (like gifs) is never empty there is no need to check that flag
         /// </summary>
-        public static void ReloadRenderer()
+        private static void ReloadDynamicView()
         {
-            while (!isLoaded)
+            _renderer->Update();
+            _renderer->Render();
+
             {
-                renderer->Update();
-                renderer->Render();
+                _surface = _view->GetSurface();
+                _bitmap = _surface->GetBitmap();
+                var pixels = _bitmap->LockPixels();
+                _texture = GetTextureFromBmp(pixels, (int)_bitmap->GetWidth(), (int)_bitmap->GetHeight());
+                _bitmap->UnlockPixels();
             }
         }
 
+        public static void MouseClick(int x, int y)
+        {
+            MouseEvent* evt = MouseEvent.Create(
+                MouseEventType.MouseDown,
+                x,
+                y,
+                MouseButton.Left);
+            _view->FireMouseEvent(evt);
+        }
+
         /// <summary>
-        /// Logger Callback Method (also set isLoaded after finish)
+        /// Dispatch
         /// </summary>
-        /// <param name="logLevel">Log level</param>
-        /// <param name="msg">Message</param>
-        private static unsafe void LoggerCallback(LogLevel logLevel, String* msg)
-            => Console.WriteLine($"{logLevel}: {msg->Read()}");
+        public static void Clear()
+        {
+            _view->Unfocus();
+            _renderer->PurgeMemory();
+        }
+
     }
 }

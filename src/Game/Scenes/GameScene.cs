@@ -32,13 +32,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Sockets;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 using ClassicUO.Game.GameObjects;
 using ClassicUO.Game.Managers;
-using ClassicUO.Game.UI.Controls;
+using ClassicUO.Game.UI;
 using ClassicUO.Game.UI.Gumps;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
@@ -177,7 +176,7 @@ namespace ClassicUO.Game.Scenes
 
             UIManager.ContainerScale = ProfileManager.CurrentProfile.ContainersScale / 100f;
 
-            SDL.SDL_SetWindowMinimumSize(Client.Game.Window.Handle, 640, 480);
+            SDL.SDL_SetWindowMinimumSize(Client.Game.Window.Handle, 300, 300);
 
             if (ProfileManager.CurrentProfile.WindowBorderless)
             {
@@ -201,7 +200,6 @@ namespace ClassicUO.Game.Scenes
 
             CircleOfTransparency.Create(ProfileManager.CurrentProfile.CircleOfTransparencyRadius);
             Plugin.OnConnected();
-
 
             Camera.SetZoomValues
             (
@@ -972,11 +970,6 @@ namespace ClassicUO.Game.Scenes
 
 
             batcher.GraphicsDevice.Viewport = r_viewport;
-
-            if (World.InGame && UltralightWrpper.IsLoaded())
-            {
-                UltralightWrpper.Draw(batcher);
-            }
 
             return base.Draw(batcher);
         }

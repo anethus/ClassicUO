@@ -5178,13 +5178,14 @@ namespace ClassicUO.Network
                 "ignore",
                 "0",
                 "0",
-                "5054",
-                width.ToString(),
-                height.ToString()
+                "9270",
+                (width + 8).ToString(),
+                (height + 8).ToString()
             };
             UIManager.SavePosition(serial, new Point(10, 10));
 
             gump.Add(new ResizePic(param), 0);
+            gump.Add(new Html5Control(s, width, height));
 
             UIManager.Add(gump);
 
