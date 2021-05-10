@@ -155,7 +155,7 @@ namespace ClassicUO.Game
                 pPixels += 4;
             }
 
-            tempTexture.SetData(pixelsArray);
+            tempTexture.SetData(data);
             return tempTexture;
         }
 
