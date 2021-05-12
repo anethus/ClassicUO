@@ -9,8 +9,7 @@ namespace ClassicUO.Game.UI.Controls
         {
             Width = (int)width;
             Height = (int)height;
-            UltralightWrpper.LoadUrl(url);
-            UltralightWrpper.ResizeView((int)width, (int)height);
+            UltralightWrapper.LoadUrl(url, (int)width, (int)height);
         }
 
         public override bool Draw(UltimaBatcher2D batcher, int x, int y)
@@ -24,7 +23,7 @@ namespace ClassicUO.Game.UI.Controls
             {
                 base.Draw(batcher, x, y);
 
-                UltralightWrpper.Draw(batcher, x + 8, y + 8);
+                UltralightWrapper.Draw(batcher, x + 8, y + 8);
 
                 batcher.ClipEnd();
             }
@@ -36,13 +35,13 @@ namespace ClassicUO.Game.UI.Controls
         {
             if (button == MouseButtonType.Left)
             {
-                UltralightWrpper.MouseClick(x, y);
+                UltralightWrapper.MouseClick(x, y);
             }
         }
 
         public override void Dispose()
         {
-            UltralightWrpper.Clear();
+            UltralightWrapper.Clear();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using ClassicUO.Renderer;
-using ClassicUO.Utility.Logging;
 using ImpromptuNinjas.UltralightSharp;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -13,7 +12,7 @@ namespace ClassicUO.Game.UI
     /// <summary>
     /// Wrapper for Ultralight
     /// </summary>
-    internal unsafe class UltralightWrpper
+    internal unsafe class UltralightWrapper
     {
         /// <summary>
         /// Config for Ultralight
@@ -140,38 +139,15 @@ namespace ClassicUO.Game.UI
         }
 
         /// <summary>
-        /// Create Texture2D from Bmp
-        /// </summary>
-        /// <param name="pixels">Pointer to pixels array</param>
-        /// <param name="w"> Picture Width</param>
-        /// <param name="h"> Picture Height</param>
-        /// <returns></returns>
-        private static Texture2D GetTextureFromBmp(void* pixels, int w, int h)
-        {
-            var tempTexture = new Texture2D(Client.Game.GraphicsDevice, w, h);
-            var pPixels = (byte*)pixels;
-
-            Color[] data = new Color[w * h];
-
-            for (int i = 0; i < data.Length; i++)
-            {
-                // Go through every color and reverse red and blue channels
-                data[i] = new Color(pPixels[2], pPixels[1], pPixels[0], pPixels[3]);
-                pPixels += 4;
-            }
-
-            tempTexture.SetData(data);
-            return tempTexture;
-        }
-
-        /// <summary>
         /// Load Url
         /// </summary>
         /// <param name="url">Url string</param>
-        public static void LoadUrl(string url)
+        /// <param name="w">Width</param>
+        /// <param name="h">Height</param>
+        public static void LoadUrl(string url, int w, int h)
         {
             // Create View
-            _view = View.Create(_renderer, 640, 480, false, _session);
+            _view = View.Create(_renderer, (uint)w, (uint)h, false, _session);
             {
                 var urlString = String.Create(url);
                 _view->LoadUrl(urlString);
@@ -208,9 +184,7 @@ namespace ClassicUO.Game.UI
                 }
 
                 _bitmap = _surface->GetBitmap();
-                var pixels = _bitmap->LockPixels();
-                _texture = GetTextureFromBmp(pixels, (int)_bitmap->GetWidth(), (int)_bitmap->GetHeight());
-                _bitmap->UnlockPixels();
+                GenerateTexture();
                 _surface->ClearDirtyBounds();
             }
         }
@@ -227,9 +201,40 @@ namespace ClassicUO.Game.UI
             {
                 _surface = _view->GetSurface();
                 _bitmap = _surface->GetBitmap();
-                var pixels = _bitmap->LockPixels();
-                _texture = GetTextureFromBmp(pixels, (int)_bitmap->GetWidth(), (int)_bitmap->GetHeight());
+                GenerateTexture();
+            }
+        }
+
+        /// <summary>
+        /// Generate Texture form BMP
+        /// </summary>
+        private static void GenerateTexture()
+        {
+            int w = (int)_bitmap->GetWidth();
+            int h = (int)_bitmap->GetHeight();
+            int bpp = (int)_bitmap->GetBpp();
+            var pixels = (byte*)_bitmap->LockPixels();
+
+            int arrSize = w * h * bpp;
+
+            using (var ms = new UnmanagedMemoryStream(pixels, arrSize))
+            {
+                byte[] buffer = new byte[arrSize];
+
+                ms.Read(buffer, 0, arrSize);
+
+                for (int i = 0; i < buffer.Length - 2; i += 4)
+                {
+                    byte r = buffer[i];
+                    buffer[i] = buffer[i + 2];
+                    buffer[i + 2] = r;
+                }
+
+                var tex = new Texture2D(Client.Game.GraphicsDevice, w, h);
+                tex.SetData(buffer, 0, arrSize);
+
                 _bitmap->UnlockPixels();
+                _texture = tex;
             }
         }
 

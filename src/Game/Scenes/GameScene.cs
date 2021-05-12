@@ -135,7 +135,7 @@ namespace ClassicUO.Game.Scenes
             Hotkeys = new HotkeysManager();
             Macros = new MacroManager();
 
-            UltralightWrpper.Init();
+            UltralightWrapper.Init();
 
             // #########################################################
             // [FILE_FIX]
