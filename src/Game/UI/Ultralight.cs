@@ -70,7 +70,6 @@ namespace ClassicUO.Game.UI
             {
                 var cachePath = String.Create(Path.Combine(storagePath, "Cache"));
                 _cfg->SetCachePath(cachePath);
-                cachePath->Destroy();
                 _cfg->SetUseGpuRenderer(false);
                 _cfg->SetEnableImages(true);
                 _cfg->SetEnableJavaScript(true);
@@ -103,15 +102,6 @@ namespace ClassicUO.Game.UI
             _renderer = ImpromptuNinjas.UltralightSharp.Renderer.Create(_cfg);
             _sessionName = String.Create("ClassicUO");
             _session = Session.Create(_renderer, false, _sessionName);
-
-            // Create View
-            _view = View.Create(_renderer, 640, 480, false, _session);
-
-            // Set finishing Loading Callback
-            _view->SetFinishLoadingCallback((data, caller, frameId, isMainFrame, url) =>
-            {
-                Log.Info($"Loading Finished, URL: 0x{(ulong)url:X8}  {url->Read()}");
-            }, null);
 
         }
 
@@ -180,6 +170,8 @@ namespace ClassicUO.Game.UI
         /// <param name="url">Url string</param>
         public static void LoadUrl(string url)
         {
+            // Create View
+            _view = View.Create(_renderer, 640, 480, false, _session);
             {
                 var urlString = String.Create(url);
                 _view->LoadUrl(urlString);
@@ -241,10 +233,24 @@ namespace ClassicUO.Game.UI
             }
         }
 
+        /// <summary>
+        /// Mouse Click - It's contain mouse down and up event
+        /// </summary>
+        /// <param name="x">X position</param>
+        /// <param name="y">Y position</param>
         public static void MouseClick(int x, int y)
         {
+            // Mouse down
             MouseEvent* evt = MouseEvent.Create(
                 MouseEventType.MouseDown,
+                x,
+                y,
+                MouseButton.Left);
+            _view->FireMouseEvent(evt);
+
+            // Mouse up
+            evt = MouseEvent.Create(
+                MouseEventType.MouseUp,
                 x,
                 y,
                 MouseButton.Left);
@@ -256,7 +262,7 @@ namespace ClassicUO.Game.UI
         /// </summary>
         public static void Clear()
         {
-            _view->Unfocus();
+            _view->Destroy();
             _renderer->PurgeMemory();
         }
 
