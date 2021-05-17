@@ -122,14 +122,16 @@ namespace ClassicUO.IO.Resources
 
                 for (int j = 0; j < width; j++)
                 {
-                    ushort val = _file.ReadByte();
+                    var lol = _file.ReadByte();
+                    var lol2 = (uint)((lol * 0xFF/0x1F) << 24);
+                    ushort val = lol;
                     val = (ushort) ((val << 10) | (val << 5) | val);
 
-                    if (val != 0)
-                    {
-                        pixels[pos + j] = HuesHelper.Color16To32(val) | 0xFF_00_00_00;
-                        ;
-                    }
+                    //if (val != 0)
+                    //{
+                    //pixels[pos + j] = HuesHelper.Color16To32(val) | 0xFF_00_00_00;
+                    pixels[pos + j] = lol2 | HuesHelper.Color16To32(val);
+                    //}
                 }
             }
 

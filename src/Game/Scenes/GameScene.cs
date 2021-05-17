@@ -68,6 +68,20 @@ namespace ClassicUO.Game.Scenes
             }
         );
 
+        private static readonly Lazy<BlendState> _lightBlend = new Lazy<BlendState>(
+            () =>
+            {
+                BlendState state = new BlendState
+                {
+                    ColorBlendFunction = BlendFunction.Max,
+                    ColorSourceBlend = Blend.One,
+                    ColorDestinationBlend = Blend.One
+                };
+
+                return state;
+            }
+        );
+
         private static readonly Lazy<BlendState> _altLightsBlend = new Lazy<BlendState>
         (
             () =>
@@ -493,7 +507,7 @@ namespace ClassicUO.Game.Scenes
 
                 if (light.Color != 0)
                 {
-                    light.Color++;
+                    light.Color--;
                 }
 
                 light.DrawX = x;
@@ -1092,11 +1106,17 @@ namespace ClassicUO.Game.Scenes
             }
 
             batcher.Begin(null, matrix);
-            batcher.SetBlendState(BlendState.Additive);
 
             Vector3 hue = Vector3.Zero;
-            hue.Y = ShaderHueTranslator.SHADER_LIGHTS;
-            hue.Z = 0;
+            if (!ProfileManager.CurrentProfile.UseColoredLights)
+                hue.Y = ShaderHueTranslator.SHADER_NONE;
+            else
+            {
+                batcher.SetBlendState(_lightBlend.Value);
+                hue.Y = ShaderHueTranslator.SHADER_HUED;
+            }
+
+            hue.Z = 0f;
 
             for (int i = 0; i < _lightCount; i++)
             {
@@ -1108,9 +1128,8 @@ namespace ClassicUO.Game.Scenes
                 {
                     continue;
                 }
-
+                
                 hue.X = l.Color;
-
                 batcher.DrawSprite
                 (
                     texture,
@@ -1122,10 +1141,8 @@ namespace ClassicUO.Game.Scenes
             }
 
             _lightCount = 0;
-
-            batcher.SetBlendState(null);
             batcher.End();
-
+            batcher.SetBlendState(null);
             batcher.GraphicsDevice.SetRenderTarget(null);
 
             return true;

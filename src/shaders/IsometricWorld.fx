@@ -153,6 +153,7 @@ float4 PixelShader_Hue(PS_INPUT IN) : COLOR0
 		{
 			color.rgb *= get_rgb(color.r, hue);
 		}
+		return color;
 	}
 	else if (mode == EFFECT_HUED)
 	{
