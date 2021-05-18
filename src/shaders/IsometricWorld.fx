@@ -25,6 +25,7 @@ const static float3 VEC3_ZERO = float3(0, 0, 0);
 sampler DrawSampler : register(s0);
 sampler HueSampler0 : register(s1);
 sampler HueSampler1 : register(s2);
+sampler HueSampler2 : register(s3);
 
 struct VS_INPUT
 {
@@ -56,6 +57,13 @@ float3 get_rgb(float gray, float hue)
 
 		return tex2D(HueSampler1, texcoord).rgb;
 	}
+}
+
+float3 get_simple_rgb(float gray, float hue)
+{
+	float2 texcoord = float2(gray % 32, hue / HuesPerTexture);
+
+	return tex2D(HueSampler2, texcoord).rgb;
 }
 
 float3 get_light(float3 norm)
@@ -149,11 +157,7 @@ float4 PixelShader_Hue(PS_INPUT IN) : COLOR0
 	}
 	else if (mode == LIGHTS)
 	{
-		if (IN.Hue.x != 0.0f)
-		{
-			color.rgb *= get_rgb(color.r, hue);
-		}
-		return color;
+		color.rgb *= 1.25f * get_simple_rgb(color.r, hue);
 	}
 	else if (mode == EFFECT_HUED)
 	{

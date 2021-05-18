@@ -292,19 +292,19 @@ namespace ClassicUO.Game.Data
             {
                 // Brazier
                 case 0x19BB:
-                case 0x0E31:
-                    color = 41;
-                    break;
+                    return 39;
                 // Fire Animation
                 case ushort i when i >= 0x19AB && i <= 0x19B8:
+                    return 53;
                 // Wall Torch
                 case 0x0A07:
                 case 0x0A0C:
-                    color = 49;
-                    break;
+                    return 44;
+                // heating stand
+                case 0x184a:
+                    return 56;
                 default:
-                    color = 0;
-                    break;
+                    return 2;
             }
 
             return color;

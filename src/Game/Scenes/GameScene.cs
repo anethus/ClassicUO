@@ -68,20 +68,6 @@ namespace ClassicUO.Game.Scenes
             }
         );
 
-        private static readonly Lazy<BlendState> _lightBlend = new Lazy<BlendState>(
-            () =>
-            {
-                BlendState state = new BlendState
-                {
-                    ColorBlendFunction = BlendFunction.Max,
-                    ColorSourceBlend = Blend.One,
-                    ColorDestinationBlend = Blend.One
-                };
-
-                return state;
-            }
-        );
-
         private static readonly Lazy<BlendState> _altLightsBlend = new Lazy<BlendState>
         (
             () =>
@@ -473,7 +459,7 @@ namespace ClassicUO.Game.Scenes
 
                 ushort graphic = lightObject.Graphic;
 
-                if (graphic >= 0x3E02 && graphic <= 0x3E0B || graphic >= 0x3914 && graphic <= 0x3929 || graphic == 0x0B1D)
+                if (graphic >= 0x3E02 && graphic <= 0x3E0B || graphic >= 0x3914 && graphic <= 0x3929 || graphic == 0x0B1D || graphic >= 0x19AB && graphic <= 0x19B6)
                 {
                     light.ID = 2;
                 }
@@ -1112,8 +1098,8 @@ namespace ClassicUO.Game.Scenes
                 hue.Y = ShaderHueTranslator.SHADER_NONE;
             else
             {
-                batcher.SetBlendState(_lightBlend.Value);
-                hue.Y = ShaderHueTranslator.SHADER_HUED;
+                //batcher.SetBlendState(_lightBlend.Value);
+                hue.Y = ShaderHueTranslator.SHADER_LIGHTS;
             }
 
             hue.Z = 0f;

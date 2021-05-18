@@ -157,6 +157,29 @@ namespace ClassicUO.IO.Resources
             }
         }
 
+        public void CreateMonoColor(uint [] buffer)
+        {
+            int len = HuesRange.Length;
+
+            int idx = 0;
+
+            for (int r = 0; r < len; r++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    for (int x = 0; x < 32; x++)
+                    {
+                        buffer[idx++] = HuesHelper.Color16To32(HuesRange[r].Entries[y].ColorTable[31]) | 0xFF_00_00_00;
+
+                        if (idx >= buffer.Length)
+                        {
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
         //public float[] GetColorForShader(ushort color)
         //{
         //    if (color != 0)

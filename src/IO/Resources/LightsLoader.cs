@@ -30,6 +30,7 @@
 
 #endregion
 
+using System.Linq;
 using System.Threading.Tasks;
 using ClassicUO.Game;
 using ClassicUO.Renderer;
@@ -116,24 +117,23 @@ namespace ClassicUO.IO.Resources
             _file.SetData(entry.Address, entry.FileSize);
             _file.Seek(entry.Offset);
 
+            int [] lola = new int [height * width];
+
             for (int i = 0; i < height; i++)
             {
                 int pos = i * width;
 
                 for (int j = 0; j < width; j++)
                 {
-                    var lol = _file.ReadByte();
-                    var lol2 = (uint)((lol * 0xFF/0x1F) << 24);
-                    ushort val = lol;
-                    val = (ushort) ((val << 10) | (val << 5) | val);
+                    var val = _file.ReadByte();
+                    var alpha = (uint)((val * 0xFF/0x1F) << 24);
+                    ushort data = (ushort) ((val << 10) | (val << 5) | val);
 
-                    //if (val != 0)
-                    //{
-                    //pixels[pos + j] = HuesHelper.Color16To32(val) | 0xFF_00_00_00;
-                    pixels[pos + j] = lol2 | HuesHelper.Color16To32(val);
-                    //}
+                    pixels[pos + j] = alpha | HuesHelper.Color16To32(data);
+                    
                 }
             }
+            var a = lola.Max();
 
             return pixels;
         }
