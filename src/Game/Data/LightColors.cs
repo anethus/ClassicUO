@@ -292,7 +292,7 @@ namespace ClassicUO.Game.Data
             {
                 // Brazier
                 case 0x19BB:
-                    return 39;
+                    return 38;
                 // Fire Animation
                 case ushort i when i >= 0x19AB && i <= 0x19B8:
                     return 53;
