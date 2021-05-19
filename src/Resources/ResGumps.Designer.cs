@@ -925,6 +925,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Customization.
+        /// </summary>
+        public static string Customization {
+            get {
+                return ResourceManager.GetString("Customization", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Damage.
         /// </summary>
         public static string Damage {
@@ -2816,6 +2825,15 @@ namespace ClassicUO.Resources {
         public static string Remove {
             get {
                 return ResourceManager.GetString("Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Replace Sails.
+        /// </summary>
+        public static string ReplaceSails {
+            get {
+                return ResourceManager.GetString("ReplaceSails", resourceCulture);
             }
         }
         

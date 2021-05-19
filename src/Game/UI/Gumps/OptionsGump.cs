@@ -66,11 +66,13 @@ namespace ClassicUO.Game.UI.Gumps
         private InputField _autoOpenCorpseRange;
 
         //experimental
-        private Checkbox _autoOpenDoors, _autoOpenCorpse, _skipEmptyCorpse, _disableTabBtn, _disableCtrlQWBtn, _disableDefaultHotkeys, _disableArrowBtn, _disableAutoMove, _overrideContainerLocation, _smoothDoors, _showTargetRangeIndicator, _customBars, _customBarsBBG, _saveHealthbars, _biggerReagents, _biggerGems;
+        private Checkbox _autoOpenDoors, _autoOpenCorpse, _skipEmptyCorpse, _disableTabBtn, _disableCtrlQWBtn, _disableDefaultHotkeys, _disableArrowBtn, _disableAutoMove, _overrideContainerLocation, _smoothDoors, _showTargetRangeIndicator, _customBars, _customBarsBBG, _saveHealthbars;
         private Checkbox _buffBarTime, _castSpellsByOneClick, _queryBeforAttackCheckbox, _queryBeforeBeneficialCheckbox, _spellColoringCheckbox, _spellFormatCheckbox;
         private HSliderBar _cellSize;
         private Checkbox _containerScaleItems, _containerDoubleClickToLoot, _relativeDragAnDropItems, _useLargeContianersGumps, _highlightContainersWhenMouseIsOver;
 
+        // customization
+        private Checkbox _biggerReagents, _biggerGems, _replaceSails;
 
         // containers
         private HSliderBar _containersScale;
@@ -343,6 +345,21 @@ namespace ClassicUO.Game.UI.Gumps
                 ) { ButtonParameter = 12 }
             );
 
+            if (CUOEnviroment.IsOutlands)
+            {
+                Add
+                (
+                    new NiceButton
+                    (
+                        10,
+                        10 + 30 * i++,
+                        140,
+                        25,
+                        ButtonAction.SwitchPage,
+                        ResGumps.Customization
+                    ) { ButtonParameter = 13 }
+                );
+            }
 
             Add
             (
@@ -419,6 +436,10 @@ namespace ClassicUO.Game.UI.Gumps
             BuildInfoBar();
             BuildContainers();
             BuildExperimental();
+            if(CUOEnviroment.IsOutlands)
+            {
+                BuildCustomization();
+            }
 
             ChangePage(1);
         }
@@ -2978,12 +2999,28 @@ namespace ClassicUO.Game.UI.Gumps
                 startX,
                 startY
             );
+            
+            Add(rightArea, PAGE);
+        }
 
-            startY += _disableAutoMove.Height + 2;
+        private void BuildCustomization()
+        {
+            const int PAGE = 13;
+
+            ScrollArea rightArea = new ScrollArea
+            (
+                190,
+                20,
+                WIDTH - 210,
+                420,
+                true
+            );
+
+            int startX = 5;
+            int startY = 5;
 
             if (CUOEnviroment.IsOutlands)
             {
-                startX = 5;
                 _biggerReagents = AddCheckBox
                 (
                     rightArea,
@@ -3003,11 +3040,21 @@ namespace ClassicUO.Game.UI.Gumps
                     startX,
                     startY
                 );
+
+                startY += _biggerGems.Height + 2;
+
+                _replaceSails = AddCheckBox
+                (
+                    rightArea,
+                    ResGumps.ReplaceSails,
+                    _currentProfile.ReplaceSails,
+                    startX,
+                    startY
+                );
             }
-            
+
             Add(rightArea, PAGE);
         }
-
 
         private void BuildInfoBar()
         {
@@ -3979,6 +4026,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 _currentProfile.BiggerReagents = _biggerReagents.IsChecked;
                 _currentProfile.BiggerGems = _biggerGems.IsChecked;
+                _currentProfile.ReplaceSails = _replaceSails.IsChecked;
             }
 
 

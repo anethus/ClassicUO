@@ -170,9 +170,12 @@ namespace ClassicUO.Configuration
 
         public bool HideScreenshotStoredInMessage { get; set; }
 
-        // Experimental
+        // Customization
         public bool BiggerReagents { get; set; }
         public bool BiggerGems { get; set; }
+        public bool ReplaceSails { get; set; }
+
+        // Experimental
         public bool CastSpellsByOneClick { get; set; }
         public bool BuffBarTime { get; set; }
         public bool AutoOpenDoors { get; set; }

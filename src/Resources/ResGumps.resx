@@ -1450,4 +1450,10 @@ Client version: '{0}'</value>
   <data name="ResetGroups" xml:space="preserve">
     <value>Reset groups</value>
   </data>
+  <data name="Customization" xml:space="preserve">
+    <value>Customization</value>
+  </data>
+  <data name="ReplaceSails" xml:space="preserve">
+    <value>Replace Sails</value>
+  </data>
 </root>

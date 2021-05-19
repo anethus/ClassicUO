@@ -137,6 +137,10 @@ namespace ClassicUO.Game.GameObjects
                 }
                 else if (IsMulti)
                 {
+                    if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.ReplaceSails && ReplaceSailsGraph.ContainsKey(Graphic))
+                    {
+                        return ReplaceSailsGraph[Graphic];
+                    }
                     return MultiGraphic;
                 }
                 else if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.BiggerReagents && BiggerRegsGraph.ContainsKey(Graphic))
@@ -178,6 +182,19 @@ namespace ClassicUO.Game.GameObjects
             { 3976, 5009 },
         };
 
+        private readonly Dictionary<ushort, ushort> ReplaceSailsGraph = new Dictionary<ushort, ushort>
+        {
+            { 15959, 50204 },
+            { 15962, 50207 },
+            { 15981, 50213 },
+            { 15986, 50217 },
+            { 16072, 50220 },
+            { 16075, 50223 },
+            { 16076, 50224 },
+            { 16093, 50226 },
+            { 16098, 50231 },  //Drawed in ItemView.cs
+        };
+
         public bool IsLocked => (Flags & Flags.Movable) == 0 && ItemData.Weight > 90;
 
         public ushort MultiGraphic { get; private set; }
@@ -185,6 +202,7 @@ namespace ClassicUO.Game.GameObjects
         public bool IsMulti
         {
             get => _isMulti;
+
             set
             {
                 _isMulti = value;
