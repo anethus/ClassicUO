@@ -137,9 +137,13 @@ namespace ClassicUO.Game.GameObjects
                 }
                 else if (IsMulti)
                 {
-                    if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.ReplaceSails && ReplaceSailsGraph.ContainsKey(Graphic))
+                    if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.ReplaceSailsOption == 1 && _betterSailsGraph.ContainsKey(Graphic))
                     {
-                        return ReplaceSailsGraph[Graphic];
+                        return _betterSailsGraph[Graphic];
+                    }
+                    if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.ReplaceSailsOption == 2 && _hiddenSailsGraph.ContainsKey(Graphic))
+                    {
+                        return _hiddenSailsGraph[Graphic];
                     }
                     return MultiGraphic;
                 }
@@ -182,17 +186,29 @@ namespace ClassicUO.Game.GameObjects
             { 3976, 5009 },
         };
 
-        private readonly Dictionary<ushort, ushort> ReplaceSailsGraph = new Dictionary<ushort, ushort>
+        private static readonly Dictionary<ushort, ushort> _betterSailsGraph = new Dictionary<ushort, ushort>
         {
             { 15959, 50204 },
             { 15962, 50207 },
-            { 15981, 50213 },
+            { 15980, 50212 },
             { 15986, 50217 },
             { 16072, 50220 },
             { 16075, 50223 },
             { 16076, 50224 },
             { 16093, 50226 },
-            { 16098, 50231 },  //Drawed in ItemView.cs
+            { 16098, 50231 },
+        };
+
+        private static readonly Dictionary<ushort, ushort> _hiddenSailsGraph = new Dictionary<ushort, ushort>
+        {
+            { 15959 , 50235 },
+            { 15962 , 50236 },
+            { 15980 , 50237 },
+            { 15986 , 50238 },
+            { 16072 , 50239 },
+            { 16075 , 50240 },
+            { 16093 , 50241 },
+            { 16098 , 50242 },
         };
 
         public bool IsLocked => (Flags & Flags.Movable) == 0 && ItemData.Weight > 90;

@@ -101,9 +101,13 @@ namespace ClassicUO.Game.GameObjects
 
             ushort graphic = Graphic;
 
-            if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.ReplaceSails && ReplaceSailsGraph.ContainsKey(Graphic))
+            if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.ReplaceSailsOption == 1 && _betterSailsGraph.ContainsKey(Graphic))
             {
-                graphic = ReplaceSailsGraph[Graphic];
+                graphic = _betterSailsGraph[Graphic];
+            }
+            else if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.ReplaceSailsOption == 2 && _hiddenSailsGraph.ContainsKey(Graphic))
+            {
+                graphic = _hiddenSailsGraph[Graphic];
             }
 
             bool partial = ItemData.IsPartialHue;
@@ -188,7 +192,19 @@ namespace ClassicUO.Game.GameObjects
             return true;
         }
 
-        private readonly Dictionary<ushort, ushort> ReplaceSailsGraph = new Dictionary<ushort, ushort>
+        private static readonly Dictionary<ushort, ushort> _hiddenSailsGraph = new Dictionary<ushort, ushort>
+        {
+            { 15959, 50235 },
+            { 15962, 50236 },
+            { 15980, 50237 },
+            { 15986, 50238 },
+            { 16072, 50239 },
+            { 16075, 50240 },
+            { 16093, 50241 },
+            { 16098, 50242 },
+        };
+
+        private static readonly Dictionary<ushort, ushort> _betterSailsGraph = new Dictionary<ushort, ushort>
         {
             { 15935, 50200 },
             { 15936, 50201 },
@@ -224,7 +240,7 @@ namespace ClassicUO.Game.GameObjects
             { 16098, 50231 },
             { 16099, 50232 },
             { 16100, 50233 },
-            { 16101, 50234 }
+            { 16101, 50234 },
         };
     }
 }

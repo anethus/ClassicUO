@@ -72,7 +72,8 @@ namespace ClassicUO.Game.UI.Gumps
         private Checkbox _containerScaleItems, _containerDoubleClickToLoot, _relativeDragAnDropItems, _useLargeContianersGumps, _highlightContainersWhenMouseIsOver;
 
         // customization
-        private Checkbox _biggerReagents, _biggerGems, _replaceSails;
+        private Checkbox _biggerReagents, _biggerGems;
+        private Combobox _replaceSails;
 
         // containers
         private HSliderBar _containersScale;
@@ -3019,39 +3020,43 @@ namespace ClassicUO.Game.UI.Gumps
             int startX = 5;
             int startY = 5;
 
-            if (CUOEnviroment.IsOutlands)
-            {
-                _biggerReagents = AddCheckBox
-                (
-                    rightArea,
-                    ResGumps.BiggerReagents,
-                    _currentProfile.BiggerReagents,
-                    startX,
-                    startY
-                );
+            _biggerReagents = AddCheckBox
+            (
+                rightArea,
+                ResGumps.BiggerReagents,
+                _currentProfile.BiggerReagents,
+                startX,
+                startY
+            );
 
-                startY += _biggerReagents.Height + 2;
+            startY += _biggerReagents.Height + 2;
 
-                _biggerGems = AddCheckBox
-                (
-                    rightArea,
-                    ResGumps.BiggerGems,
-                    _currentProfile.BiggerGems,
-                    startX,
-                    startY
-                );
+            _biggerGems = AddCheckBox
+            (
+                rightArea,
+                ResGumps.BiggerGems,
+                _currentProfile.BiggerGems,
+                startX,
+                startY
+            );
 
-                startY += _biggerGems.Height + 2;
+            startY += _biggerGems.Height + 5;
+            Label text = AddLabel(rightArea, ResGumps.ReplaceSails, startX, startY);
+            startX += text.Width + 10;
 
-                _replaceSails = AddCheckBox
-                (
-                    rightArea,
-                    ResGumps.ReplaceSails,
-                    _currentProfile.ReplaceSails,
-                    startX,
-                    startY
-                );
-            }
+            _replaceSails = AddCombobox
+            (
+                rightArea,
+                new [] {
+                    ResGumps.OriginalSails,
+                    ResGumps.BetterSails,
+                    ResGumps.HiddenSails
+                },
+                _currentProfile.ReplaceSailsOption,
+                startX,
+                startY - 3,
+                200
+            );
 
             Add(rightArea, PAGE);
         }
@@ -4026,7 +4031,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 _currentProfile.BiggerReagents = _biggerReagents.IsChecked;
                 _currentProfile.BiggerGems = _biggerGems.IsChecked;
-                _currentProfile.ReplaceSails = _replaceSails.IsChecked;
+                _currentProfile.ReplaceSailsOption = _replaceSails.SelectedIndex;
             }
 
 

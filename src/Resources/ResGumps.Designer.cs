@@ -412,6 +412,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Better Sails.
+        /// </summary>
+        public static string BetterSails {
+            get {
+                return ResourceManager.GetString("BetterSails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bigger Gems.
         /// </summary>
         public static string BiggerGems {
@@ -1646,6 +1655,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hidden Sails.
+        /// </summary>
+        public static string HiddenSails {
+            get {
+                return ResourceManager.GetString("HiddenSails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Hide Chat Gradient.
         /// </summary>
         public static string HideChatGradient {
@@ -2482,6 +2500,15 @@ namespace ClassicUO.Resources {
         public static string ON {
             get {
                 return ResourceManager.GetString("ON", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original Sails.
+        /// </summary>
+        public static string OriginalSails {
+            get {
+                return ResourceManager.GetString("OriginalSails", resourceCulture);
             }
         }
         

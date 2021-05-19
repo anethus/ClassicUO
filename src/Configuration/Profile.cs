@@ -173,7 +173,7 @@ namespace ClassicUO.Configuration
         // Customization
         public bool BiggerReagents { get; set; }
         public bool BiggerGems { get; set; }
-        public bool ReplaceSails { get; set; }
+        public int ReplaceSailsOption { get; set; } = 0;
 
         // Experimental
         public bool CastSpellsByOneClick { get; set; }

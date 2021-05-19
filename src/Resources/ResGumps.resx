@@ -1456,4 +1456,13 @@ Client version: '{0}'</value>
   <data name="ReplaceSails" xml:space="preserve">
     <value>Replace Sails</value>
   </data>
+  <data name="BetterSails" xml:space="preserve">
+    <value>Better Sails</value>
+  </data>
+  <data name="HiddenSails" xml:space="preserve">
+    <value>Hidden Sails</value>
+  </data>
+  <data name="OriginalSails" xml:space="preserve">
+    <value>Original Sails</value>
+  </data>
 </root>
