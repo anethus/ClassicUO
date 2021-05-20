@@ -103,7 +103,6 @@ namespace ClassicUO.Game.GameObjects
             }
         );
 
-        private static readonly DataReader _reader = new DataReader();
         private ushort? _displayedGraphic;
         private bool _isMulti;
 
@@ -362,19 +361,20 @@ namespace ClassicUO.Game.GameObjects
                             entry.DecompressedLength
                         );
 
-                        _reader.SetData(dataPtr, entry.DecompressedLength);
-                        _reader.Skip(4);
-                        int count = (int) _reader.ReadUInt();
+                        StackDataReader reader = new StackDataReader(dataPtr, entry.DecompressedLength);
+                        reader.Skip(4);
+
+                        int count = reader.Read<int>();
 
                         int sizeOf = sizeof(MultiBlockNew);
 
                         for (int i = 0; i < count; i++)
                         {
-                            MultiBlockNew* block = (MultiBlockNew*) (_reader.PositionAddress + i * sizeOf);
+                            MultiBlockNew* block = (MultiBlockNew*) (reader.PositionAddress + i * sizeOf);
 
                             if (block->Unknown != 0)
                             {
-                                _reader.Skip((int) (block->Unknown * 4));
+                                reader.Skip((int) (block->Unknown * 4));
                             }
 
                             if (block->X < minX)
@@ -411,6 +411,7 @@ namespace ClassicUO.Game.GameObjects
                                 m.AlphaHue = 255;
                                 m.IsCustom = false;
                                 m.State = CUSTOM_HOUSE_MULTI_OBJECT_FLAGS.CHMOF_DONT_REMOVE;
+                                m.IsMovable = ItemData.IsMultiMovable;
                                 m.AddToTile();
                                 house.Components.Add(m);
                             }
@@ -420,7 +421,7 @@ namespace ClassicUO.Game.GameObjects
                             }
                         }
 
-                        _reader.ReleaseData();
+                        reader.Release();
                     }
                 }
                 else
@@ -471,6 +472,7 @@ namespace ClassicUO.Game.GameObjects
                         m.AlphaHue = 255;
                         m.IsCustom = false;
                         m.State = CUSTOM_HOUSE_MULTI_OBJECT_FLAGS.CHMOF_DONT_REMOVE;
+                        m.IsMovable = ItemData.IsMultiMovable;
                         m.AddToTile();
                         house.Components.Add(m);
                     }
