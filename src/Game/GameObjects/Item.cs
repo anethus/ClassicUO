@@ -103,9 +103,34 @@ namespace ClassicUO.Game.GameObjects
             }
         );
 
+        private static readonly DataReader _reader = new DataReader();
         private ushort? _displayedGraphic;
         private bool _isMulti;
 
+        private static readonly Dictionary<ushort, ushort> _biggerGemsGraph = new Dictionary<ushort, ushort>
+        {
+            { 3877, 47570 },
+            { 3862, 47567 },
+            { 3861, 47566 },
+            { 3878, 47571 },
+            { 3856, 47564 },
+            { 3859, 47565 },
+            { 3865, 47568 },
+            { 3873, 47569 },
+            { 3885, 47563 }
+        };
+
+        private static readonly Dictionary<ushort, ushort> _biggerRegsGraph = new Dictionary<ushort, ushort>
+        {
+            { 3962, 5002 },
+            { 3963, 5003 },
+            { 3980, 5004 },
+            { 3981, 5005 },
+            { 3972, 5006 },
+            { 3973, 5007 },
+            { 3974, 5008 },
+            { 3976, 5009 },
+        };
 
         public Item() : base(0)
         {
@@ -136,79 +161,29 @@ namespace ClassicUO.Game.GameObjects
                 }
                 else if (IsMulti)
                 {
-                    if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.ReplaceSailsOption == 1 && _betterSailsGraph.ContainsKey(Graphic))
+                    if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.ReplaceSailsOption == 1 && SailTable.BeterSailsGraphic.ContainsKey(MultiGraphic))
                     {
-                        return _betterSailsGraph[Graphic];
+                        return SailTable.BeterSailsGraphic[MultiGraphic];
                     }
-                    if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.ReplaceSailsOption == 2 && _hiddenSailsGraph.ContainsKey(Graphic))
+                    else if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.ReplaceSailsOption == 2 && SailTable.HideSailsGraphic.ContainsKey(MultiGraphic))
                     {
-                        return _hiddenSailsGraph[Graphic];
+                        return SailTable.HideSailsGraphic[MultiGraphic];
                     }
                     return MultiGraphic;
                 }
-                else if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.BiggerReagents && BiggerRegsGraph.ContainsKey(Graphic))
+                else if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.BiggerReagents && _biggerRegsGraph.ContainsKey(Graphic))
                 {
-                    return BiggerRegsGraph[Graphic];
+                    return _biggerRegsGraph[Graphic];
                 }
-                else if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.BiggerGems && BiggerGemsGraph.ContainsKey(Graphic))
+                else if (CUOEnviroment.IsOutlands && ProfileManager.CurrentProfile.BiggerGems && _biggerGemsGraph.ContainsKey(Graphic))
                 {
-                    return BiggerGemsGraph[Graphic];
+                    return _biggerGemsGraph[Graphic];
                 }
 
                 return Graphic;
             }
             set => _displayedGraphic = value;
         }
-
-        private readonly Dictionary<ushort, ushort> BiggerGemsGraph = new Dictionary<ushort, ushort>
-        {
-            { 3877, 47570 },
-            { 3862, 47567 },
-            { 3861, 47566 },
-            { 3878, 47571 },
-            { 3856, 47564 },
-            { 3859, 47565 },
-            { 3865, 47568 },
-            { 3873, 47569 },
-            { 3885, 47563 } 
-        };
-
-        private readonly Dictionary<ushort, ushort> BiggerRegsGraph = new Dictionary<ushort, ushort>
-        {
-            { 3962, 5002 },
-            { 3963, 5003 },
-            { 3980, 5004 },
-            { 3981, 5005 },
-            { 3972, 5006 },
-            { 3973, 5007 },
-            { 3974, 5008 },
-            { 3976, 5009 },
-        };
-
-        private static readonly Dictionary<ushort, ushort> _betterSailsGraph = new Dictionary<ushort, ushort>
-        {
-            { 15959, 50204 },
-            { 15962, 50207 },
-            { 15980, 50212 },
-            { 15986, 50217 },
-            { 16072, 50220 },
-            { 16075, 50223 },
-            { 16076, 50224 },
-            { 16093, 50226 },
-            { 16098, 50231 },
-        };
-
-        private static readonly Dictionary<ushort, ushort> _hiddenSailsGraph = new Dictionary<ushort, ushort>
-        {
-            { 15959 , 50235 },
-            { 15962 , 50236 },
-            { 15980 , 50237 },
-            { 15986 , 50238 },
-            { 16072 , 50239 },
-            { 16075 , 50240 },
-            { 16093 , 50241 },
-            { 16098 , 50242 },
-        };
 
         public bool IsLocked => (Flags & Flags.Movable) == 0 && ItemData.Weight > 90;
 
@@ -361,20 +336,19 @@ namespace ClassicUO.Game.GameObjects
                             entry.DecompressedLength
                         );
 
-                        StackDataReader reader = new StackDataReader(dataPtr, entry.DecompressedLength);
-                        reader.Skip(4);
-
-                        int count = reader.Read<int>();
+                        _reader.SetData(dataPtr, entry.DecompressedLength);
+                        _reader.Skip(4);
+                        int count = (int) _reader.ReadUInt();
 
                         int sizeOf = sizeof(MultiBlockNew);
 
                         for (int i = 0; i < count; i++)
                         {
-                            MultiBlockNew* block = (MultiBlockNew*) (reader.PositionAddress + i * sizeOf);
+                            MultiBlockNew* block = (MultiBlockNew*) (_reader.PositionAddress + i * sizeOf);
 
                             if (block->Unknown != 0)
                             {
-                                reader.Skip((int) (block->Unknown * 4));
+                                _reader.Skip((int) (block->Unknown * 4));
                             }
 
                             if (block->X < minX)
@@ -411,7 +385,6 @@ namespace ClassicUO.Game.GameObjects
                                 m.AlphaHue = 255;
                                 m.IsCustom = false;
                                 m.State = CUSTOM_HOUSE_MULTI_OBJECT_FLAGS.CHMOF_DONT_REMOVE;
-                                m.IsMovable = ItemData.IsMultiMovable;
                                 m.AddToTile();
                                 house.Components.Add(m);
                             }
@@ -421,7 +394,7 @@ namespace ClassicUO.Game.GameObjects
                             }
                         }
 
-                        reader.Release();
+                        _reader.ReleaseData();
                     }
                 }
                 else
@@ -472,7 +445,6 @@ namespace ClassicUO.Game.GameObjects
                         m.AlphaHue = 255;
                         m.IsCustom = false;
                         m.State = CUSTOM_HOUSE_MULTI_OBJECT_FLAGS.CHMOF_DONT_REMOVE;
-                        m.IsMovable = ItemData.IsMultiMovable;
                         m.AddToTile();
                         house.Components.Add(m);
                     }

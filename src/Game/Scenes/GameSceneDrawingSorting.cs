@@ -71,38 +71,6 @@ namespace ClassicUO.Game.Scenes
         };
         private StaticTiles _empty;
 
-        private static readonly HashSet<ushort> _hiddenSails = new HashSet<ushort>{
-            15935,
-            15936,
-            15937,
-            15938,
-            15960,
-            15961,
-            15963,
-            15964,
-            15978,
-            15979,
-            15981,
-            15982,
-            15984,
-            15985,
-            15987,
-            15988,
-            16073,
-            16074,
-            16076,
-            16078,
-            16092,
-            16094,
-            16095,
-            16096,
-            16097,
-            16099,
-            16100,
-            16101
-        };
-
-
         private sbyte _maxGroundZ;
         private int _maxZ;
         private Vector2 _minPixel, _maxPixel;
@@ -411,7 +379,7 @@ namespace ClassicUO.Game.Scenes
                         //we avoid to hide impassable foliage or bushes, if present...
                         if (ProfileManager.CurrentProfile.TreeToStumps && itemData.IsFoliage && !itemData.IsMultiMovable && !(obj is Multi)
                             || ProfileManager.CurrentProfile.HideVegetation && (obj is Multi mm && mm.IsVegetation || obj is Static st && st.IsVegetation)
-                            || ProfileManager.CurrentProfile.ReplaceSailsOption == 2 && obj is Multi sa && _hiddenSails.Contains(sa.Graphic))
+                            || ProfileManager.CurrentProfile.ReplaceSailsOption == 2 && obj is Multi sa && SailTable.HideSailsInvisibility.Contains(sa.Graphic))
                         {
                             continue;
                         }
