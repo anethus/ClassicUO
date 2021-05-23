@@ -5,11 +5,13 @@ namespace ClassicUO.Game.UI.Controls
 {
     internal class Html5Control : Control
     {
+        private readonly UltralightWrapper ulWrapp;
         public Html5Control(string url, uint width, uint height)
         {
             Width = (int)width;
             Height = (int)height;
-            UltralightWrapper.LoadUrl(url, (int)width, (int)height);
+            ulWrapp = new UltralightWrapper();
+            ulWrapp.LoadUrl(url, (int)width, (int)height);
         }
 
         public override bool Draw(UltimaBatcher2D batcher, int x, int y)
@@ -23,7 +25,7 @@ namespace ClassicUO.Game.UI.Controls
             {
                 base.Draw(batcher, x, y);
 
-                UltralightWrapper.Draw(batcher, x + 8, y + 8);
+                ulWrapp.Draw(batcher, x + 8, y + 8);
 
                 batcher.ClipEnd();
             }
@@ -35,13 +37,13 @@ namespace ClassicUO.Game.UI.Controls
         {
             if (button == MouseButtonType.Left)
             {
-                UltralightWrapper.MouseClick(x, y);
+                ulWrapp.MouseClick(x, y);
             }
         }
 
         public override void Dispose()
         {
-            UltralightWrapper.Clear();
+            ulWrapp.Clear();
         }
     }
 }

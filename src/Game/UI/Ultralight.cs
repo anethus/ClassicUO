@@ -33,7 +33,7 @@ namespace ClassicUO.Game.UI
         /// <summary>
         /// View
         /// </summary>
-        private static View* _view;
+        private View* _view;
         /// <summary>
         /// Surface
         /// </summary>
@@ -110,7 +110,7 @@ namespace ClassicUO.Game.UI
         /// <param name="batcher">Ultima 2D Batcher</param>
         /// <param name="x">X position</param>
         /// <param name="y">Y position</param>
-        public static void Draw(UltimaBatcher2D batcher, int x, int y)
+        public void Draw(UltimaBatcher2D batcher, int x, int y)
         {
             ReloadView();
             DrawFrame(batcher, x, y);
@@ -122,7 +122,7 @@ namespace ClassicUO.Game.UI
         /// <param name="batcher">Ultima 2D Batcher</param>
         /// <param name="x">X position</param>
         /// <param name="y">Y position</param>
-        public static void DrawDynamic(UltimaBatcher2D batcher, int x, int y)
+        public void DrawDynamic(UltimaBatcher2D batcher, int x, int y)
         {
             ReloadDynamicView();
             DrawFrame(batcher, x, y);
@@ -133,7 +133,7 @@ namespace ClassicUO.Game.UI
         /// </summary>
         /// <param name="width">Width</param>
         /// <param name="height">Height</param>
-        public static void ResizeView(int width, int height)
+        public void ResizeView(int width, int height)
         {
             _view->Resize((uint)width, (uint)height);
         }
@@ -144,7 +144,7 @@ namespace ClassicUO.Game.UI
         /// <param name="url">Url string</param>
         /// <param name="w">Width</param>
         /// <param name="h">Height</param>
-        public static void LoadUrl(string url, int w, int h)
+        public void LoadUrl(string url, int w, int h)
         {
             // Create View
             _view = View.Create(_renderer, (uint)w, (uint)h, false, _session);
@@ -153,6 +153,56 @@ namespace ClassicUO.Game.UI
                 _view->LoadUrl(urlString);
                 urlString->Destroy();
             }
+        }
+
+        /// <summary>
+        /// Load Local HTML File
+        /// </summary>
+        /// <param name="url">File Name</param>
+        /// <param name="w"></param>
+        /// <param name="h"></param>
+        public void LoadLocalUrl(string fileName, int w, int h)
+        {
+            _view = View.Create(_renderer, (uint)w, (uint)h, false, _session);
+
+            {
+                var urlString = String.Create($"file:///{fileName}");
+                _view->LoadUrl(urlString);
+                urlString->Destroy();
+            }
+        }
+
+        /// <summary>
+        /// Mouse Click - It's contain mouse down and up event
+        /// </summary>
+        /// <param name="x">X position</param>
+        /// <param name="y">Y position</param>
+        public void MouseClick(int x, int y)
+        {
+            // Mouse down
+            MouseEvent* evt = MouseEvent.Create(
+                MouseEventType.MouseDown,
+                x,
+                y,
+                MouseButton.Left);
+            _view->FireMouseEvent(evt);
+
+            // Mouse up
+            evt = MouseEvent.Create(
+                MouseEventType.MouseUp,
+                x,
+                y,
+                MouseButton.Left);
+            _view->FireMouseEvent(evt);
+        }
+
+        /// <summary>
+        /// Dispatch
+        /// </summary>
+        public void Clear()
+        {
+            _view->Destroy();
+            _renderer->PurgeMemory();
         }
 
         /// <summary>
@@ -170,7 +220,7 @@ namespace ClassicUO.Game.UI
         /// <summary>
         /// Reload Single Frame
         /// </summary>
-        private static void ReloadView()
+        private void ReloadView()
         {
             _renderer->Update();
             _renderer->Render();
@@ -193,7 +243,7 @@ namespace ClassicUO.Game.UI
         /// Reload Dynamic View
         /// Since GetDirtyBounds for dynamic views (like gifs) is never empty there is no need to check that flag
         /// </summary>
-        private static void ReloadDynamicView()
+        private void ReloadDynamicView()
         {
             _renderer->Update();
             _renderer->Render();
@@ -236,39 +286,6 @@ namespace ClassicUO.Game.UI
                 _bitmap->UnlockPixels();
                 _texture = tex;
             }
-        }
-
-        /// <summary>
-        /// Mouse Click - It's contain mouse down and up event
-        /// </summary>
-        /// <param name="x">X position</param>
-        /// <param name="y">Y position</param>
-        public static void MouseClick(int x, int y)
-        {
-            // Mouse down
-            MouseEvent* evt = MouseEvent.Create(
-                MouseEventType.MouseDown,
-                x,
-                y,
-                MouseButton.Left);
-            _view->FireMouseEvent(evt);
-
-            // Mouse up
-            evt = MouseEvent.Create(
-                MouseEventType.MouseUp,
-                x,
-                y,
-                MouseButton.Left);
-            _view->FireMouseEvent(evt);
-        }
-
-        /// <summary>
-        /// Dispatch
-        /// </summary>
-        public static void Clear()
-        {
-            _view->Destroy();
-            _renderer->PurgeMemory();
         }
 
     }
