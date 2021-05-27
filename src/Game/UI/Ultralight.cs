@@ -52,26 +52,9 @@ namespace ClassicUO.Game.UI
 
         private static FileSystem fileSystem;
 
-        [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern IntPtr CreateFile(
-           string fileName,
-           FileAccess dwDesiredAccess,
-           FileShare dwShareMode,
-           IntPtr securityAttrs_MustBeZero,
-           FileMode dwCreationDisposition,
-           FileAttributes dwFlagsAndAttributes,
-           IntPtr hTemplateFile_MustBeZero);
+        private static int fileSize;
 
-        [DllImport("kernel32", SetLastError = true)]
-        internal static extern int ReadFile(
-           IntPtr handle,
-           sbyte* bytes,
-           int numBytesToRead,
-           out int numBytesRead,
-           IntPtr overlapped_MustBeZero);
-
-        [DllImport("kernel32.dll", SetLastError = true)]
-        private static extern bool GetFileSizeEx(UIntPtr hFile, out long lpFileSize);
+        private static string assetPath;
 
         /// <summary>
         /// Initialize Ultralight
@@ -98,7 +81,6 @@ namespace ClassicUO.Game.UI
                 _cfg->SetUseGpuRenderer(false);
                 _cfg->SetEnableImages(true);
                 _cfg->SetEnableJavaScript(true);
-                _cfg->SetUserAgent(String.Create("Mozilla/5.0"));
             }
 
             // Load resources
@@ -121,7 +103,8 @@ namespace ClassicUO.Game.UI
             {
                 if (asmDir != null)
                 {
-                    var assetsPath = String.Create(Path.Combine(asmDir, "assets"));
+                    assetPath = "assets";
+                    var assetsPath = String.Create(Path.Combine(asmDir, assetPath));
                     AppCore.EnablePlatformFileSystem(assetsPath);
                     assetsPath->Destroy();
                 }
@@ -134,6 +117,10 @@ namespace ClassicUO.Game.UI
 
         }
 
+        /// <summary>
+        /// Build FileSystem for Ultraligh
+        /// C++ Source code of FileSystem.css https://github.com/ultralight-ux/AppCore/blob/master/src/win/FileSystemWin.cpp
+        /// </summary>
         public static void BuildFilesystem()
         {
             fileSystem = new FileSystem
@@ -145,27 +132,35 @@ namespace ClassicUO.Game.UI
                 }),
                 FileExists = new FnPtr<FileSystemFileExistsCallback>((path) =>
                 {
-                    Console.WriteLine("File exist check");
-                    return true;
+                    var fullPath = Path.Combine(assetPath, path->Read());
+                    return new FileInfo(fullPath).Exists;
                 }),
                 GetFileSize = new FnPtr<FileSystemGetFileSizeCallback>((handler, result) =>
                 {
                     Console.WriteLine("Get File Size");
-                    var r = GetFileSizeEx(handler, out long size);
-                    *result = size;
-                    return r;
+                    *result = fileSize;
+                    return true;
                 }),
                 GetFileMimeType = new FnPtr<FileSystemGetFileMimeTypeCallback>((path, result) =>
                 {
+                    // Ultralight looks to HKEY_CLASSES_ROOT and by extension look for Key "Content Type"
                     Console.WriteLine("Get MIME type");
-                    RegistryKey key = Registry.ClassesRoot.OpenSubKey(".html");
                     string type = "application/unknown";
+
+                    RegistryKey key = Registry.ClassesRoot.OpenSubKey(Path.GetExtension(path->Read()));
+                    
                     if (key != null)
                     {
                         type = key.GetValue("Content Type").ToString();
                     }
-                    result = String.Create(type);
-                    return true;
+                    if(type != null)
+                    {
+                        result = String.Create(type);
+                        Console.WriteLine($"MIME Type = {result->Read()}");
+                        return true;
+                    }
+                    
+                    return false;
                 }),
                 ReadFromFile = new FnPtr<FileSystemReadFromFileCallback>((handle, data, len) =>
                 {
@@ -174,14 +169,31 @@ namespace ClassicUO.Game.UI
                     // data sbyte*
                     // len long
 
-                    ReadFile((IntPtr)handle.ToPointer(), data, (int)len, out int rededSize, (IntPtr)0);
-
-                    return rededSize;
+                    data = (sbyte*)handle;
+                    return len;
                 }),
                 OpenFile = new FnPtr<FileSystemOpenFileCallback>((path, allowWrite) =>
                 {
                     Console.WriteLine("Open File");
-                    IntPtr ptr = CreateFile(path->Read(), FileAccess.ReadWrite, FileShare.Read, (IntPtr)0, FileMode.Open, FileAttributes.Normal, (IntPtr)0);
+                    var fullPath = Path.Combine(assetPath, path->Read());
+                    if (!File.Exists(fullPath))
+                    {
+                        return Ultralight.InvalidFileHandle;
+                    }
+
+                    fileSize = (int)new FileInfo(fullPath).Length;
+                    byte[] p = new byte[fileSize];
+
+                    IntPtr ptr;
+
+                    using(FileStream fs = File.Open(fullPath, FileMode.Open, FileAccess.ReadWrite))
+                    {
+                        fs.Read(p, 0, fileSize);
+                    }
+
+                    ptr = Marshal.AllocHGlobal(fileSize);
+
+                    Marshal.Copy(p, 0, ptr, fileSize);
 
                     return (UIntPtr)ptr.ToPointer();
                 }),
