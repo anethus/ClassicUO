@@ -6,6 +6,9 @@ using System;
 using System.IO;
 using ImpromptuNinjas.UltralightSharp.Enums;
 using String = ImpromptuNinjas.UltralightSharp.String;
+using System.Runtime.InteropServices;
+using System.Text;
+using Microsoft.Win32;
 
 namespace ClassicUO.Game.UI
 {
@@ -47,6 +50,29 @@ namespace ClassicUO.Game.UI
         /// </summary>
         private static Texture2D _texture;
 
+        private static FileSystem fileSystem;
+
+        [DllImport("kernel32", CharSet = CharSet.Auto, SetLastError = true)]
+        internal static extern IntPtr CreateFile(
+           string fileName,
+           FileAccess dwDesiredAccess,
+           FileShare dwShareMode,
+           IntPtr securityAttrs_MustBeZero,
+           FileMode dwCreationDisposition,
+           FileAttributes dwFlagsAndAttributes,
+           IntPtr hTemplateFile_MustBeZero);
+
+        [DllImport("kernel32", SetLastError = true)]
+        internal static extern int ReadFile(
+           IntPtr handle,
+           sbyte* bytes,
+           int numBytesToRead,
+           out int numBytesRead,
+           IntPtr overlapped_MustBeZero);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool GetFileSizeEx(UIntPtr hFile, out long lpFileSize);
+
         /// <summary>
         /// Initialize Ultralight
         /// </summary>
@@ -85,6 +111,10 @@ namespace ClassicUO.Game.UI
                 }
             }
 
+            BuildFilesystem();
+
+            Ultralight.SetFileSystem(fileSystem);
+
             // Set Font Loader
             AppCore.EnablePlatformFontLoader();
 
@@ -100,10 +130,64 @@ namespace ClassicUO.Game.UI
             // Create Renderer
             _renderer = ImpromptuNinjas.UltralightSharp.Renderer.Create(_cfg);
             _sessionName = String.Create("ClassicUO");
-            _session = Session.Create(_renderer, false, _sessionName);
+            _session = Session.Create(_renderer, true, _sessionName);
 
         }
 
+        public static void BuildFilesystem()
+        {
+            fileSystem = new FileSystem
+            {
+                CloseFile = new FnPtr<FileSystemCloseFileCallback>((handle) =>
+                {
+                    Console.WriteLine("Close file");
+                    handle = Ultralight.InvalidFileHandle;
+                }),
+                FileExists = new FnPtr<FileSystemFileExistsCallback>((path) =>
+                {
+                    Console.WriteLine("File exist check");
+                    return true;
+                }),
+                GetFileSize = new FnPtr<FileSystemGetFileSizeCallback>((handler, result) =>
+                {
+                    Console.WriteLine("Get File Size");
+                    var r = GetFileSizeEx(handler, out long size);
+                    *result = size;
+                    return r;
+                }),
+                GetFileMimeType = new FnPtr<FileSystemGetFileMimeTypeCallback>((path, result) =>
+                {
+                    Console.WriteLine("Get MIME type");
+                    RegistryKey key = Registry.ClassesRoot.OpenSubKey(".html");
+                    string type = "application/unknown";
+                    if (key != null)
+                    {
+                        type = key.GetValue("Content Type").ToString();
+                    }
+                    result = String.Create(type);
+                    return true;
+                }),
+                ReadFromFile = new FnPtr<FileSystemReadFromFileCallback>((handle, data, len) =>
+                {
+                    Console.WriteLine("Read From File");
+                    // handle UIntPtr
+                    // data sbyte*
+                    // len long
+
+                    ReadFile((IntPtr)handle.ToPointer(), data, (int)len, out int rededSize, (IntPtr)0);
+
+                    return rededSize;
+                }),
+                OpenFile = new FnPtr<FileSystemOpenFileCallback>((path, allowWrite) =>
+                {
+                    Console.WriteLine("Open File");
+                    IntPtr ptr = CreateFile(path->Read(), FileAccess.ReadWrite, FileShare.Read, (IntPtr)0, FileMode.Open, FileAttributes.Normal, (IntPtr)0);
+
+                    return (UIntPtr)ptr.ToPointer();
+                }),
+            };
+        }
+        
         /// <summary>
         /// Draw Loaded Page
         /// </summary>
@@ -170,6 +254,16 @@ namespace ClassicUO.Game.UI
                 _view->LoadUrl(urlString);
                 urlString->Destroy();
             }
+
+            _view->SetFinishLoadingCallback((data, caller, frameId, isMainFrame, url) => {
+                Console.WriteLine($"Loading Finished, URL: 0x{(ulong)url:X8}  {url->Read()}");
+
+            }, null);
+
+            _view->SetFailLoadingCallback((data, caller, frameId, isMainFrame, url, desc, errorDomain, errorCode) =>
+            {
+                Console.WriteLine($"Loading Faild, URL: {url->Read()} Error: [{errorCode}] {desc->Read()} - {errorDomain->Read()}");
+            }, null);
         }
 
         /// <summary>
@@ -194,6 +288,29 @@ namespace ClassicUO.Game.UI
                 y,
                 MouseButton.Left);
             _view->FireMouseEvent(evt);
+        }
+
+        /// <summary>
+        /// Keyboard Char send
+        /// </summary>
+        /// <param name="key">Key Char</param>
+        /// <param name="mode">Modifiers</param>
+        public void KeyboardChar(char key, uint mode)
+        {
+            String* text = String.Create(key.ToString());
+            KeyEvent* evt = KeyEvent.Create(
+                KeyEventType.Char,
+                mode,
+                0,
+                0,
+                text,
+                null,
+                false,
+                false,
+                false
+             );
+
+            _view->FireKeyEvent(evt);
         }
 
         /// <summary>
