@@ -31,15 +31,18 @@
 #endregion
 
 using System;
-using System.IO;
+using System.Text;
 using System.Xml;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
+using ClassicUO.Game.Managers;
+using ClassicUO.Game.Scenes;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.Input;
 using ClassicUO.IO.Resources;
-using ClassicUO.Utility;
+using ClassicUO.Renderer;
 using Microsoft.Xna.Framework;
+using SDL2;
 
 namespace ClassicUO.Game.UI.Gumps
 {
@@ -48,11 +51,18 @@ namespace ClassicUO.Game.UI.Gumps
         private GumpPic _background;
         private SpellDefinition _spell;
 
+        private MacroManager mm;
+
+        private string keyCode;
+        public bool ShowEdit => Keyboard.Ctrl && Keyboard.Alt;
+
         public UseSpellButtonGump() : base(0, 0)
         {
             CanMove = true;
             AcceptMouseInput = true;
             CanCloseWithRightClick = true;
+
+            mm = Client.Game.GetScene<GameScene>().Macros;
         }
 
         public UseSpellButtonGump(SpellDefinition spell) : this()
@@ -86,6 +96,65 @@ namespace ClassicUO.Game.UI.Gumps
             GroupMatrixWidth = 44;
             GroupMatrixHeight = 44;
             AnchorType = ANCHOR_TYPE.SPELL;
+        }
+
+        public override bool Draw(UltimaBatcher2D batcher, int x, int y)
+        {
+            base.Draw(batcher, x, y);
+
+            if (ShowEdit)
+            {
+                ResetHueVector();
+
+                UOTexture lock_texture = GumpsLoader.Instance.GetTexture(0x1086);
+
+                if (lock_texture != null)
+                {
+                    lock_texture.Ticks = Time.Ticks;
+
+                    if (UIManager.MouseOverControl != null && (UIManager.MouseOverControl == this || UIManager.MouseOverControl.RootParent == this))
+                    {
+                        HueVector.X = 34;
+                        HueVector.Y = 1;
+                    }
+
+                    batcher.Draw2D(lock_texture, x + (Width - lock_texture.Width), y, ref HueVector);
+                }
+            }
+
+            if (!string.IsNullOrEmpty(keyCode))
+            {
+
+                batcher.DrawString(Fonts.Bold, keyCode.ToString(), x + 5, y + 5, ref HueVector);
+
+            }
+            else
+            {
+                SetName();
+            }
+
+            return true;
+        }
+
+        private void SetName()
+        {
+            var macro = mm.FindMacro(_spell?.Name);
+            if (macro != null)
+            {
+                var key = macro.Key;
+                if (key != SDL.SDL_Keycode.SDLK_UNKNOWN)
+                {
+                    StringBuilder keyName = new StringBuilder();
+                    if (macro.Shift)
+                        keyName.Append("Sft+");
+                    if (macro.Ctrl)
+                        keyName.Append("Ctr+");
+                    if (macro.Alt)
+                        keyName.Append("Alt+");
+                    keyName.Append(macro.Key.ToString().Replace("SDLK_", "").ToUpper());
+                    keyCode = keyName.ToString();
+                }
+            }
         }
 
         private static int GetSpellTooltip(int id)
@@ -146,6 +215,17 @@ namespace ClassicUO.Game.UI.Gumps
             base.OnMouseUp(x, y, button);
 
             Point offset = Mouse.LDragOffset;
+
+            if (button == MouseButtonType.Left && ShowEdit)
+            {
+                keyCode = null;
+                Macro mCast = Macro.CreateFastMacro(_spell.Name, MacroType.CastSpell, (MacroSubType)_spell.ID + 61);
+                if (mm.FindMacro(_spell.Name) == null)
+                {
+                    mm.MoveToBack(mCast);
+                }
+                GameActions.OpenMacroGump(_spell.Name);
+            }
 
             if (ProfileManager.CurrentProfile.CastSpellsByOneClick && button == MouseButtonType.Left && Math.Abs(offset.X) < 5 && Math.Abs(offset.Y) < 5)
             {

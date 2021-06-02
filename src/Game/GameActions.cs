@@ -75,6 +75,21 @@ namespace ClassicUO.Game
             Socket.Send(new PChangeWarMode(war));
         }
 
+        public static void OpenMacroGump(string name)
+        {
+            MacroGump macroGump = UIManager.GetGump<MacroGump>();
+
+            if (macroGump == null)
+            {
+                UIManager.Add(new MacroGump(name));
+            }
+            else
+            {
+                macroGump.SetInScreen();
+                macroGump.BringOnTop();
+            }
+        }
+
         public static void OpenPaperdoll(uint serial)
         {
             PaperDollGump paperDollGump = UIManager.GetGump<PaperDollGump>(serial);
