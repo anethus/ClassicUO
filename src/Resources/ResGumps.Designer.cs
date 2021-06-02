@@ -2745,6 +2745,14 @@ namespace ClassicUO.Resources {
             }
         }
         
+        ///   Looks up a localized string similar to Open Macro Settings.
+        /// </summary>
+        public static string OpenMacroSettings {
+            get {
+                return ResourceManager.GetString("OpenMacroSettings", resourceCulture);
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to &lt;out of range&gt;.
         /// </summary>

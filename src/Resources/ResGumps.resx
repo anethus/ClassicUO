@@ -1552,4 +1552,10 @@ Client version: '{0}'</value>
   <data name="DragSelectStartingPosY" xml:space="preserve">
     <value>Starting Y position of health bars</value>
   </data>
+  <data name="OpenMacroSettings" xml:space="preserve">
+    <value>Open Macro Settings</value>
+  </data>
+  <data name="EnableFastSpellsAssign" xml:space="preserve">
+    <value>Enable Fast Spells Assign (Ctrl + Alt)</value>
+  </data>
 </root>
