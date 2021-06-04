@@ -110,7 +110,7 @@ namespace ClassicUO.Game
             }
         }
 
-        public static void OpenSettings()
+        public static void OpenSettings(int page = 0)
         {
             OptionsGump opt = UIManager.GetGump<OptionsGump>();
 
@@ -123,6 +123,7 @@ namespace ClassicUO.Game
                 };
 
                 UIManager.Add(optionsGump);
+                optionsGump.ChangePage(page);
                 optionsGump.SetInScreen();
             }
             else

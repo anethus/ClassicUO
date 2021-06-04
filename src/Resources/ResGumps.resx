@@ -1447,4 +1447,7 @@ Client version: '{0}'</value>
   <data name="TerrainShadowsLevel" xml:space="preserve">
     <value>Terrain shadows level:</value>
   </data>
+  <data name="OpenMacroSettings" xml:space="preserve">
+    <value>Open Macro Settings</value>
+  </data>
 </root>

@@ -6,12 +6,14 @@ namespace ClassicUO.Game.UI.Gumps
 {
     internal class MacroGump : Gump
     {
-
         public MacroGump(string name) : base(0, 0)
         {
-            AlphaBlendControl partyGumpBackground = new AlphaBlendControl
+            CanMove = true;
+            CanCloseWithRightClick = true;
+
+            AlphaBlendControl macroGumpBackground = new AlphaBlendControl
             {
-                Width = 300,
+                Width = 260,
                 Height = 200,
                 X = ProfileManager.CurrentProfile.GameWindowSize.X / 2 - 125,
                 Y = 150,
@@ -20,19 +22,19 @@ namespace ClassicUO.Game.UI.Gumps
 
             Label text = new Label($"Edit macro: {name}", true, 15)
             {
-                X = ProfileManager.CurrentProfile.GameWindowSize.X / 2 - 115,
-                Y = partyGumpBackground.Y + 5
+                X = ProfileManager.CurrentProfile.GameWindowSize.X / 2 - 105,
+                Y = macroGumpBackground.Y + 2
             };
 
-            Add(partyGumpBackground);
+            Add(macroGumpBackground);
             Add(text);
 
             Add
             (
-                new MacroControl(name)
+                new MacroControl(name, true)
                 {
-                    X = partyGumpBackground.X + 20,
-                    Y = partyGumpBackground.Y + 20,
+                    X = macroGumpBackground.X + 20,
+                    Y = macroGumpBackground.Y + 20,
                 }
             );
 

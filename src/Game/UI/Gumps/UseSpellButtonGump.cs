@@ -31,7 +31,6 @@
 #endregion
 
 using System;
-using System.Text;
 using System.Xml;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
@@ -42,7 +41,6 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Renderer;
 using Microsoft.Xna.Framework;
-using SDL2;
 
 namespace ClassicUO.Game.UI.Gumps
 {
@@ -51,9 +49,13 @@ namespace ClassicUO.Game.UI.Gumps
         private GumpPic _background;
         private SpellDefinition _spell;
 
-        private MacroManager mm;
+        private readonly MacroManager mm;
 
-        private string keyCode;
+        // TODO: Add resto of spells offset by type
+        private const int MAGERY_SPELLS_OFFSET = 61;
+        private const int NECRO_SPELLS_OFFSET = 125;
+        private const int CHIVAL_SPELLS_OFFSETS = 142;
+
         public bool ShowEdit => Keyboard.Ctrl && Keyboard.Alt;
 
         public UseSpellButtonGump() : base(0, 0)
@@ -122,39 +124,40 @@ namespace ClassicUO.Game.UI.Gumps
                 }
             }
 
-            if (!string.IsNullOrEmpty(keyCode))
-            {
-
-                batcher.DrawString(Fonts.Bold, keyCode.ToString(), x + 5, y + 5, ref HueVector);
-
-            }
-            else
-            {
-                SetName();
-            }
-
             return true;
         }
 
-        private void SetName()
+        private int GetSpellsGroup()
         {
-            var macro = mm.FindMacro(_spell?.Name);
-            if (macro != null)
+            var spellsGroup = _spell.ID / 100;
+
+            switch (spellsGroup)
             {
-                var key = macro.Key;
-                if (key != SDL.SDL_Keycode.SDLK_UNKNOWN)
-                {
-                    StringBuilder keyName = new StringBuilder();
-                    if (macro.Shift)
-                        keyName.Append("Sft+");
-                    if (macro.Ctrl)
-                        keyName.Append("Ctr+");
-                    if (macro.Alt)
-                        keyName.Append("Alt+");
-                    keyName.Append(macro.Key.ToString().Replace("SDLK_", "").ToUpper());
-                    keyCode = keyName.ToString();
-                }
+                case (int)SpellBookType.Magery:
+                    return MAGERY_SPELLS_OFFSET;
+                case (int)SpellBookType.Necromancy:
+                    return NECRO_SPELLS_OFFSET;
+                case (int)SpellBookType.Chivalry:
+                    return CHIVAL_SPELLS_OFFSETS;
+                case (int)SpellBookType.Bushido:
+                    // Bushido
+                    break;
+                case (int)SpellBookType.Ninjitsu:
+                    // Ninjitsu
+                    break;
+                case (int)SpellBookType.Spellweaving:
+                    // Spellweaving
+                    break;
+                default:
+                    // Here can be Mysticism or Mastery
+                    break;
             }
+            return 0;
+        }
+
+        private int GetSpellsId()
+        {
+            return _spell.ID % 100;
         }
 
         private static int GetSpellTooltip(int id)
@@ -218,8 +221,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             if (button == MouseButtonType.Left && ShowEdit)
             {
-                keyCode = null;
-                Macro mCast = Macro.CreateFastMacro(_spell.Name, MacroType.CastSpell, (MacroSubType)_spell.ID + 61);
+                Macro mCast = Macro.CreateFastMacro(_spell.Name, MacroType.CastSpell, (MacroSubType)GetSpellsId() + GetSpellsGroup());
                 if (mm.FindMacro(_spell.Name) == null)
                 {
                     mm.MoveToBack(mCast);
