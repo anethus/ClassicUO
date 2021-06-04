@@ -131,12 +131,15 @@ namespace ClassicUO.Game.UI.Controls
                 );
             }
 
+            var scrollAreaH = isFastAssign ? 80 : 280;
+            var scrollAreaW = isFastAssign ? 230 : 280;
+
             ScrollArea area = new ScrollArea
             (
                 10,
                 _hotkeyBox.Bounds.Bottom + 80,
-                280,
-                280,
+                scrollAreaW,
+                scrollAreaH,
                 true
             );
 
@@ -329,11 +332,9 @@ namespace ClassicUO.Game.UI.Controls
                     UIManager.Add(macroButtonGump);
                     break;
                 case (int)buttonsOption.OpenMacroOptions:
-                    UIManager.Gumps.OfType<MacroButtonGump>().FirstOrDefault(s => s._macro == Macro)?.Dispose();
+                    UIManager.Gumps.OfType<MacroGump>().FirstOrDefault()?.Dispose();
 
                     GameActions.OpenSettings(4);
-                    break;
-                default:
                     break;
             }
         }

@@ -79,15 +79,8 @@ namespace ClassicUO.Game
         {
             MacroGump macroGump = UIManager.GetGump<MacroGump>();
 
-            if (macroGump == null)
-            {
-                UIManager.Add(new MacroGump(name));
-            }
-            else
-            {
-                macroGump.SetInScreen();
-                macroGump.BringOnTop();
-            }
+            macroGump?.Dispose();
+            UIManager.Add(new MacroGump(name));
         }
 
         public static void OpenPaperdoll(uint serial)

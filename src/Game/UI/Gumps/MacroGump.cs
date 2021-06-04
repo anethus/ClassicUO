@@ -4,7 +4,7 @@ using ClassicUO.Game.UI.Controls;
 
 namespace ClassicUO.Game.UI.Gumps
 {
-    internal class MacroGump : Gump
+    internal sealed class MacroGump : Gump
     {
         public MacroGump(string name) : base(0, 0)
         {
