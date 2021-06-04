@@ -51,12 +51,20 @@ namespace ClassicUO.Game.UI.Gumps
 
         private readonly MacroManager mm;
 
-        // TODO: Add resto of spells offset by type
+        #region MacroSubType Offsets
+        // Offset for MacroSubType
         private const int MAGERY_SPELLS_OFFSET = 61;
         private const int NECRO_SPELLS_OFFSET = 125;
         private const int CHIVAL_SPELLS_OFFSETS = 142;
+        private const int BUSHIDO_SPELLS_OFFSETS = 152;
+        private const int NINJITSU_SPELLS_OFFSETS = 158;
+        private const int SPELLWEAVING_SPELLS_OFFSETS = 166;
+        private const int MYSTICISM_SPELLS_OFFSETS = 182;
+        private const int MASTERY_SPELLS_OFFSETS = 198;
 
-        public bool ShowEdit => Keyboard.Ctrl && Keyboard.Alt;
+        #endregion
+
+        public bool ShowEdit => Keyboard.Ctrl && Keyboard.Alt && ProfileManager.CurrentProfile.FastSpellsAssign;
 
         public UseSpellButtonGump() : base(0, 0)
         {
@@ -140,24 +148,31 @@ namespace ClassicUO.Game.UI.Gumps
                 case (int)SpellBookType.Chivalry:
                     return CHIVAL_SPELLS_OFFSETS;
                 case (int)SpellBookType.Bushido:
-                    // Bushido
-                    break;
+                    return BUSHIDO_SPELLS_OFFSETS;
                 case (int)SpellBookType.Ninjitsu:
-                    // Ninjitsu
-                    break;
+                    return NINJITSU_SPELLS_OFFSETS;
                 case (int)SpellBookType.Spellweaving:
-                    // Spellweaving
-                    break;
+                    // Mysticicsm Spells Id starts from 678 and Spellweaving ends at 618
+                    if(_spell.ID > 620)
+                    {
+                        return MYSTICISM_SPELLS_OFFSETS;
+                    }
+                    return SPELLWEAVING_SPELLS_OFFSETS;
+                case (int)SpellBookType.Mastery - 1:
+                    return MASTERY_SPELLS_OFFSETS;
                 default:
-                    // Here can be Mysticism or Mastery
                     break;
             }
-            return 0;
+            return -1;
         }
 
         private int GetSpellsId()
         {
-            return _spell.ID % 100;
+            var rawSpellId = _spell.ID % 100;
+            // Mysticism Spells Id start from 678
+            if (rawSpellId > 78)
+                return rawSpellId - 78;
+            return rawSpellId;
         }
 
         private static int GetSpellTooltip(int id)
