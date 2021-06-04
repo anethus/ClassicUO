@@ -49,7 +49,7 @@ namespace ClassicUO.Game.UI.Gumps
         private GumpPic _background;
         private SpellDefinition _spell;
 
-        private readonly MacroManager mm;
+        private readonly MacroManager _mm;
 
         #region MacroSubType Offsets
         // Offset for MacroSubType
@@ -72,7 +72,7 @@ namespace ClassicUO.Game.UI.Gumps
             AcceptMouseInput = true;
             CanCloseWithRightClick = true;
 
-            mm = Client.Game.GetScene<GameScene>().Macros;
+            _mm = Client.Game.GetScene<GameScene>().Macros;
         }
 
         public UseSpellButtonGump(SpellDefinition spell) : this()
@@ -116,11 +116,11 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 ResetHueVector();
 
-                UOTexture lock_texture = GumpsLoader.Instance.GetTexture(0x1086);
+                UOTexture lockTexture = GumpsLoader.Instance.GetTexture(0x1086);
 
-                if (lock_texture != null)
+                if (lockTexture != null)
                 {
-                    lock_texture.Ticks = Time.Ticks;
+                    lockTexture.Ticks = Time.Ticks;
 
                     if (UIManager.MouseOverControl != null && (UIManager.MouseOverControl == this || UIManager.MouseOverControl.RootParent == this))
                     {
@@ -128,7 +128,7 @@ namespace ClassicUO.Game.UI.Gumps
                         HueVector.Y = 1;
                     }
 
-                    batcher.Draw2D(lock_texture, x + (Width - lock_texture.Width), y, ref HueVector);
+                    batcher.Draw2D(lockTexture, x + (Width - lockTexture.Width), y, ref HueVector);
                 }
             }
 
@@ -160,8 +160,6 @@ namespace ClassicUO.Game.UI.Gumps
                     return SPELLWEAVING_SPELLS_OFFSETS;
                 case (int)SpellBookType.Mastery - 1:
                     return MASTERY_SPELLS_OFFSETS;
-                default:
-                    break;
             }
             return -1;
         }
@@ -237,9 +235,9 @@ namespace ClassicUO.Game.UI.Gumps
             if (button == MouseButtonType.Left && ShowEdit)
             {
                 Macro mCast = Macro.CreateFastMacro(_spell.Name, MacroType.CastSpell, (MacroSubType)GetSpellsId() + GetSpellsGroup());
-                if (mm.FindMacro(_spell.Name) == null)
+                if (_mm.FindMacro(_spell.Name) == null)
                 {
-                    mm.MoveToBack(mCast);
+                    _mm.MoveToBack(mCast);
                 }
                 GameActions.OpenMacroGump(_spell.Name);
             }
