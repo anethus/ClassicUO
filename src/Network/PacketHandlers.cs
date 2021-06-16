@@ -809,6 +809,19 @@ namespace ClassicUO.Network
             {
                 NetClient.Socket.Send(new PShowPublicHouseContent(ProfileManager.CurrentProfile.ShowHouseContent));
             }
+
+
+            PPluginSendAllSpells spellsPacket = new PPluginSendAllSpells();
+            PPluginSendAllSkills skillsPacket = new PPluginSendAllSkills();
+
+            byte[] buffer = spellsPacket.ToArray();
+            int len = spellsPacket.Length;
+
+            Plugin.ProcessRecvPacket(buffer, ref len);
+
+            buffer = skillsPacket.ToArray();
+            len = skillsPacket.Length;
+            Plugin.ProcessRecvPacket(buffer, ref len);
         }
 
         private static void Talk(ref PacketBufferReader p)
@@ -3644,7 +3657,17 @@ namespace ClassicUO.Network
 
             serial |= 0x80000000;
 
-            World.Mobiles.Replace(owner, serial);
+            if (World.Mobiles.Remove(owner.Serial))
+            {
+                for (LinkedObject i = owner.Items; i != null; i = i.Next)
+                {
+                    Item it = (Item)i;
+                    it.Container = serial;
+                }
+
+                World.Mobiles[serial] = owner;
+                owner.Serial = serial;
+            }
 
             if (SerialHelper.IsValid(corpseSerial))
             {
