@@ -99,8 +99,6 @@ namespace ClassicUO.Game.Map
                         sbyte z = cells[pos].Z;
 
                         Land land = Land.Create(tileID);
-                        land.AverageZ = z;
-                        land.MinZ = z;
 
                         ushort tileX = (ushort) (bx + x);
 
@@ -392,7 +390,7 @@ namespace ClassicUO.Game.Map
                     {
                         GameObject next = first.TNext;
 
-                        if (first != World.Player)
+                        if (!ReferenceEquals(first, World.Player))
                         {
                             first.Destroy();
                         }
@@ -434,7 +432,7 @@ namespace ClassicUO.Game.Map
                     {
                         GameObject next = first.TNext;
 
-                        if (first != World.Player)
+                        if (!ReferenceEquals(first, World.Player))
                         {
                             first.Destroy();
                         }

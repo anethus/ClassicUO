@@ -117,9 +117,7 @@ namespace ClassicUO.Game.Scenes
             NetClient.LoginSocket.Connected += NetClient_Connected;
             NetClient.LoginSocket.Disconnected += Login_NetClient_Disconnected;
 
-            int music = Client.Version >= ClientVersion.CV_7000 ? 78 : Client.Version > ClientVersion.CV_308Z ? 0 : 8;
-
-            Audio.PlayMusic(music, false, true);
+            Audio.PlayMusic(Audio.LoginMusicIndex, false, true);
 
             if ((Settings.GlobalSettings.AutoLogin || Reconnect) && CurrentLoginStep != LoginSteps.Main || CUOEnviroment.SkipLoginScreen)
             {
@@ -215,12 +213,12 @@ namespace ClassicUO.Game.Scenes
 
         private Gump GetGumpForStep()
         {
-            foreach (Item item in World.Items)
+            foreach (Item item in World.Items.Values)
             {
                 World.RemoveItem(item);
             }
 
-            foreach (Mobile mobile in World.Mobiles)
+            foreach (Mobile mobile in World.Mobiles.Values)
             {
                 World.RemoveMobile(mobile);
             }

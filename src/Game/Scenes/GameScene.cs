@@ -613,8 +613,8 @@ namespace ClassicUO.Game.Scenes
             }
 
 
-            UpdateTextServerEntities(World.Mobiles, true);
-            UpdateTextServerEntities(World.Items, false);
+            UpdateTextServerEntities(World.Mobiles.Values, true);
+            UpdateTextServerEntities(World.Items.Values, false);
 
             _renderIndex++;
 
@@ -1007,7 +1007,7 @@ namespace ClassicUO.Game.Scenes
 
 
             batcher.Begin(null, matrix);
-
+            batcher.SetBrightlight(ProfileManager.CurrentProfile.TerrainShadowsLevel * 0.1f);
 
             bool usecircle = ProfileManager.CurrentProfile.UseCircleOfTransparency;
 

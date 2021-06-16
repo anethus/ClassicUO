@@ -68,14 +68,11 @@
     <EmbeddedResource Include="shaders\xBR.fxc" />
   </ItemGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="cuoapi">
-      <HintPath>..\external\api\cuoapi.dll</HintPath>
-    </Reference>
+  <ItemGroup Condition="$(TargetFramework.StartsWith('net4'))">
     <Reference Include="System.IO.Compression" />
   </ItemGroup>
 
@@ -85,6 +82,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\external\FNA\FNA.Core.csproj" />
+    <ProjectReference Include="..\external\MP3Sharp\MP3Sharp\MP3Sharp.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="cuoapi">
+      <HintPath>..\external\cuoapi\cuoapi.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
   <ItemGroup>

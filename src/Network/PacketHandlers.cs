@@ -809,6 +809,19 @@ namespace ClassicUO.Network
             {
                 NetClient.Socket.Send(new PShowPublicHouseContent(ProfileManager.CurrentProfile.ShowHouseContent));
             }
+
+
+            PPluginSendAllSpells spellsPacket = new PPluginSendAllSpells();
+            PPluginSendAllSkills skillsPacket = new PPluginSendAllSkills();
+
+            byte[] buffer = spellsPacket.ToArray();
+            int len = spellsPacket.Length;
+
+            Plugin.ProcessRecvPacket(buffer, ref len);
+
+            buffer = skillsPacket.ToArray();
+            len = skillsPacket.Length;
+            Plugin.ProcessRecvPacket(buffer, ref len);
         }
 
         private static void Talk(ref PacketBufferReader p)
@@ -1592,7 +1605,7 @@ namespace ClassicUO.Network
             {
                 Client.Game.GetScene<GameScene>()?.Weather?.Reset();
 
-                Client.Game.Scene.Audio.PlayMusic(42, true);
+                Client.Game.Scene.Audio.PlayMusic(Client.Game.Scene.Audio.DeathMusicIndex, true);
 
                 if (ProfileManager.CurrentProfile.EnableDeathScreen)
                 {
@@ -3644,7 +3657,17 @@ namespace ClassicUO.Network
 
             serial |= 0x80000000;
 
-            World.Mobiles.Replace(owner, serial);
+            if (World.Mobiles.Remove(owner.Serial))
+            {
+                for (LinkedObject i = owner.Items; i != null; i = i.Next)
+                {
+                    Item it = (Item)i;
+                    it.Container = serial;
+                }
+
+                World.Mobiles[serial] = owner;
+                owner.Serial = serial;
+            }
 
             if (SerialHelper.IsValid(corpseSerial))
             {
@@ -6335,7 +6358,6 @@ namespace ClassicUO.Network
             int page = 0;
 
 
-            bool applyCheckerTrans = false;
             bool textBoxFocused = false;
 
             for (int cnt = 0; cnt < cmdlen; cnt++)
@@ -6359,8 +6381,9 @@ namespace ClassicUO.Network
                 }
                 else if (string.Equals(entry, "checkertrans", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    applyCheckerTrans = true;
-                    gump.Add(new CheckerTrans(gparams), page);
+                    var checkerTrans = new CheckerTrans(gparams);
+                    gump.Add(checkerTrans, page);
+                    ApplyTrans(gump, page, checkerTrans.X, checkerTrans.Y, checkerTrans.Width, checkerTrans.Height);
                 }
                 else if (string.Equals(entry, "croppedtext", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -6724,57 +6747,6 @@ namespace ClassicUO.Network
                 }
             }
 
-            if (applyCheckerTrans)
-            {
-                bool applyTrans(int ii, int current_page)
-                {
-                    bool transparent = false;
-
-                    for (; ii < gump.Children.Count; ii++)
-                    {
-                        Control child = gump.Children[ii];
-
-                        if (current_page == 0)
-                        {
-                            current_page = child.Page;
-                        }
-
-                        bool canDraw = /*current_page == 0 || child.Page == 0 ||*/
-                            current_page == child.Page;
-
-                        if (canDraw && child.IsVisible && child is CheckerTrans)
-                        {
-                            transparent = true;
-
-                            continue;
-                        }
-
-                        child.Alpha = transparent ? 0.5f : 0;
-                    }
-
-                    return transparent;
-                }
-
-
-                bool trans = applyTrans(0, 0);
-                float alpha = trans ? 0.5f : 0;
-
-                for (int i = 0; i < gump.Children.Count; i++)
-                {
-                    Control cc = gump.Children[i];
-
-                    if (cc is CheckerTrans)
-                    {
-                        trans = applyTrans(i + 1, cc.Page);
-                        alpha = trans ? 0.5f : 0;
-                    }
-                    else
-                    {
-                        cc.Alpha = alpha;
-                    }
-                }
-            }
-
             if (mustBeAdded)
             {
                 UIManager.Add(gump);
@@ -6784,6 +6756,24 @@ namespace ClassicUO.Network
             gump.SetInScreen();
 
             return gump;
+        }
+
+        private static void ApplyTrans(Gump gump, int current_page, int x, int y, int width, int height)
+        {
+            int x2 = x + width;
+            int y2 = y + height;
+            for (int i = 0; i < gump.Children.Count; i++)
+            {
+                Control child = gump.Children[i];
+                bool canDraw = child.Page == 0 || current_page == child.Page;
+
+                bool overlap = (x < child.X + child.Width) && (child.X < x2) && (y < child.Y + child.Height) && (child.Y < y2);
+
+                if (canDraw && child.IsVisible && overlap)
+                {
+                    child.Alpha = 0.5f;
+                }
+            }
         }
 
 

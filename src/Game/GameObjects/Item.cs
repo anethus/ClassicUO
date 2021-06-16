@@ -136,7 +136,7 @@ namespace ClassicUO.Game.GameObjects
         {
         }
 
-        public bool IsCoin => Graphic >= 0x0EEA && Graphic <= 0x0EF2;
+        public bool IsCoin => Graphic == 0x0EEA || Graphic == 0x0EED || Graphic == 0x0EF0;
 
         public ushort DisplayedGraphic
         {
@@ -314,6 +314,7 @@ namespace ClassicUO.Game.GameObjects
 
             ref UOFileIndex entry = ref MultiLoader.Instance.GetValidRefEntry(Graphic);
             MultiLoader.Instance.File.SetData(entry.Address, entry.FileSize);
+            bool movable = false;
 
             if (MultiLoader.Instance.IsUOP)
             {
@@ -387,6 +388,11 @@ namespace ClassicUO.Game.GameObjects
                                 m.State = CUSTOM_HOUSE_MULTI_OBJECT_FLAGS.CHMOF_DONT_REMOVE;
                                 m.AddToTile();
                                 house.Components.Add(m);
+
+                                if (m.ItemData.IsMultiMovable)
+                                {
+                                    movable = true;
+                                }
                             }
                             else if (i == 0)
                             {
@@ -447,6 +453,11 @@ namespace ClassicUO.Game.GameObjects
                         m.State = CUSTOM_HOUSE_MULTI_OBJECT_FLAGS.CHMOF_DONT_REMOVE;
                         m.AddToTile();
                         house.Components.Add(m);
+
+                        if (m.ItemData.IsMultiMovable)
+                        {
+                            movable = true;
+                        }
                     }
                     else if (i == 0)
                     {
@@ -462,6 +473,16 @@ namespace ClassicUO.Game.GameObjects
                 Width = maxX,
                 Height = maxY
             };
+
+            // hack to make baots movable.
+            // Mast is not the main center in bigger boats, so if we got a movable multi --> makes all multi movable
+            if (movable)
+            {
+                foreach (Multi m in house.Components)
+                {
+                    m.IsMovable = movable;
+                }
+            }
 
             MultiDistanceBonus = Math.Max(Math.Max(Math.Abs(minX), maxX), Math.Max(Math.Abs(minY), maxY));
 

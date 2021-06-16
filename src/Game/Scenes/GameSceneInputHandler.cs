@@ -41,6 +41,7 @@ using ClassicUO.Input;
 using ClassicUO.IO.Resources;
 using ClassicUO.Network;
 using ClassicUO.Resources;
+using ClassicUO.Utility;
 using Microsoft.Xna.Framework;
 using SDL2;
 using MathHelper = ClassicUO.Utility.MathHelper;
@@ -185,7 +186,7 @@ namespace ClassicUO.Game.Scenes
 
             Rectangle rect = useCHB ? new Rectangle(0, 0, HealthBarGumpCustom.HPB_BAR_WIDTH, HealthBarGumpCustom.HPB_HEIGHT_MULTILINE) : GumpsLoader.Instance.GetTexture(0x0804).Bounds;
 
-            foreach (Mobile mobile in World.Mobiles)
+            foreach (Mobile mobile in World.Mobiles.Values)
             {
                 if (ProfileManager.CurrentProfile.DragSelectHumanoidsOnly && !mobile.IsHuman)
                 {
@@ -611,7 +612,7 @@ namespace ClassicUO.Game.Scenes
                 switch (obj)
                 {
                     case Static st:
-                        string name = st.Name;
+                        string name = StringHelper.GetPluralAdjustedString(st.Name, st.ItemData.Count > 1);
 
                         if (string.IsNullOrEmpty(name))
                         {
