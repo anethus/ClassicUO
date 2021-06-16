@@ -613,8 +613,8 @@ namespace ClassicUO.Game.Scenes
             }
 
 
-            UpdateTextServerEntities(World.Mobiles, true);
-            UpdateTextServerEntities(World.Items, false);
+            UpdateTextServerEntities(World.Mobiles.Values, true);
+            UpdateTextServerEntities(World.Items.Values, false);
 
             _renderIndex++;
 
@@ -1007,7 +1007,7 @@ namespace ClassicUO.Game.Scenes
 
 
             batcher.Begin(null, matrix);
-
+            batcher.SetBrightlight(ProfileManager.CurrentProfile.TerrainShadowsLevel * 0.1f);
 
             bool usecircle = ProfileManager.CurrentProfile.UseCircleOfTransparency;
 
@@ -1027,18 +1027,27 @@ namespace ClassicUO.Game.Scenes
 
             int z = World.Player.Z + 5;
 
+            ushort hue = 0;
+
             for (int i = 0; i < _renderListCount; ++i)
             {
-                GameObject obj = _renderList[i];
+                ref var info = ref _renderList[i];
+
+                var obj = info.Object;
 
                 if (obj.Z <= _maxGroundZ)
                 {
                     GameObject.DrawTransparent = usecircle && obj.TransparentTest(z);
 
+                    hue = obj.Hue;
+                    obj.Hue = info.Hue;
+
                     if (obj.Draw(batcher, obj.RealScreenPosition.X, obj.RealScreenPosition.Y))
                     {
                         ++RenderedObjectsCount;
                     }
+
+                    obj.Hue = hue;
                 }
             }
 
@@ -1046,7 +1055,7 @@ namespace ClassicUO.Game.Scenes
             {
                 _multi.Draw(batcher, _multi.RealScreenPosition.X, _multi.RealScreenPosition.Y);
             }
-
+        
             // draw weather
             Weather.Draw(batcher, 0, 0);
             batcher.End();

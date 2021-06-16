@@ -54,7 +54,6 @@ namespace ClassicUO.Game.GameObjects
         private static int _startCharacterFeetY;
         private static int _characterFrameHeight;
 
-
         public override bool Draw(UltimaBatcher2D batcher, int posX, int posY)
         {
             ResetHueVector();
@@ -90,7 +89,7 @@ namespace ClassicUO.Game.GameObjects
                 HueVector.Z = 1f - AlphaHue / 255f;
             }
 
-            if (ProfileManager.CurrentProfile.HighlightGameObjects && SelectedObject.LastObject == this)
+            if (ProfileManager.CurrentProfile.HighlightGameObjects && ReferenceEquals(SelectedObject.LastObject, this))
             {
                 _viewHue = Constants.HIGHLIGHT_CURRENT_OBJECT_HUE;
                 HueVector.Y = 1;
@@ -145,7 +144,7 @@ namespace ClassicUO.Game.GameObjects
 
 
             bool isAttack = Serial == TargetManager.LastAttack;
-            bool isUnderMouse = TargetManager.IsTargeting && SelectedObject.LastObject == this;
+            bool isUnderMouse = TargetManager.IsTargeting && ReferenceEquals(SelectedObject.LastObject, this);
 
             if (Serial != World.Player.Serial)
             {
@@ -412,48 +411,25 @@ namespace ClassicUO.Game.GameObjects
                                 }
                             }
 
-                            // Seems like all Gargoyle equipment has the 'IsWeapon' flag
-                            if (seatData.Graphic != 0 && IsGargoyle /*&& item.ItemData.IsWeapon*/)
-                            {
-                                DrawInternal
-                                (
-                                    batcher,
-                                    this,
-                                    item,
-                                    drawX,
-                                    drawY,
-                                    IsFlipped,
-                                    animIndex,
-                                    false,
-                                    graphic,
-                                    GetGroupForAnimation(this, graphic, true),
-                                    dir,
-                                    isHuman,
-                                    true,
-                                    alpha: HueVector.Z,
-                                    forceUOP: true
-                                );
-                            }
-                            else
-                            {
-                                DrawInternal
-                                (
-                                    batcher,
-                                    this,
-                                    item,
-                                    drawX,
-                                    drawY,
-                                    IsFlipped,
-                                     animIndex, //item.AnimIndex,
-                                    false,
-                                    graphic,
-                                    animGroup,
-                                    dir,
-                                    isHuman,
-                                    false,
-                                    alpha: HueVector.Z
-                                );
-                            }
+                            DrawInternal
+                            (
+                                batcher,
+                                this,
+                                item,
+                                drawX,
+                                drawY,
+                                IsFlipped, 
+                                animIndex,
+                                false,
+                                graphic,
+                                isGargoyle /*&& item.ItemData.IsWeapon*/ && seatData.Graphic == 0 ? GetGroupForAnimation(this, graphic, true) : animGroup,
+                                dir,
+                                isHuman,
+                                false,
+                                false,
+                                isGargoyle,
+                                HueVector.Z
+                            );
                         }
                         else
                         {
@@ -579,7 +555,11 @@ namespace ClassicUO.Game.GameObjects
 
             int fc = direction.FrameCount;
 
-            if (fc > 0 && frameIndex >= fc || frameIndex < 0)
+            if (fc > 0 && frameIndex >= fc)
+            {
+                frameIndex = (sbyte) (fc - 1);
+            }
+            else if (frameIndex < 0)
             {
                 frameIndex = 0;
             }

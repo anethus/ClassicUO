@@ -59,6 +59,10 @@ namespace ClassicUO
         {
             CultureInfo.CurrentCulture = CultureInfo.InvariantCulture;
 
+#if !NETFRAMEWORK
+            DllMap.Initialise();
+#endif
+
             Log.Start(LogTypes.All);
 
             CUOEnviroment.GameThread = Thread.CurrentThread;
@@ -149,6 +153,29 @@ namespace ClassicUO
                 SetDllDirectory(libsPath);
             }
 
+            if (string.IsNullOrWhiteSpace(Settings.GlobalSettings.Language))
+            {
+                Log.Trace("language is not set. Trying to get the OS language.");
+                try
+                {
+                    Settings.GlobalSettings.Language = CultureInfo.InstalledUICulture.ThreeLetterWindowsLanguageName;
+
+                    if (string.IsNullOrWhiteSpace(Settings.GlobalSettings.Language))
+                    {
+                        Log.Warn("cannot read the OS language. Rolled back to ENU");
+                       
+                        Settings.GlobalSettings.Language = "ENU";
+                    }
+
+                    Log.Trace($"language set: '{Settings.GlobalSettings.Language}'");
+                }
+                catch
+                {
+                    Log.Warn("cannot read the OS language. Rolled back to ENU");
+                  
+                    Settings.GlobalSettings.Language = "ENU";
+                }
+            }
 
             if (string.IsNullOrWhiteSpace(Settings.GlobalSettings.UltimaOnlineDirectory))
             {
@@ -464,6 +491,28 @@ namespace ClassicUO
                     case "packetlog":
 
                         CUOEnviroment.PacketLog = true;
+
+                        break;
+
+                    case "language":
+
+                        switch (value?.ToUpperInvariant())
+                        {
+                            case "RUS": Settings.GlobalSettings.Language = "RUS"; break;
+                            case "FRA": Settings.GlobalSettings.Language = "FRA"; break;
+                            case "DEU": Settings.GlobalSettings.Language = "DEU"; break;
+                            case "ESP": Settings.GlobalSettings.Language = "ESP"; break;
+                            case "JPN": Settings.GlobalSettings.Language = "JPN"; break;
+                            case "KOR": Settings.GlobalSettings.Language = "KOR"; break;
+                            case "PTB": Settings.GlobalSettings.Language = "PTB"; break;
+                            case "ITA": Settings.GlobalSettings.Language = "ITA"; break;
+                            case "CHT": Settings.GlobalSettings.Language = "CHT"; break;
+                            default:
+                            
+                                Settings.GlobalSettings.Language = "ENU";
+                                break;
+
+                        }
 
                         break;
                 }

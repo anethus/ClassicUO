@@ -365,7 +365,7 @@ namespace ClassicUO.Game
                         type,
                         font,
                         hue,
-                        "ENU"
+                        Settings.GlobalSettings.Language
                     )
                 );
             }
@@ -409,7 +409,7 @@ namespace ClassicUO.Game
                 font,
                 entity == null ? TextType.SYSTEM : TextType.OBJECT,
                 unicode,
-                "ENU"
+                Settings.GlobalSettings.Language
             );
         }
 
@@ -727,7 +727,7 @@ namespace ClassicUO.Game
 
         public static void AllNames()
         {
-            foreach (Mobile mobile in World.Mobiles)
+            foreach (Mobile mobile in World.Mobiles.Values)
             {
                 if (mobile != World.Player)
                 {
@@ -735,7 +735,7 @@ namespace ClassicUO.Game
                 }
             }
 
-            foreach (Item item in World.Items)
+            foreach (Item item in World.Items.Values)
             {
                 if (item.IsCorpse)
                 {

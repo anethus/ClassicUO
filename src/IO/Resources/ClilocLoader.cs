@@ -30,11 +30,13 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using ClassicUO.Utility;
+using ClassicUO.Utility.Logging;
 
 namespace ClassicUO.IO.Resources
 {
@@ -50,12 +52,20 @@ namespace ClassicUO.IO.Resources
 
         public static ClilocLoader Instance => _instance ?? (_instance = new ClilocLoader());
 
-        public Task Load(string cliloc)
+        public Task Load(string lang)
         {
-            _cliloc = cliloc;
-
-            if (!File.Exists(UOFileManager.GetUOFilePath(cliloc)))
+            if (string.IsNullOrEmpty(lang))
             {
+                lang = "enu";
+            }
+
+            _cliloc = $"Cliloc.{lang}";
+            Log.Trace($"searching for: '{_cliloc}'");
+
+            if (!File.Exists(UOFileManager.GetUOFilePath(_cliloc)))
+            {
+                Log.Warn($"'{_cliloc}' not found. Rolled back to Cliloc.enu");
+
                 _cliloc = "Cliloc.enu";
             }
 
@@ -77,7 +87,37 @@ namespace ClassicUO.IO.Resources
 
                     if (!File.Exists(path))
                     {
+                        Log.Error($"cliloc not found: '{path}'");
                         return;
+                    }
+
+                    if (string.Compare(_cliloc, "cliloc.enu", StringComparison.InvariantCultureIgnoreCase) != 0)
+                    { 
+                        string enupath = UOFileManager.GetUOFilePath("Cliloc.enu");
+
+                        using (BinaryReader reader = new BinaryReader(new FileStream(enupath, FileMode.Open, FileAccess.Read)))
+                        {
+                            reader.ReadInt32();
+                            reader.ReadInt16();
+                            byte[] buffer = new byte[1024];
+
+                            while (reader.BaseStream.Length != reader.BaseStream.Position)
+                            {
+                                int number = reader.ReadInt32();
+                                byte flag = reader.ReadByte();
+                                int length = reader.ReadInt16();
+
+                                if (length > buffer.Length)
+                                {
+                                    buffer = new byte[(length + 1023) & ~1023];
+                                }
+
+                                reader.Read(buffer, 0, length);
+                                string text = string.Intern(Encoding.UTF8.GetString(buffer, 0, length));
+
+                                _entries[number] = text;
+                            }
+                        }
                     }
 
                     using (BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read)))
