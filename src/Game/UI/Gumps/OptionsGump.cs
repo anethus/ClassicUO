@@ -78,7 +78,7 @@ namespace ClassicUO.Game.UI.Gumps
         private HSliderBar _delay_before_display_tooltip, _tooltip_zoom, _tooltip_background_opacity;
         private Combobox _dragSelectModifierKey;
         private Combobox _backpackStyle;
-        private Checkbox _newReagents;
+        private Checkbox _newReagents, _newGems;
 
 
         //counters
@@ -3334,6 +3334,17 @@ namespace ClassicUO.Game.UI.Gumps
 
             startY += _newReagents.Height + 2;
 
+            _newGems = AddCheckBox
+            (
+                rightArea,
+                ResGumps.NewGems,
+                _currentProfile.NewGems,
+                startX,
+                startY
+            );
+
+            startY += _newGems.Height + 2;
+
             Add(rightArea, PAGE);
         }
 
@@ -4033,6 +4044,7 @@ namespace ClassicUO.Game.UI.Gumps
             _currentProfile.ShowTargetRangeIndicator = _showTargetRangeIndicator.IsChecked;
 
             _currentProfile.NewReagents = _newReagents.IsChecked;
+            _currentProfile.NewGems = _newGems.IsChecked;
 
 
             bool updateHealthBars = _currentProfile.CustomBarsToggled != _customBars.IsChecked;
