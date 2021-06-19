@@ -71,7 +71,7 @@ namespace ClassicUO.Game.UI.Gumps
         private Checkbox _containerScaleItems, _containerDoubleClickToLoot, _relativeDragAnDropItems, _useLargeContianersGumps, _highlightContainersWhenMouseIsOver;
 
 
-        // containers
+        // user interface
         private HSliderBar _containersScale;
         private Combobox _cotType;
         private DataBox _databox;
@@ -329,7 +329,7 @@ namespace ClassicUO.Game.UI.Gumps
                     140,
                     25,
                     ButtonAction.SwitchPage,
-                    ResGumps.Containers
+                    ResGumps.Interface
                 ) { ButtonParameter = 11 }
             );
 
@@ -420,7 +420,7 @@ namespace ClassicUO.Game.UI.Gumps
             BuildTooltip();
             BuildCounters();
             BuildInfoBar();
-            BuildContainers();
+            BuildInterface();
             BuildExperimental();
 
             ChangePage(1);
@@ -3150,7 +3150,7 @@ namespace ClassicUO.Game.UI.Gumps
             Add(rightArea, PAGE);
         }
 
-        private void BuildContainers()
+        private void BuildInterface()
         {
             const int PAGE = 11;
 
