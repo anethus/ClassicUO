@@ -279,13 +279,14 @@ namespace ClassicUO.Game.UI.Gumps
             var markerName = _markerName.Text;
             var color = _colors[_colorsCombo.SelectedIndex];
 
-            return new WMapMarker(color)
+            return new WMapMarker
             {
                 Name = markerName,
                 X = x,
                 Y = y,
                 MapId = mapIdx,
-                ColorName = color
+                ColorName = color,
+                Color = GetColor(color)
             };
         }
 
