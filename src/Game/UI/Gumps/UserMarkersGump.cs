@@ -6,6 +6,7 @@ using ClassicUO.Configuration;
 using ClassicUO.Game.UI.Controls;
 using static ClassicUO.Game.UI.Gumps.WorldMapGump;
 using ClassicUO.IO.Resources;
+using ClassicUO.Resources;
 
 namespace ClassicUO.Game.UI.Gumps
 {
@@ -50,7 +51,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             _colors = new [] { "red", "green", "blue", "purple", "black", "yellow", "white", "none" };
 
-            var markerName = _markerIdx < 0 ? "MarkerName" : _markers[_markerIdx].Name;
+            var markerName = _markerIdx < 0 ? ResGumps.MarkerDefName : _markers[_markerIdx].Name;
 
             int selectedColor = Array.IndexOf(_colors, color);
 
@@ -72,13 +73,13 @@ namespace ClassicUO.Game.UI.Gumps
             Add(markersGumpBackground);
 
             if (!isEdit)
-                Add(new Label("Add Marker", true, HUE_FONT, 0, 255, Renderer.FontStyle.BlackBorder)
+                Add(new Label(ResGumps.AddMarker, true, HUE_FONT, 0, 255, Renderer.FontStyle.BlackBorder)
                 {
                     X = markersGumpBackground.X + 100,
                     Y = markersGumpBackground.Y + 3,
                 });
             else
-                Add(new Label("Edit Marker", true, HUE_FONT, 0, 255, Renderer.FontStyle.BlackBorder)
+                Add(new Label(ResGumps.EditMarker, true, HUE_FONT, 0, 255, Renderer.FontStyle.BlackBorder)
                 {
                     X = markersGumpBackground.X + 100,
                     Y = markersGumpBackground.Y + 3,
@@ -182,7 +183,7 @@ namespace ClassicUO.Game.UI.Gumps
                             60,
                             25,
                             ButtonAction.Activate,
-                            "Create"
+                            ResGumps.CreateMarker
                         )
                     { ButtonParameter = (int)ButtonsOption.ADD_BTN, IsSelectable = false }
                 );
@@ -198,7 +199,7 @@ namespace ClassicUO.Game.UI.Gumps
                             60,
                             25,
                             ButtonAction.Activate,
-                            "Edit"
+                            ResGumps.Edit
                         )
                     { ButtonParameter = (int)ButtonsOption.EDIT_BTN, IsSelectable = false }
                 );
@@ -213,7 +214,7 @@ namespace ClassicUO.Game.UI.Gumps
                         60,
                         25,
                         ButtonAction.Activate,
-                        "Cancel"
+                        ResGumps.Cancel
                     )
                 { ButtonParameter = (int)ButtonsOption.CANCEL_BTN, IsSelectable = false }
             );

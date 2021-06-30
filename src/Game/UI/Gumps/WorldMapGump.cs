@@ -363,7 +363,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             _options["show_coordinates"] = new ContextMenuItemEntry(ResGumps.ShowYourCoordinates, () => { _showCoordinates = !_showCoordinates; }, true, _showCoordinates);
 
-            _options["markers_manager"] = new ContextMenuItemEntry("Markers Manager",
+            _options["markers_manager"] = new ContextMenuItemEntry(ResGumps.MarkersManager,
                 () =>
                 {
                     var mm = new MarkersManagerGump();

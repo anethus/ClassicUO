@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using ClassicUO.Resources;
 using static ClassicUO.Game.UI.Gumps.WorldMapGump;
 
 namespace ClassicUO.Game.UI.Gumps
@@ -99,17 +100,17 @@ namespace ClassicUO.Game.UI.Gumps
 
             #region Legend
 
-            Add(new Label("Name", true, HUE_FONT, 185, 255, Renderer.FontStyle.BlackBorder) { X = 20, Y = initY });
+            Add(new Label(ResGumps.MarkerName, true, HUE_FONT, 185, 255, Renderer.FontStyle.BlackBorder) { X = 20, Y = initY });
 
-            Add(new Label("X", true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 295, Y = initY });
+            Add(new Label(ResGumps.MarkerX, true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 295, Y = initY });
 
-            Add(new Label("Y", true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 340, Y = initY });
+            Add(new Label(ResGumps.MarkerY, true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 340, Y = initY });
 
-            Add(new Label("Color", true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 390, Y = initY });
+            Add(new Label(ResGumps.MarkerColor, true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 390, Y = initY });
 
-            Add(new Label("Edit", true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 460, Y = initY });
+            Add(new Label(ResGumps.Edit, true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 460, Y = initY });
 
-            Add(new Label("Remove", true, HUE_FONT, 40, 255, Renderer.FontStyle.BlackBorder) { X = 490, Y = initY });
+            Add(new Label(ResGumps.Remove, true, HUE_FONT, 40, 255, Renderer.FontStyle.BlackBorder) { X = 490, Y = initY });
 
             #endregion
 
