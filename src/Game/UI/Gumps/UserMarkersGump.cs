@@ -5,6 +5,7 @@ using ClassicUO.Utility;
 using ClassicUO.Configuration;
 using ClassicUO.Game.UI.Controls;
 using static ClassicUO.Game.UI.Gumps.WorldMapGump;
+using ClassicUO.IO.Resources;
 
 namespace ClassicUO.Game.UI.Gumps
 {
@@ -25,7 +26,11 @@ namespace ClassicUO.Game.UI.Gumps
         private const int MAX_CORD_LEN = 10;
         private const int MAX_NAME_LEN = 25;
 
-        private readonly string _mapFilesPath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client", "userMarker.csv");
+        private const int MAP_MIN_CORD = 0;
+        private readonly int MAP_MAX_X = MapLoader.Instance.MapsDefaultSize[World.MapIndex, 0];
+        private readonly int MAP_MAX_Y = MapLoader.Instance.MapsDefaultSize[World.MapIndex, 1];
+
+        private readonly string _userMarkersFilePath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client", $"{USER_MARKERS_FILE}.usr");
 
         public event EventHandler EditEnd;
 
@@ -59,6 +64,7 @@ namespace ClassicUO.Game.UI.Gumps
                 X = ProfileManager.CurrentProfile.GameWindowSize.X / 2 - 125,
                 Y = 150,
                 Alpha = 0.2f,
+                CanMove = true,
                 CanCloseWithRightClick = true,
             };
 
@@ -77,6 +83,7 @@ namespace ClassicUO.Game.UI.Gumps
                     Y = markersGumpBackground.Y + 3,
                 });
 
+            // X Field
             Add(new ResizePic(0x0BB8)
             {
                 X = markersGumpBackground.X + 13,
@@ -101,6 +108,7 @@ namespace ClassicUO.Game.UI.Gumps
             };
             Add(_textBoxX);
 
+            // Y Field
             Add(new ResizePic(0x0BB8)
             {
                 X = markersGumpBackground.X + 13,
@@ -125,12 +133,12 @@ namespace ClassicUO.Game.UI.Gumps
             };
             Add(_textBoxY);
 
-
+            // Marker Name field
             Add(new ResizePic(0x0BB8)
             {
                 X = markersGumpBackground.X + 13,
                 Y = markersGumpBackground.Y + 90,
-                Width = 200,
+                Width = 250,
                 Height = 25
             });
 
@@ -150,16 +158,18 @@ namespace ClassicUO.Game.UI.Gumps
             };
             Add(_markerName);
 
+            // Color Combobox
             _colorsCombo = new Combobox
                 (
                     markersGumpBackground.X + 13,
                     _markerName.Y + 30,
-                    200,
+                    250,
                     _colors,
                     selectedColor
                 );
             Add(_colorsCombo);
 
+            // Buttons Add and Edit depend of state
             if (!isEdit)
             {
                 Add
@@ -225,7 +235,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         private void AddNewMarker()
         {
-            if (!File.Exists(_mapFilesPath))
+            if (!File.Exists(_userMarkersFilePath))
             {
                 return;
             }
@@ -238,7 +248,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             var newLine = $"{newMarker.X},{newMarker.Y},{newMarker.MapId},{newMarker.Name},lol.png,{newMarker.ColorName},4\r";
 
-            File.AppendAllText(_mapFilesPath, newLine);
+            File.AppendAllText(_userMarkersFilePath, newLine);
 
             _markers.Add(newMarker);
 
@@ -251,6 +261,17 @@ namespace ClassicUO.Game.UI.Gumps
                 return null;
             if (!int.TryParse(_textBoxY.Text, out var y))
                 return null;
+
+            // Validate User Enter Data
+            if(x > MAP_MAX_X || x < MAP_MIN_CORD)
+            {
+                return null;
+            }
+
+            if (y > MAP_MAX_Y || y < MAP_MIN_CORD)
+            {
+                return null;
+            }
 
             var mapIdx = World.MapIndex;
             var markerName = _markerName.Text;

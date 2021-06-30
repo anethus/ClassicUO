@@ -20,15 +20,13 @@ namespace ClassicUO.Game.UI.Gumps
 
         private ScrollArea _scrollArea;
 
-        private static readonly List<WMapMarker> _markers = new List<WMapMarker>();
+        private static List<WMapMarker> _markers = new List<WMapMarker>();
 
-        private readonly string _mapFilesPath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client", "userMarker.csv");
+        private readonly string _userMarkersFilePath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client", $"{USER_MARKERS_FILE}.usr");
 
         public MarkersManagerGump(): base(0, 0)
         {
             CanMove = true;
-
-            _markers.Clear();
 
             LoadMarkers();
 
@@ -100,15 +98,15 @@ namespace ClassicUO.Game.UI.Gumps
 
             Add(new Label("Name", true, HUE_FONT, 185, 255, Renderer.FontStyle.BlackBorder) { X = 20, Y = initY });
 
-            Add(new Label("X", true, HUE_FONT, 35, 255, Renderer.FontStyle.Solid) { X = 295, Y = initY });
+            Add(new Label("X", true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 295, Y = initY });
 
-            Add(new Label("Y", true, HUE_FONT, 35, 255, Renderer.FontStyle.Solid) { X = 340, Y = initY });
+            Add(new Label("Y", true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 340, Y = initY });
 
-            Add(new Label("Color", true, HUE_FONT, 35, 255, Renderer.FontStyle.Solid) { X = 390, Y = initY });
+            Add(new Label("Color", true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 390, Y = initY });
 
-            Add(new Label("Edit", true, HUE_FONT, 35, 255, Renderer.FontStyle.Solid) { X = 460, Y = initY });
+            Add(new Label("Edit", true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 460, Y = initY });
 
-            Add(new Label("Remove", true, HUE_FONT, 35, 255, Renderer.FontStyle.Solid) { X = 490, Y = initY });
+            Add(new Label("Remove", true, HUE_FONT, 40, 255, Renderer.FontStyle.BlackBorder) { X = 490, Y = initY });
 
             #endregion
 
@@ -177,7 +175,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             if (_isMarkerListModified)
             {
-                using (StreamWriter writer = new StreamWriter(_mapFilesPath, false))
+                using (StreamWriter writer = new StreamWriter(_userMarkersFilePath, false))
                 {
                     foreach (var marker in _markers)
                     {
@@ -186,50 +184,20 @@ namespace ClassicUO.Game.UI.Gumps
                         writer.WriteLine(newLine);
                     }
                 }
+                _isMarkerListModified = false;
+                ReloadUserMarkers();
             }
             base.Dispose();
         }
 
         private void LoadMarkers()
         {
-            if (!File.Exists(_mapFilesPath))
+            if (!File.Exists(_userMarkersFilePath))
             {
                 return;
             }
 
-            using (StreamReader reader = new StreamReader(_mapFilesPath))
-            {
-                while (!reader.EndOfStream)
-                {
-                    string line = reader.ReadLine();
-
-                    if (string.IsNullOrEmpty(line))
-                    {
-                        return;
-                    }
-
-                    string[] splits = line.Split(',');
-
-                    if (splits.Length <= 1)
-                    {
-                        continue;
-                    }
-
-                    WMapMarker marker = new WMapMarker
-                    {
-                        X = int.Parse(splits[0]),
-                        Y = int.Parse(splits[1]),
-                        MapId = int.Parse(splits[2]),
-                        Name = splits[3],
-                        MarkerIconName = splits[4].ToLower(),
-                        Color = GetColor(splits[5].ToLower()),
-                        ColorName = splits[5].ToLower(),
-                        ZoomIndex = splits.Length == 7 ? int.Parse(splits[6]) : 3
-                    };
-
-                    _markers.Add(marker);
-                }
-            }
+            _markers = LoadUserMarkers();
         }
         
         private sealed class MakerManagerControl : Control
@@ -265,7 +233,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             private void DrawData()
             {
-                _labelName = new Label($"{_marker.Name}", true, HUE_FONT, 185) { X = 10, Y = _y };
+                _labelName = new Label($"{_marker.Name}", true, HUE_FONT, 280) { X = 10, Y = _y };
                 Add(_labelName);
 
                 _labelX = new Label($"{_marker.X}", true, HUE_FONT, 35) { X = 285, Y = _y };
@@ -289,7 +257,7 @@ namespace ClassicUO.Game.UI.Gumps
                 Add(
                     new Button((int)ButtonsOption.REMOVE_MARKER_BTN, 0xFB1, 0xFB2)
                     {
-                        X = 480,
+                        X = 485,
                         Y = _y,
                         ButtonAction = ButtonAction.Activate,
                     }
