@@ -58,7 +58,7 @@ namespace ClassicUO.Game.UI.Gumps
     internal class WorldMapGump : ResizableGump
     {
         private static Point _last_position = new Point(100, 100);
-        private Point _center, _lastScroll;
+        private Point _center, _mouseCenter, _lastScroll;
 
         private bool _flipMap = true;
         private bool _freeView;
@@ -70,13 +70,12 @@ namespace ClassicUO.Game.UI.Gumps
         private int _mapIndex;
         private bool _mapMarkersLoaded;
         private UOTexture _mapTexture;
-
-
+        
         private readonly List<WMapMarkerFile> _markerFiles = new List<WMapMarkerFile>();
 
         private SpriteFont _markerFont = Fonts.Map1;
         private int _markerFontIndex = 1;
-        private readonly Dictionary<string, Texture2D> _markerIcons = new Dictionary<string, Texture2D>();
+        public readonly Dictionary<string, Texture2D> _markerIcons = new Dictionary<string, Texture2D>();
 
         private readonly Dictionary<string, ContextMenuItemEntry> _options = new Dictionary<string, ContextMenuItemEntry>();
         private bool _showCoordinates;
@@ -94,7 +93,8 @@ namespace ClassicUO.Game.UI.Gumps
 
         private WMapMarker _gotoMarker;
 
-        private readonly float[] _zooms = new float[10] { 0.125f, 0.25f, 0.5f, 0.75f, 1f, 1.5f, 2f, 4f, 6f, 8f };
+        private readonly float[] _zooms = { 0.125f, 0.25f, 0.5f, 0.75f, 1f, 1.5f, 2f, 4f, 6f, 8f };
+        private readonly float[] _reversZoom = { 8f, 4f, 2f, 1.3f, 1f, 0.66f, 0.5f, 0.25f, 0,166f, 0.125f };
 
         public WorldMapGump() : base
         (
@@ -360,6 +360,15 @@ namespace ClassicUO.Game.UI.Gumps
 
             _options["show_coordinates"] = new ContextMenuItemEntry(ResGumps.ShowYourCoordinates, () => { _showCoordinates = !_showCoordinates; }, true, _showCoordinates);
 
+            _options["markers_manager"] = new ContextMenuItemEntry("Markers Manager",
+                () =>
+                {
+                    var mm = new MarkersManagerGump();
+
+                    UIManager.Add(mm);
+                }
+                );
+
             _options["saveclose"] = new ContextMenuItemEntry(ResGumps.SaveClose, Dispose);
         }
 
@@ -449,6 +458,7 @@ namespace ClassicUO.Game.UI.Gumps
             ContextMenu.Add(_options["show_multis"]);
             ContextMenu.Add(_options["show_coordinates"]);
             ContextMenu.Add("", null);
+            ContextMenu.Add(_options["markers_manager"]);
             ContextMenu.Add(_options["saveclose"]);
         }
 
@@ -572,51 +582,6 @@ namespace ClassicUO.Game.UI.Gumps
             base.Dispose();
         }
 
-        private Color GetColor(string name)
-        {
-            if (name.Equals("red", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Red;
-            }
-
-            if (name.Equals("green", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Green;
-            }
-
-            if (name.Equals("blue", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Blue;
-            }
-
-            if (name.Equals("purple", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Purple;
-            }
-
-            if (name.Equals("black", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Black;
-            }
-
-            if (name.Equals("yellow", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Yellow;
-            }
-
-            if (name.Equals("white", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.White;
-            }
-
-            if (name.Equals("none", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Transparent;
-            }
-
-            return Color.White;
-        }
-
         private void SetFont(int fontIndex)
         {
             _markerFontIndex = fontIndex;
@@ -677,7 +642,7 @@ namespace ClassicUO.Game.UI.Gumps
         }
 
 
-        private class WMapMarker
+        internal class WMapMarker
         {
             public string Name { get; set; }
             public int X { get; set; }
@@ -687,6 +652,24 @@ namespace ClassicUO.Game.UI.Gumps
             public Texture2D MarkerIcon { get; set; }
             public string MarkerIconName { get; set; }
             public int ZoomIndex { get; set; }
+
+            public string ColorName { get; set; }
+
+            /// <summary>
+            /// Base Constructor
+            /// </summary>
+            public WMapMarker()
+            {
+            }
+
+            /// <summary>
+            /// Constructor with Color Name
+            /// </summary>
+            /// <param name="color"></param>
+            public WMapMarker(string color)
+            {
+                Color = GetColor(color);
+            }
         }
 
         private class WMapMarkerFile
@@ -1192,7 +1175,6 @@ namespace ClassicUO.Game.UI.Gumps
             );
         }
 
-
         private void LoadMarkers()
         {
             //return Task.Run(() =>
@@ -1414,8 +1396,8 @@ namespace ClassicUO.Game.UI.Gumps
                             if (markerFile.Markers.Count > 0)
                             {
                                 GameActions.Print($"..{Path.GetFileName(mapFile)} ({markerFile.Markers.Count})", 0x2B);
-                                _markerFiles.Add(markerFile);
                             }
+                            _markerFiles.Add(markerFile);
                         }
                     }
 
@@ -1473,7 +1455,6 @@ namespace ClassicUO.Game.UI.Gumps
             int halfHeight = gHeight >> 1;
 
             ResetHueVector();
-
 
             batcher.Draw2D
             (
@@ -2411,6 +2392,42 @@ namespace ClassicUO.Game.UI.Gumps
 
             UIManager.GameCursor.IsDraggingCursorForced = false;
 
+            if (button == MouseButtonType.Left && Keyboard.Ctrl)
+            {
+                var newWidth = Width / Zoom;
+                var newHeight = Height / Zoom;
+
+                if (_flipMap)
+                {
+                    var a = (newWidth + newHeight) / 1.41f;
+                    var b = (newHeight - newWidth) / 1.41f;
+                    newWidth = (int)a;
+                    newHeight = (int)b;
+                }
+
+                var newX = x / Zoom;
+                var newY = y / Zoom;
+
+                if (_flipMap)
+                {
+                    var a = (newX + newY) / 1.41f;
+                    var b = (newY - newX) / 1.41f;
+                    newX = (int)a;
+                    newY = (int)b;
+                }
+
+                _mouseCenter.X = _center.X - (int)(newWidth / 2) + (int)newX;
+                _mouseCenter.Y = _center.Y - (int)(newHeight / 2) + (int)newY;
+
+                // Check if file is loaded and contain markers
+                var userFile = _markerFiles.Where(f => f.Name == "userMarker").FirstOrDefault();
+
+                UserMarkersGump existingGump = UIManager.GetGump<UserMarkersGump>();
+
+                existingGump?.Dispose();
+                UIManager.Add(new UserMarkersGump(_mouseCenter.X, _mouseCenter.Y, userFile.Markers));
+            }
+
             base.OnMouseUp(x, y, button);
         }
 
@@ -2436,14 +2453,14 @@ namespace ClassicUO.Game.UI.Gumps
                     }
                 }
             }
-
+            
             base.OnMouseDown(x, y, button);
         }
 
         protected override void OnMouseOver(int x, int y)
         {
             Point offset = Mouse.LButtonPressed ? Mouse.LDragOffset : Mouse.MButtonPressed ? Mouse.MDragOffset : Point.Zero;
-
+            
             if (_isScrolling && offset != Point.Zero)
             {
                 int scrollX = _lastScroll.X - x;
@@ -2537,6 +2554,51 @@ namespace ClassicUO.Game.UI.Gumps
         #endregion
 
         #region Helpers
+
+        private static Color GetColor(string name)
+        {
+            if (name.Equals("red", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.Red;
+            }
+
+            if (name.Equals("green", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.Green;
+            }
+
+            if (name.Equals("blue", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.Blue;
+            }
+
+            if (name.Equals("purple", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.Purple;
+            }
+
+            if (name.Equals("black", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.Black;
+            }
+
+            if (name.Equals("yellow", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.Yellow;
+            }
+
+            if (name.Equals("white", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.White;
+            }
+
+            if (name.Equals("none", StringComparison.OrdinalIgnoreCase))
+            {
+                return Color.Transparent;
+            }
+
+            return Color.White;
+        }
 
         /// <summary>
         /// Converts latitudes and longitudes to X and Y locations based on Lord British's throne is located at 1323.1624 or 0° 0'N 0° 0'E
