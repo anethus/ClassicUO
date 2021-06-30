@@ -36,7 +36,7 @@ namespace ClassicUO.Game.UI.Gumps
             CANCEL_BTN,
         }
 
-        internal UserMarkersGump(int x, int y, List<WMapMarker> markers, string color = "red", bool isEdit = false, int markerIdx = 0) : base(0, 0)
+        internal UserMarkersGump(int x, int y, List<WMapMarker> markers, string color = "red", bool isEdit = false, int markerIdx = -1) : base(0, 0)
         {
             CanMove = true;
 
@@ -44,6 +44,8 @@ namespace ClassicUO.Game.UI.Gumps
             _markerIdx = markerIdx;
 
             _colors = new [] { "red", "green", "blue", "purple", "black", "yellow", "white", "none" };
+
+            var markerName = _markerIdx < 0 ? "MarkerName" : _markers[_markerIdx].Name;
 
             int selectedColor = Array.IndexOf(_colors, color);
 
@@ -144,7 +146,7 @@ namespace ClassicUO.Game.UI.Gumps
                 Y = markersGumpBackground.Y + 90,
                 Width = 250,
                 Height = 25,
-                Text = "MarkerName"
+                Text = markerName
             };
             Add(_markerName);
 
