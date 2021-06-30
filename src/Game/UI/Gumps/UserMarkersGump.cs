@@ -66,6 +66,7 @@ namespace ClassicUO.Game.UI.Gumps
                 Alpha = 0.2f,
                 CanMove = true,
                 CanCloseWithRightClick = true,
+                AcceptMouseInput = true
             };
 
             Add(markersGumpBackground);

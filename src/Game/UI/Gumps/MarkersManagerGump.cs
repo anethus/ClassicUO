@@ -24,7 +24,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         private readonly string _userMarkersFilePath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client", $"{USER_MARKERS_FILE}.usr");
 
-        public MarkersManagerGump(): base(0, 0)
+        internal MarkersManagerGump(): base(0, 0)
         {
             CanMove = true;
 
@@ -38,7 +38,10 @@ namespace ClassicUO.Game.UI.Gumps
                     Y = 1,
                     Width = WIDTH - 2,
                     Height = HEIGHT - 2,
-                    Hue = 999
+                    Hue = 999,
+                    AcceptMouseInput = true,
+                    CanCloseWithRightClick = true,
+                    CanMove = true,
                 }
             );
 
