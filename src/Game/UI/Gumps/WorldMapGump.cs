@@ -69,7 +69,7 @@ namespace ClassicUO.Game.UI.Gumps
         private readonly string _mapIconsPath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client", "MapIcons");
 
         public const string USER_MARKERS_FILE = "userMarkers";
-        public static readonly string _userMarkersFilePath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client", $"{USER_MARKERS_FILE}.usr");
+        public static readonly string UserMarkersFilePath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client", $"{USER_MARKERS_FILE}.usr");
 
         private int _mapIndex;
         private bool _mapMarkersLoaded;
@@ -98,7 +98,6 @@ namespace ClassicUO.Game.UI.Gumps
         private WMapMarker _gotoMarker;
 
         private readonly float[] _zooms = { 0.125f, 0.25f, 0.5f, 0.75f, 1f, 1.5f, 2f, 4f, 6f, 8f };
-        private readonly float[] _reversZoom = { 8f, 4f, 2f, 1.3f, 1f, 0.66f, 0.5f, 0.25f, 0,166f, 0.125f };
 
         public WorldMapGump() : base
         (
@@ -1197,9 +1196,9 @@ namespace ClassicUO.Game.UI.Gumps
                         }
                     }
 
-                    if (!File.Exists(_userMarkersFilePath))
+                    if (!File.Exists(UserMarkersFilePath))
                     {
-                        using (File.Create(_userMarkersFilePath)) { };
+                        using (File.Create(UserMarkersFilePath)) { }
                     }
 
                     _markerIcons.Clear();
@@ -1260,7 +1259,7 @@ namespace ClassicUO.Game.UI.Gumps
                     string[] mapFiles = Directory.GetFiles(_mapFilesPath, "*.map")
                                         .Union(Directory.GetFiles(_mapFilesPath, "*.csv"))
                                         .Union(Directory.GetFiles(_mapFilesPath, "*.xml"))
-                                        .Append(_userMarkersFilePath).ToArray();
+                                        .Append(UserMarkersFilePath).ToArray();
 
                     _markerFiles.Clear();
 
@@ -1423,7 +1422,7 @@ namespace ClassicUO.Game.UI.Gumps
         /// </summary>
         internal static void ReloadUserMarkers()
         {
-            var userFile = _markerFiles.Where(f => f.Name == USER_MARKERS_FILE).FirstOrDefault();
+            var userFile = _markerFiles.FirstOrDefault(f => f.Name == USER_MARKERS_FILE);
 
             if(userFile == null)
             {
@@ -1441,7 +1440,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             List<WMapMarker> tempList = new List<WMapMarker>();
 
-            using (StreamReader reader = new StreamReader(_userMarkersFilePath))
+            using (StreamReader reader = new StreamReader(UserMarkersFilePath))
             {
                 while (!reader.EndOfStream)
                 {

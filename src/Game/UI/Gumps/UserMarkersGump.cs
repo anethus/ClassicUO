@@ -27,8 +27,8 @@ namespace ClassicUO.Game.UI.Gumps
         private const int MAX_NAME_LEN = 25;
 
         private const int MAP_MIN_CORD = 0;
-        private readonly int MAP_MAX_X = MapLoader.Instance.MapsDefaultSize[World.MapIndex, 0];
-        private readonly int MAP_MAX_Y = MapLoader.Instance.MapsDefaultSize[World.MapIndex, 1];
+        private readonly int _mapMaxX = MapLoader.Instance.MapsDefaultSize[World.MapIndex, 0];
+        private readonly int _mapMaxY = MapLoader.Instance.MapsDefaultSize[World.MapIndex, 1];
 
         private readonly string _userMarkersFilePath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client", $"{USER_MARKERS_FILE}.usr");
 
@@ -263,12 +263,12 @@ namespace ClassicUO.Game.UI.Gumps
                 return null;
 
             // Validate User Enter Data
-            if(x > MAP_MAX_X || x < MAP_MIN_CORD)
+            if(x > _mapMaxX || x < MAP_MIN_CORD)
             {
                 return null;
             }
 
-            if (y > MAP_MAX_Y || y < MAP_MIN_CORD)
+            if (y > _mapMaxY || y < MAP_MIN_CORD)
             {
                 return null;
             }
