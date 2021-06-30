@@ -2555,49 +2555,29 @@ namespace ClassicUO.Game.UI.Gumps
 
         #region Helpers
 
-        private static Color GetColor(string name)
+        /// <summary>
+        /// Map Color name to Color in XNA
+        /// </summary>
+        private static readonly Dictionary<string, Color> _colorMap = new Dictionary<string, Color>
         {
-            if (name.Equals("red", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Red;
-            }
+            { "red", Color.Red },
+            { "green", Color.Green },
+            { "blue", Color.Blue },
+            { "purple", Color.Purple },
+            { "black", Color.Black },
+            { "yellow", Color.Yellow },
+            { "white", Color.White },
+            { "none", Color.Transparent },
+        };
 
-            if (name.Equals("green", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Green;
-            }
-
-            if (name.Equals("blue", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Blue;
-            }
-
-            if (name.Equals("purple", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Purple;
-            }
-
-            if (name.Equals("black", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Black;
-            }
-
-            if (name.Equals("yellow", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Yellow;
-            }
-
-            if (name.Equals("white", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.White;
-            }
-
-            if (name.Equals("none", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Transparent;
-            }
-
-            return Color.White;
+        /// <summary>
+        /// Get Color for Texture by name
+        /// </summary>
+        /// <param name="name">Color name</param>
+        /// <returns>Color in XNA (RGBA)</returns>
+        public static Color GetColor(string name)
+        {
+            return _colorMap.TryGetValue(name, out var color) ? color : Color.White;
         }
 
         /// <summary>

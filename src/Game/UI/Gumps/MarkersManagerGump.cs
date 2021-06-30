@@ -231,52 +231,7 @@ namespace ClassicUO.Game.UI.Gumps
                 }
             }
         }
-
-        private static Color GetColor(string name)
-        {
-            if (name.Equals("red", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Red;
-            }
-
-            if (name.Equals("green", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Green;
-            }
-
-            if (name.Equals("blue", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Blue;
-            }
-
-            if (name.Equals("purple", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Purple;
-            }
-
-            if (name.Equals("black", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Black;
-            }
-
-            if (name.Equals("yellow", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Yellow;
-            }
-
-            if (name.Equals("white", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.White;
-            }
-
-            if (name.Equals("none", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Transparent;
-            }
-
-            return Color.White;
-        }
-
+        
         private sealed class MakerManagerControl : Control
         {
             private readonly WMapMarker _marker;
