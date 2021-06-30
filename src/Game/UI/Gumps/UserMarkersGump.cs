@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ClassicUO.Utility;
 using ClassicUO.Configuration;
 using ClassicUO.Game.UI.Controls;
@@ -20,6 +21,9 @@ namespace ClassicUO.Game.UI.Gumps
 
         private readonly Combobox _colorsCombo;
         private readonly string[] _colors;
+
+        private readonly Combobox _iconsCombo;
+        private readonly string[] _icons;
 
         private readonly List<WMapMarker> _markers;
         private readonly int _markerIdx;
@@ -42,26 +46,30 @@ namespace ClassicUO.Game.UI.Gumps
             CANCEL_BTN,
         }
 
-        internal UserMarkersGump(int x, int y, List<WMapMarker> markers, string color = "red", bool isEdit = false, int markerIdx = -1) : base(0, 0)
+        internal UserMarkersGump(int x, int y, List<WMapMarker> markers, string color = "none", string icon = "exit", bool isEdit = false, int markerIdx = -1) : base(0, 0)
         {
             CanMove = true;
 
             _markers = markers;
             _markerIdx = markerIdx;
 
-            _colors = new [] { "red", "green", "blue", "purple", "black", "yellow", "white", "none" };
+            _colors = new [] { "none", "red", "green", "blue", "purple", "black", "yellow", "white" };
+            _icons = _markerIcons.Keys.ToArray();
 
             var markerName = _markerIdx < 0 ? ResGumps.MarkerDefName : _markers[_markerIdx].Name;
 
             int selectedColor = Array.IndexOf(_colors, color);
-
             if (selectedColor < 0)
                 selectedColor = 0;
+
+            int selectedIcon = Array.IndexOf(_icons, icon);
+            if (selectedIcon < 0)
+                selectedIcon = 0;
 
             AlphaBlendControl markersGumpBackground = new AlphaBlendControl
             {
                 Width = 300,
-                Height = 200,
+                Height = 220,
                 X = ProfileManager.CurrentProfile.GameWindowSize.X / 2 - 125,
                 Y = 150,
                 Alpha = 0.2f,
@@ -171,6 +179,17 @@ namespace ClassicUO.Game.UI.Gumps
                 );
             Add(_colorsCombo);
 
+            // Icon combobox
+            _iconsCombo = new Combobox
+                (
+                    markersGumpBackground.X + 13,
+                    _markerName.Y + 60,
+                    250,
+                    _icons,
+                    selectedIcon
+                );
+            Add(_iconsCombo);
+
             // Buttons Add and Edit depend of state
             if (!isEdit)
             {
@@ -248,7 +267,7 @@ namespace ClassicUO.Game.UI.Gumps
                 return;
             }
 
-            var newLine = $"{newMarker.X},{newMarker.Y},{newMarker.MapId},{newMarker.Name},lol.png,{newMarker.ColorName},4\r";
+            var newLine = $"{newMarker.X},{newMarker.Y},{newMarker.MapId},{newMarker.Name},{newMarker.MarkerIconName},{newMarker.ColorName},4\r";
 
             File.AppendAllText(_userMarkersFilePath, newLine);
 
@@ -278,16 +297,27 @@ namespace ClassicUO.Game.UI.Gumps
             var mapIdx = World.MapIndex;
             var markerName = _markerName.Text;
             var color = _colors[_colorsCombo.SelectedIndex];
+            var icon = _icons[_iconsCombo.SelectedIndex];
 
-            return new WMapMarker
+            var marker = new WMapMarker
             {
                 Name = markerName,
                 X = x,
                 Y = y,
                 MapId = mapIdx,
                 ColorName = color,
-                Color = GetColor(color)
+                Color = GetColor(color),
             };
+
+            if (!_markerIcons.TryGetValue(icon, out var iconTexture))
+            {
+                return marker;
+            }
+
+            marker.MarkerIcon = iconTexture;
+            marker.MarkerIconName = icon;
+
+            return marker;
         }
 
         public override void OnButtonClick(int buttonId)

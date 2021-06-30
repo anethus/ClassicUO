@@ -2315,6 +2315,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Icon.
+        /// </summary>
+        public static string MarkerIcon {
+            get {
+                return ResourceManager.GetString("MarkerIcon", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string MarkerName {

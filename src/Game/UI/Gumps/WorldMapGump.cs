@@ -657,22 +657,6 @@ namespace ClassicUO.Game.UI.Gumps
             public int ZoomIndex { get; set; }
 
             public string ColorName { get; set; }
-
-            /// <summary>
-            /// Base Constructor
-            /// </summary>
-            public WMapMarker()
-            {
-            }
-
-            /// <summary>
-            /// Constructor with Color Name
-            /// </summary>
-            /// <param name="color"></param>
-            public WMapMarker(string color)
-            {
-                Color = GetColor(color);
-            }
         }
 
         private class WMapMarkerFile
@@ -2644,12 +2628,7 @@ namespace ClassicUO.Game.UI.Gumps
         /// <returns>Truncated String</returns>
         private static string Truncate(string s, int maxLen)
         {
-            if(s.Length > maxLen)
-            {
-                return s.Remove(maxLen);
-            }
-
-            return s;
+            return s.Length > maxLen ? s.Remove(maxLen) : s;
         }
 
         /// <summary>

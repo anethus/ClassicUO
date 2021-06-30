@@ -1504,4 +1504,7 @@ Client version: '{0}'</value>
   <data name="MarkerY" xml:space="preserve">
     <value>Y</value>
   </data>
+  <data name="MarkerIcon" xml:space="preserve">
+    <value>Icon</value>
+  </data>
 </root>

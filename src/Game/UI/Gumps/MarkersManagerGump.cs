@@ -7,13 +7,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using ClassicUO.Resources;
+using Microsoft.Xna.Framework.Graphics;
 using static ClassicUO.Game.UI.Gumps.WorldMapGump;
+using ClassicUO.Renderer;
 
 namespace ClassicUO.Game.UI.Gumps
 {
     internal sealed class MarkersManagerGump : Gump
     {
-        private const int WIDTH = 700;
+        private const int WIDTH = 600;
         private const int HEIGHT = 500;
         private const ushort HUE_FONT = 0xFFFF;
 
@@ -100,17 +102,19 @@ namespace ClassicUO.Game.UI.Gumps
 
             #region Legend
 
-            Add(new Label(ResGumps.MarkerName, true, HUE_FONT, 185, 255, Renderer.FontStyle.BlackBorder) { X = 20, Y = initY });
+            Add(new Label(ResGumps.MarkerIcon, true, HUE_FONT, 185, 255, FontStyle.BlackBorder) { X = 5, Y = initY });
 
-            Add(new Label(ResGumps.MarkerX, true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 295, Y = initY });
+            Add(new Label(ResGumps.MarkerName, true, HUE_FONT, 185, 255, FontStyle.BlackBorder) { X = 50, Y = initY });
 
-            Add(new Label(ResGumps.MarkerY, true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 340, Y = initY });
+            Add(new Label(ResGumps.MarkerX, true, HUE_FONT, 35, 255, FontStyle.BlackBorder) { X = 315, Y = initY });
 
-            Add(new Label(ResGumps.MarkerColor, true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 390, Y = initY });
+            Add(new Label(ResGumps.MarkerY, true, HUE_FONT, 35, 255, FontStyle.BlackBorder) { X = 380, Y = initY });
 
-            Add(new Label(ResGumps.Edit, true, HUE_FONT, 35, 255, Renderer.FontStyle.BlackBorder) { X = 460, Y = initY });
+            Add(new Label(ResGumps.MarkerColor, true, HUE_FONT, 35, 255, FontStyle.BlackBorder) { X = 420, Y = initY });
 
-            Add(new Label(ResGumps.Remove, true, HUE_FONT, 40, 255, Renderer.FontStyle.BlackBorder) { X = 490, Y = initY });
+            Add(new Label(ResGumps.Edit, true, HUE_FONT, 35, 255, FontStyle.BlackBorder) { X = 490, Y = initY });
+
+            Add(new Label(ResGumps.Remove, true, HUE_FONT, 40, 255, FontStyle.BlackBorder) { X = 520, Y = initY });
 
             #endregion
 
@@ -120,7 +124,7 @@ namespace ClassicUO.Game.UI.Gumps
                 (
                     0,
                     initY + 20,
-                    WIDTH - 10,
+                    WIDTH,
                     1,
                     Color.Gray.PackedValue
                 )
@@ -137,7 +141,7 @@ namespace ClassicUO.Game.UI.Gumps
             (
                 10,
                 40,
-                WIDTH - 50,
+                WIDTH - 10,
                 420,
                 true
             );
@@ -183,7 +187,7 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     foreach (var marker in _markers)
                     {
-                        var newLine = $"{marker.X},{marker.Y},{marker.MapId},{marker.Name},lol.png,{marker.ColorName},4";
+                        var newLine = $"{marker.X},{marker.Y},{marker.MapId},{marker.Name},{marker.MarkerIconName},{marker.ColorName},4";
 
                         writer.WriteLine(newLine);
                     }
@@ -203,7 +207,22 @@ namespace ClassicUO.Game.UI.Gumps
 
             _markers = LoadUserMarkers();
         }
-        
+
+        internal class DrawTexture : Control
+        {
+            public Texture2D Texture;
+
+            public DrawTexture(Texture2D texture)
+            {
+                Texture = texture;
+            }
+
+            public override bool Draw(UltimaBatcher2D batcher, int x, int y)
+            {
+                 return batcher.Draw2D(Texture, x, y, ref HueVector);
+            }
+        }
+
         private sealed class MakerManagerControl : Control
         {
             private readonly WMapMarker _marker;
@@ -214,6 +233,8 @@ namespace ClassicUO.Game.UI.Gumps
             private Label _labelX;
             private Label _labelY;
             private Label _labelColor;
+
+            private DrawTexture _iconTexture;
 
             public event EventHandler RemoveMarkerEvent;
             public event EventHandler EditMarkerEvent;
@@ -237,22 +258,28 @@ namespace ClassicUO.Game.UI.Gumps
 
             private void DrawData()
             {
-                _labelName = new Label($"{_marker.Name}", true, HUE_FONT, 280) { X = 10, Y = _y };
+                if (_marker.MarkerIcon != null)
+                {
+                    _iconTexture = new DrawTexture(_marker.MarkerIcon) { X = 0, Y = _y - 5 };
+                    Add(_iconTexture);
+                }
+
+                _labelName = new Label($"{_marker.Name}", true, HUE_FONT, 280) { X = 30, Y = _y };
                 Add(_labelName);
 
-                _labelX = new Label($"{_marker.X}", true, HUE_FONT, 35) { X = 285, Y = _y };
+                _labelX = new Label($"{_marker.X}", true, HUE_FONT, 35) { X = 305, Y = _y };
                 Add(_labelX);
 
-                _labelY = new Label($"{_marker.Y}", true, HUE_FONT, 35) { X = 330, Y = _y };
+                _labelY = new Label($"{_marker.Y}", true, HUE_FONT, 35) { X = 350, Y = _y };
                 Add(_labelY);
 
-                _labelColor = new Label($"{_marker.ColorName}", true, HUE_FONT, 35) { X = 390, Y = _y };
+                _labelColor = new Label($"{_marker.ColorName}", true, HUE_FONT, 35) { X = 410, Y = _y };
                 Add(_labelColor);
 
                 Add(
                     new Button((int)ButtonsOption.EDIT_MARKER_BTN, 0xFAB, 0xFAC)
                     {
-                        X = 450,
+                        X = 480,
                         Y = _y,
                         ButtonAction = ButtonAction.Activate,
                     }
@@ -261,7 +288,7 @@ namespace ClassicUO.Game.UI.Gumps
                 Add(
                     new Button((int)ButtonsOption.REMOVE_MARKER_BTN, 0xFB1, 0xFB2)
                     {
-                        X = 485,
+                        X = 515,
                         Y = _y,
                         ButtonAction = ButtonAction.Activate,
                     }
@@ -276,6 +303,7 @@ namespace ClassicUO.Game.UI.Gumps
                     _labelColor.Text = editedMarker.ColorName;
                     _labelX.Text = editedMarker.X.ToString();
                     _labelY.Text = editedMarker.Y.ToString();
+                    _iconTexture.Texture = editedMarker.MarkerIcon;
 
                     EditMarkerEvent.Raise();
                 }
@@ -290,8 +318,8 @@ namespace ClassicUO.Game.UI.Gumps
 
                         existingGump?.Dispose();
 
-                        var editUserMarkerGump = new UserMarkersGump(_marker.X, _marker.Y, _markers, _marker.ColorName, true, _idx);
-                        editUserMarkerGump.EditEnd += OnEditEnd;
+                        var editUserMarkerGump = new UserMarkersGump(_marker.X, _marker.Y, _markers, _marker.ColorName, _marker.MarkerIconName ,true, _idx);
+                        editUserMarkerGump.EditEnd += OnEditEnd; 
 
                         UIManager.Add(editUserMarkerGump);
                             
