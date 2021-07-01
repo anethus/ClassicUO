@@ -677,7 +677,7 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     stream.Read(buffer, 0, buffer.Length);
 
-                    StackDataReader reader = new StackDataReader(buffer, (int)stream.Length);
+                    StackDataReader reader = new StackDataReader(buffer.AsSpan(0, (int)stream.Length));
 
                     bool was_error;
                     long fp_offset;
@@ -1085,20 +1085,15 @@ namespace ClassicUO.Game.UI.Gumps
                                 const float MAG_0 = 80f / 100f;
                                 const float MAG_1 = 100f / 80f;
 
-                                int mapY_plus_one;
-
                                 for (mapY = 1; mapY < real_height_less_one; ++mapY)
                                 {
-                                    mapY_plus_one = mapY + 1;
+                                    int blockCurrent = (mapY + OFFSET_PIX_HALF) * (realWidth + OFFSET_PIX) + OFFSET_PIX_HALF;
+                                    int blockNext = (mapY + 1 + OFFSET_PIX_HALF) * (realWidth + OFFSET_PIX) + OFFSET_PIX_HALF;
 
                                     for (mapX = 1; mapX < real_width_less_one; ++mapX)
                                     {
-                                        int blockCurrent = (mapY + OFFSET_PIX_HALF) * (realWidth + OFFSET_PIX) + mapX + OFFSET_PIX_HALF;
-
-                                        int blockNext = (mapY_plus_one + OFFSET_PIX_HALF) * (realWidth + OFFSET_PIX) + (mapX - 1) + OFFSET_PIX_HALF;
-
-                                        ref sbyte z0 = ref allZ[blockCurrent];
-                                        ref sbyte z1 = ref allZ[blockNext];
+                                        sbyte z0 = allZ[++blockCurrent];
+                                        sbyte z1 = allZ[blockNext++];
 
                                         if (z0 == z1)
                                         {
@@ -1116,15 +1111,15 @@ namespace ClassicUO.Game.UI.Gumps
                                         {
                                             if (z0 < z1)
                                             {
-                                                r = (byte)(r * MAG_0);
-                                                g = (byte)(g * MAG_0);
-                                                b = (byte)(b * MAG_0);
+                                                r = (byte)Math.Min(0xFF, r * MAG_0);
+                                                g = (byte)Math.Min(0xFF, g * MAG_0);
+                                                b = (byte)Math.Min(0xFF, b * MAG_0);
                                             }
                                             else
                                             {
-                                                r = (byte)(r * MAG_1);
-                                                g = (byte)(g * MAG_1);
-                                                b = (byte)(b * MAG_1);
+                                                r = (byte)Math.Min(0xFF, r * MAG_1);
+                                                g = (byte)Math.Min(0xFF, g * MAG_1);
+                                                b = (byte)Math.Min(0xFF, b * MAG_1);
                                             }
 
                                             cc = (uint) (r | (g << 8) | (b << 16) | (a << 24));
@@ -1153,6 +1148,7 @@ namespace ClassicUO.Game.UI.Gumps
                         }
                         catch (Exception ex)
                         {
+                            Log.Error($"error loading worldmap: {ex}");
                         }
 
 

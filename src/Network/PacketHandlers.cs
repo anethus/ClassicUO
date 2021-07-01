@@ -83,7 +83,7 @@ namespace ClassicUO.Network
 
             if (bufferReader != null)
             {
-                StackDataReader buffer = new StackDataReader(data, length);
+                StackDataReader buffer = new StackDataReader(data.AsSpan(0, length));
                 buffer.Seek(offset);
 
                 bufferReader(ref buffer);
@@ -2462,15 +2462,15 @@ namespace ClassicUO.Network
 
                         // poster
                         int len = p.ReadUInt8();
-                        string text = p.ReadUTF8(len, true) + " - ";
+                        string text = (len <= 0 ? string.Empty : p.ReadUTF8(len, true)) + " - ";
 
                         // subject
                         len = p.ReadUInt8();
-                        text += p.ReadUTF8(len, true) + " - ";
+                        text += (len <= 0 ? string.Empty : p.ReadUTF8(len, true)) + " - ";
 
                         // datetime
                         len = p.ReadUInt8();
-                        text += p.ReadUTF8(len, true);
+                        text += (len <= 0 ? string.Empty : p.ReadUTF8(len, true));
 
                         bulletinBoard.AddBulletinObject(serial, text);
                     }
@@ -3710,25 +3710,43 @@ namespace ClassicUO.Network
 
             string[] lines = new string[textLinesCount];
 
-            for (int i = 0, index = p.Position; i < textLinesCount; i++)
+            for (int i = 0; i < textLinesCount; ++i)
             {
-                int length = ((p[index++] << 8) | p[index++]) << 1;
-                int true_length = 0;
+                int length = p.ReadUInt16BE();
 
-                while (true_length < length)
+                if (length > 0)
                 {
-                    if (((p[index + true_length++] << 8) | p[index + true_length++]) << 1 == '\0')
-                    {
-                        break;
-                    }
+                    lines[i] = p.ReadUnicodeBE(length);
                 }
-
-                unsafe
+                else
                 {
-                    lines[i] = Encoding.BigEndianUnicode.GetString(((byte*)p.StartAddress + index), true_length);
+                    lines[i] = string.Empty;
                 }
-                index += length;
             }
+
+            //for (int i = 0, index = p.Position; i < textLinesCount; i++)
+            //{
+            //    int length = ((p[index++] << 8) | p[index++]) << 1;
+            //    int true_length = 0;
+
+            //    while (true_length < length)
+            //    {
+            //        if (((p[index + true_length++] << 8) | p[index + true_length++]) << 1 == '\0')
+            //        {
+            //            break;
+            //        }
+            //    }
+
+            //    unsafe
+            //    {
+
+            //        fixed (byte* ptr = &p.Buffer[index])
+            //        {
+            //            lines[i] = Encoding.BigEndianUnicode.GetString(ptr, true_length);
+            //        }
+            //    }
+            //    index += length;
+            //}
 
             CreateGump
             (
@@ -4958,11 +4976,12 @@ namespace ClassicUO.Network
             //byte* decompressedBytes = stackalloc byte[dlen];
             bool ismovable = item.ItemData.IsMultiMovable;
 
-            byte[] decompressedBytes = System.Buffers.ArrayPool<byte>.Shared.Rent(dlen);
+            byte[] buffer = null;
+            Span<byte> span = dlen <= 1024 ? stackalloc byte[dlen] : (buffer = System.Buffers.ArrayPool<byte>.Shared.Rent(dlen));
 
             try
             {
-                fixed (byte* dbytesPtr = decompressedBytes)
+                fixed (byte* dbytesPtr = span)
                 {
                     fixed (byte* srcPtr = &source[sourcePosition])
                     {
@@ -4976,7 +4995,7 @@ namespace ClassicUO.Network
                         );
                     }
 
-                    StackDataReader reader = new StackDataReader(dbytesPtr, dlen);
+                    StackDataReader reader = new StackDataReader(span.Slice(0, dlen));
 
                     ushort id = 0;
                     sbyte x = 0, y = 0, z = 0;
@@ -5109,7 +5128,10 @@ namespace ClassicUO.Network
             }
             finally
             {
-                System.Buffers.ArrayPool<byte>.Shared.Return(decompressedBytes);
+                if (buffer != null)
+                {
+                    System.Buffers.ArrayPool<byte>.Shared.Return(buffer);
+                }
             }
         }
 
@@ -5268,7 +5290,7 @@ namespace ClassicUO.Network
             p.Skip((int) clen);
 
             uint linesNum = p.ReadUInt32BE();
-            string[] lines = System.Buffers.ArrayPool<string>.Shared.Rent((int) linesNum);
+            string[] lines = new string[linesNum];
 
             try
             {
@@ -5297,25 +5319,54 @@ namespace ClassicUO.Network
 
                         p.Skip((int)clen);
 
-                        for (int i = 0, index = 0; i < linesNum && index < dlen; i++)
+
+                        StackDataReader reader = new StackDataReader(decData.AsSpan(0, dlen));
+
+                        for (int i = 0; i < linesNum; ++i)
                         {
-                            int length = ((decData[index++] << 8) | decData[index++]) << 1;
-                            int true_length = 0;
+                            int remaining = reader.Remaining;
 
-                            for (int k = 0; k < length && true_length < length && index + true_length < dlen; ++k, true_length += 2)
+                            if (remaining >= 2)
                             {
-                                ushort c = (ushort)(((decData[index + true_length] << 8) | decData[index + true_length + 1]) << 1);
+                                int length = reader.ReadUInt16BE();
 
-                                if (c == '\0')
+                                if (length > 0)
                                 {
-                                    break;
+                                    lines[i] = reader.ReadUnicodeBE(length);
+                                }
+                                else
+                                {
+                                    lines[i] = string.Empty;
                                 }
                             }
-
-                            lines[i] = Encoding.BigEndianUnicode.GetString(decData, index, true_length);
-
-                            index += length;
+                            else
+                            {
+                                lines[i] = string.Empty;
+                            }
                         }
+
+
+                        reader.Release();
+
+                        //for (int i = 0, index = 0; i < linesNum && index < dlen; i++)
+                        //{
+                        //    int length = ((decData[index++] << 8) | decData[index++]) << 1;
+                        //    int true_length = 0;
+
+                        //    for (int k = 0; k < length && true_length < length && index + true_length < dlen; ++k, true_length += 2)
+                        //    {
+                        //        ushort c = (ushort)(((decData[index + true_length] << 8) | decData[index + true_length + 1]) << 1);
+
+                        //        if (c == '\0')
+                        //        {
+                        //            break;
+                        //        }
+                        //    }
+
+                        //    lines[i] = Encoding.BigEndianUnicode.GetString(decData, index, true_length);
+
+                        //    index += length;
+                        //}
                     }
                     finally
                     {
@@ -5335,7 +5386,7 @@ namespace ClassicUO.Network
             }
             finally
             {
-                System.Buffers.ArrayPool<string>.Shared.Return(lines);
+                //System.Buffers.ArrayPool<string>.Shared.Return(lines);
             }
         }
 
