@@ -2611,6 +2611,7 @@ namespace ClassicUO.Resources {
             }
         }
         
+        /// <summary>
         ///   Looks up a localized string similar to New Sails.
         /// </summary>
         public static string NewSails {
@@ -2739,17 +2740,18 @@ namespace ClassicUO.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Original Sails.
         /// </summary>
-        public static string OriginalSails {
-            get {
-                return ResourceManager.GetString("OriginalSails", resourceCulture);
-            }
-        }
-        
-        ///   Looks up a localized string similar to Open Macro Settings.
-        /// </summary>
         public static string OpenMacroSettings {
             get {
                 return ResourceManager.GetString("OpenMacroSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Original Sails.
+        /// </summary>
+        public static string OriginalSails {
+            get {
+                return ResourceManager.GetString("OriginalSails", resourceCulture);
             }
         }
         
@@ -3093,15 +3095,6 @@ namespace ClassicUO.Resources {
         public static string Remove {
             get {
                 return ResourceManager.GetString("Remove", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Replace Sails.
-        /// </summary>
-        public static string SailType {
-            get {
-                return ResourceManager.GetString("SailType", resourceCulture);
             }
         }
         
