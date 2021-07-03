@@ -58,7 +58,7 @@ namespace ClassicUO.Game.UI.Gumps
     internal class WorldMapGump : ResizableGump
     {
         private static Point _last_position = new Point(100, 100);
-        private Point _center, _lastScroll;
+        private Point _center, _mouseCenter, _lastScroll;
 
         private bool _flipMap = true;
         private bool _freeView;
@@ -67,16 +67,19 @@ namespace ClassicUO.Game.UI.Gumps
         private bool _isTopMost;
         private readonly string _mapFilesPath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client");
         private readonly string _mapIconsPath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client", "MapIcons");
+
+        public const string USER_MARKERS_FILE = "userMarkers";
+        public static readonly string UserMarkersFilePath = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client", $"{USER_MARKERS_FILE}.usr");
+
         private int _mapIndex;
         private bool _mapMarkersLoaded;
         private UOTexture _mapTexture;
 
-
-        private readonly List<WMapMarkerFile> _markerFiles = new List<WMapMarkerFile>();
+        private static readonly List<WMapMarkerFile> _markerFiles = new List<WMapMarkerFile>();
 
         private SpriteFont _markerFont = Fonts.Map1;
         private int _markerFontIndex = 1;
-        private readonly Dictionary<string, Texture2D> _markerIcons = new Dictionary<string, Texture2D>();
+        public static readonly Dictionary<string, Texture2D> _markerIcons = new Dictionary<string, Texture2D>();
 
         private readonly Dictionary<string, ContextMenuItemEntry> _options = new Dictionary<string, ContextMenuItemEntry>();
         private bool _showCoordinates;
@@ -94,7 +97,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         private WMapMarker _gotoMarker;
 
-        private readonly float[] _zooms = new float[10] { 0.125f, 0.25f, 0.5f, 0.75f, 1f, 1.5f, 2f, 4f, 6f, 8f };
+        private readonly float[] _zooms = { 0.125f, 0.25f, 0.5f, 0.75f, 1f, 1.5f, 2f, 4f, 6f, 8f };
 
         public WorldMapGump() : base
         (
@@ -360,6 +363,15 @@ namespace ClassicUO.Game.UI.Gumps
 
             _options["show_coordinates"] = new ContextMenuItemEntry(ResGumps.ShowYourCoordinates, () => { _showCoordinates = !_showCoordinates; }, true, _showCoordinates);
 
+            _options["markers_manager"] = new ContextMenuItemEntry(ResGumps.MarkersManager,
+                () =>
+                {
+                    var mm = new MarkersManagerGump();
+
+                    UIManager.Add(mm);
+                }
+                );
+
             _options["saveclose"] = new ContextMenuItemEntry(ResGumps.SaveClose, Dispose);
         }
 
@@ -449,6 +461,7 @@ namespace ClassicUO.Game.UI.Gumps
             ContextMenu.Add(_options["show_multis"]);
             ContextMenu.Add(_options["show_coordinates"]);
             ContextMenu.Add("", null);
+            ContextMenu.Add(_options["markers_manager"]);
             ContextMenu.Add(_options["saveclose"]);
         }
 
@@ -477,15 +490,15 @@ namespace ClassicUO.Game.UI.Gumps
 
         private (int, int) RotatePoint(int x, int y, float zoom, int dist, float angle = 45f)
         {
-            x = (int) (x * zoom);
-            y = (int) (y * zoom);
+            x = (int)(x * zoom);
+            y = (int)(y * zoom);
 
             if (angle == 0.0f)
             {
                 return (x, y);
             }
 
-            return ((int) Math.Round(Math.Cos(dist * Math.PI / 4.0) * x - Math.Sin(dist * Math.PI / 4.0) * y), (int) Math.Round(Math.Sin(dist * Math.PI / 4.0) * x + Math.Cos(dist * Math.PI / 4.0) * y));
+            return ((int)Math.Round(Math.Cos(dist * Math.PI / 4.0) * x - Math.Sin(dist * Math.PI / 4.0) * y), (int)Math.Round(Math.Sin(dist * Math.PI / 4.0) * x + Math.Cos(dist * Math.PI / 4.0) * y));
         }
 
         private void AdjustPosition
@@ -572,51 +585,6 @@ namespace ClassicUO.Game.UI.Gumps
             base.Dispose();
         }
 
-        private Color GetColor(string name)
-        {
-            if (name.Equals("red", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Red;
-            }
-
-            if (name.Equals("green", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Green;
-            }
-
-            if (name.Equals("blue", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Blue;
-            }
-
-            if (name.Equals("purple", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Purple;
-            }
-
-            if (name.Equals("black", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Black;
-            }
-
-            if (name.Equals("yellow", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Yellow;
-            }
-
-            if (name.Equals("white", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.White;
-            }
-
-            if (name.Equals("none", StringComparison.OrdinalIgnoreCase))
-            {
-                return Color.Transparent;
-            }
-
-            return Color.White;
-        }
-
         private void SetFont(int fontIndex)
         {
             _markerFontIndex = fontIndex;
@@ -677,7 +645,7 @@ namespace ClassicUO.Game.UI.Gumps
         }
 
 
-        private class WMapMarker
+        internal class WMapMarker
         {
             public string Name { get; set; }
             public int X { get; set; }
@@ -687,6 +655,8 @@ namespace ClassicUO.Game.UI.Gumps
             public Texture2D MarkerIcon { get; set; }
             public string MarkerIconName { get; set; }
             public int ZoomIndex { get; set; }
+
+            public string ColorName { get; set; }
         }
 
         private class WMapMarkerFile
@@ -701,7 +671,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             public static unsafe Texture2D CreateTextureFromICO_Cur(Stream stream)
             {
-                byte[] buffer = System.Buffers.ArrayPool<byte>.Shared.Rent((int) stream.Length);
+                byte[] buffer = System.Buffers.ArrayPool<byte>.Shared.Rent((int)stream.Length);
 
                 try
                 {
@@ -996,8 +966,8 @@ namespace ClassicUO.Game.UI.Gumps
             private static unsafe IntPtr INTERNAL_convertSurfaceFormat(IntPtr surface)
             {
                 IntPtr result = surface;
-                SDL.SDL_Surface* surPtr = (SDL.SDL_Surface*) surface;
-                SDL.SDL_PixelFormat* pixelFormatPtr = (SDL.SDL_PixelFormat*) surPtr->format;
+                SDL.SDL_Surface* surPtr = (SDL.SDL_Surface*)surface;
+                SDL.SDL_PixelFormat* pixelFormatPtr = (SDL.SDL_PixelFormat*)surPtr->format;
 
                 // SurfaceFormat.Color is SDL_PIXELFORMAT_ABGR8888
                 if (pixelFormatPtr->format != SDL.SDL_PIXELFORMAT_ABGR8888)
@@ -1024,7 +994,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 return Task.CompletedTask;
             }
-            
+
             return Task.Run
             (
                 () =>
@@ -1043,7 +1013,7 @@ namespace ClassicUO.Game.UI.Gumps
                             int fixedHeight = MapLoader.Instance.MapBlocksSize[World.MapIndex, 1];
 
                             int size = (realWidth + OFFSET_PIX) * (realHeight + OFFSET_PIX);
-                           
+
                             sbyte[] allZ = System.Buffers.ArrayPool<sbyte>.Shared.Rent(size);
                             uint[] buffer = System.Buffers.ArrayPool<uint>.Shared.Rent(size);
 
@@ -1132,10 +1102,10 @@ namespace ClassicUO.Game.UI.Gumps
 
                                         ref uint cc = ref buffer[blockCurrent];
 
-                                        byte r = (byte) (cc & 0xFF);        
-                                        byte g = (byte)((cc >> 8) & 0xFF);  
-                                        byte b = (byte)((cc >> 16) & 0xFF); 
-                                        byte a = (byte)((cc >> 24) & 0xFF); 
+                                        byte r = (byte)(cc & 0xFF);
+                                        byte g = (byte)((cc >> 8) & 0xFF);
+                                        byte b = (byte)((cc >> 16) & 0xFF);
+                                        byte a = (byte)((cc >> 24) & 0xFF);
 
                                         if (r != 0 || g != 0 || b != 0)
                                         {
@@ -1152,7 +1122,7 @@ namespace ClassicUO.Game.UI.Gumps
                                                 b = (byte)Math.Min(0xFF, b * MAG_1);
                                             }
 
-                                            cc = (uint) (r | (g << 8) | (b << 16) | (a << 24));
+                                            cc = (uint)(r | (g << 8) | (b << 16) | (a << 24));
                                         }
                                     }
                                 }
@@ -1167,7 +1137,7 @@ namespace ClassicUO.Game.UI.Gumps
                                 {
                                     _mapTexture = new UOTexture(realWidth, realHeight);
                                 }
-                                
+
                                 _mapTexture.SetData(buffer, 0, realWidth * realHeight);
                             }
                             finally
@@ -1188,7 +1158,6 @@ namespace ClassicUO.Game.UI.Gumps
             );
         }
 
-
         private void LoadMarkers()
         {
             //return Task.Run(() =>
@@ -1205,6 +1174,11 @@ namespace ClassicUO.Game.UI.Gumps
                         {
                             t.Dispose();
                         }
+                    }
+
+                    if (!File.Exists(UserMarkersFilePath))
+                    {
+                        using (File.Create(UserMarkersFilePath)) { }
                     }
 
                     _markerIcons.Clear();
@@ -1262,7 +1236,10 @@ namespace ClassicUO.Game.UI.Gumps
                         }
                     }
 
-                    string[] mapFiles = Directory.GetFiles(_mapFilesPath, "*.map").Union(Directory.GetFiles(_mapFilesPath, "*.csv")).Union(Directory.GetFiles(_mapFilesPath, "*.xml")).ToArray();
+                    string[] mapFiles = Directory.GetFiles(_mapFilesPath, "*.map")
+                                        .Union(Directory.GetFiles(_mapFilesPath, "*.csv"))
+                                        .Union(Directory.GetFiles(_mapFilesPath, "*.xml"))
+                                        .Append(UserMarkersFilePath).ToArray();
 
                     _markerFiles.Clear();
 
@@ -1366,6 +1343,10 @@ namespace ClassicUO.Game.UI.Gumps
                                     }
                                 }
                             }
+                            else if (mapFile != null && Path.GetExtension(mapFile).ToLower().Equals(".usr"))
+                            {
+                                markerFile.Markers = LoadUserMarkers();
+                            }
                             else if (mapFile != null) //CSV x,y,mapindex,name of marker,iconname,color,zoom
                             {
                                 using (StreamReader reader = new StreamReader(mapFile))
@@ -1385,24 +1366,7 @@ namespace ClassicUO.Game.UI.Gumps
                                         {
                                             continue;
                                         }
-
-                                        WMapMarker marker = new WMapMarker
-                                        {
-                                            X = int.Parse(splits[0]),
-                                            Y = int.Parse(splits[1]),
-                                            MapId = int.Parse(splits[2]),
-                                            Name = splits[3],
-                                            MarkerIconName = splits[4].ToLower(),
-                                            Color = GetColor(splits[5]),
-                                            ZoomIndex = splits.Length == 7 ? int.Parse(splits[6]) : 3
-                                        };
-
-                                        if (_markerIcons.TryGetValue(splits[4].ToLower(), out Texture2D value))
-                                        {
-                                            marker.MarkerIcon = value;
-                                        }
-
-                                        markerFile.Markers.Add(marker);
+                                        markerFile.Markers.Add(ParseMarker(splits));
                                     }
                                 }
                             }
@@ -1410,8 +1374,8 @@ namespace ClassicUO.Game.UI.Gumps
                             if (markerFile.Markers.Count > 0)
                             {
                                 GameActions.Print($"..{Path.GetFileName(mapFile)} ({markerFile.Markers.Count})", 0x2B);
-                                _markerFiles.Add(markerFile);
                             }
+                            _markerFiles.Add(markerFile);
                         }
                     }
 
@@ -1431,6 +1395,53 @@ namespace ClassicUO.Game.UI.Gumps
             }
 
             //);
+        }
+
+        /// <summary>
+        /// Reload User Markers File after Changes
+        /// </summary>
+        internal static void ReloadUserMarkers()
+        {
+            var userFile = _markerFiles.FirstOrDefault(f => f.Name == USER_MARKERS_FILE);
+
+            if (userFile == null)
+            {
+                return;
+            }
+
+            userFile.Markers = LoadUserMarkers();
+        }
+
+        /// <summary>
+        /// Load User Markers to List of Markers
+        /// </summary>
+        /// <returns>List of loaded Markers</returns>
+        internal static List<WMapMarker> LoadUserMarkers()
+        {
+            List<WMapMarker> tempList = new List<WMapMarker>();
+
+            using (StreamReader reader = new StreamReader(UserMarkersFilePath))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        continue;
+                    }
+
+                    string[] splits = line.Split(',');
+
+                    if (splits.Length <= 1)
+                    {
+                        continue;
+                    }
+                    tempList.Add(ParseMarker(splits));
+                }
+            }
+
+            return tempList;
         }
 
         #endregion
@@ -1460,16 +1471,15 @@ namespace ClassicUO.Game.UI.Gumps
             int sx = _center.X + 1;
             int sy = _center.Y + 1;
 
-            int size = (int) Math.Max(gWidth * 1.75f, gHeight * 1.75f);
+            int size = (int)Math.Max(gWidth * 1.75f, gHeight * 1.75f);
 
-            int size_zoom = (int) (size / Zoom);
+            int size_zoom = (int)(size / Zoom);
             int size_zoom_half = size_zoom >> 1;
 
             int halfWidth = gWidth >> 1;
             int halfHeight = gHeight >> 1;
 
             ResetHueVector();
-
 
             batcher.Draw2D
             (
@@ -1879,24 +1889,24 @@ namespace ClassicUO.Game.UI.Gumps
 
                 if (rotX + size.X / 2 > x + Width - 8)
                 {
-                    rotX = x + Width - 8 - (int) (size.X / 2);
+                    rotX = x + Width - 8 - (int)(size.X / 2);
                 }
                 else if (rotX - size.X / 2 < x)
                 {
-                    rotX = x + (int) (size.X / 2);
+                    rotX = x + (int)(size.X / 2);
                 }
 
                 if (rotY + size.Y > y + Height)
                 {
-                    rotY = y + Height - (int) size.Y;
+                    rotY = y + Height - (int)size.Y;
                 }
                 else if (rotY - size.Y < y)
                 {
-                    rotY = y + (int) size.Y;
+                    rotY = y + (int)size.Y;
                 }
 
-                int xx = (int) (rotX - size.X / 2);
-                int yy = (int) (rotY - size.Y);
+                int xx = (int)(rotX - size.X / 2);
+                int yy = (int)(rotY - size.Y);
 
                 HueVector.X = 0;
                 HueVector.Y = 1;
@@ -2018,7 +2028,7 @@ namespace ClassicUO.Game.UI.Gumps
             else
             {
                 batcher.Draw2D(marker.MarkerIcon, rotX - (marker.MarkerIcon.Width >> 1), rotY - (marker.MarkerIcon.Height >> 1), ref HueVector);
-               
+
                 if (!showMarkerName)
                 {
                     if (Mouse.Position.X >= rotX - (marker.MarkerIcon.Width >> 1) &&
@@ -2150,7 +2160,7 @@ namespace ClassicUO.Game.UI.Gumps
                 _flipMap ? 45f : 0f
             );
 
-          
+
             rotX += x + width;
             rotY += y + height;
 
@@ -2280,24 +2290,24 @@ namespace ClassicUO.Game.UI.Gumps
 
                 if (rotX + size.X / 2 > x + Width - 8)
                 {
-                    rotX = x + Width - 8 - (int) (size.X / 2);
+                    rotX = x + Width - 8 - (int)(size.X / 2);
                 }
                 else if (rotX - size.X / 2 < x)
                 {
-                    rotX = x + (int) (size.X / 2);
+                    rotX = x + (int)(size.X / 2);
                 }
 
                 if (rotY + size.Y > y + Height)
                 {
-                    rotY = y + Height - (int) size.Y;
+                    rotY = y + Height - (int)size.Y;
                 }
                 else if (rotY - size.Y < y)
                 {
-                    rotY = y + (int) size.Y;
+                    rotY = y + (int)size.Y;
                 }
 
-                int xx = (int) (rotX - size.X / 2);
-                int yy = (int) (rotY - size.Y);
+                int xx = (int)(rotX - size.X / 2);
+                int yy = (int)(rotY - size.Y);
 
                 HueVector.X = 0;
                 HueVector.Y = 1;
@@ -2407,6 +2417,51 @@ namespace ClassicUO.Game.UI.Gumps
 
             UIManager.GameCursor.IsDraggingCursorForced = false;
 
+            if (button == MouseButtonType.Left && Keyboard.Ctrl)
+            {
+                // Scale width to Zoom
+                var newWidth = Width / Zoom;
+                var newHeight = Height / Zoom;
+
+                // Scale mouse cords to Zoom
+                var newX = x / Zoom;
+                var newY = y / Zoom;
+
+                // Rotate Cords if map fliped
+                // x' = (x + y)/Sqrt(2)
+                // y' = (y - x)/Sqrt(2)
+                if (_flipMap)
+                {
+                    var nw = (newWidth + newHeight) / 1.41f;
+                    var nh = (newHeight - newWidth) / 1.41f;
+                    newWidth = (int)nw;
+                    newHeight = (int)nh;
+
+                    var nx = (newX + newY) / 1.41f;
+                    var ny = (newY - newX) / 1.41f;
+                    newX = (int)nx;
+                    newY = (int)ny;
+                }
+
+                // Calulate Click cords to Map Cords
+                // (x,y) = MapCenter - ScaeldMapWidth/2 + ScaledMouseCords
+                _mouseCenter.X = _center.X - (int)(newWidth / 2) + (int)newX;
+                _mouseCenter.Y = _center.Y - (int)(newHeight / 2) + (int)newY;
+
+                // Check if file is loaded and contain markers
+                var userFile = _markerFiles.Where(f => f.Name == USER_MARKERS_FILE).FirstOrDefault();
+
+                if (userFile == null)
+                {
+                    return;
+                }
+
+                UserMarkersGump existingGump = UIManager.GetGump<UserMarkersGump>();
+
+                existingGump?.Dispose();
+                UIManager.Add(new UserMarkersGump(_mouseCenter.X, _mouseCenter.Y, userFile.Markers));
+            }
+
             base.OnMouseUp(x, y, button);
         }
 
@@ -2454,8 +2509,8 @@ namespace ClassicUO.Game.UI.Gumps
                     _flipMap ? 45f : 0f
                 );
 
-                _center.X += (int) (scrollX / Zoom);
-                _center.Y += (int) (scrollY / Zoom);
+                _center.X += (int)(scrollX / Zoom);
+                _center.Y += (int)(scrollY / Zoom);
 
                 if (_center.X < 0)
                 {
@@ -2535,6 +2590,69 @@ namespace ClassicUO.Game.UI.Gumps
         #region Helpers
 
         /// <summary>
+        /// Parser String to Marker
+        /// </summary>
+        /// <param name="splits">Array of string contain information about Marker</param>
+        /// <returns>Marker</returns>
+        internal static WMapMarker ParseMarker(string[] splits)
+        {
+            WMapMarker marker = new WMapMarker
+            {
+                X = int.Parse(Truncate(splits[0], 4)),
+                Y = int.Parse(Truncate(splits[1], 4)),
+                MapId = int.Parse(splits[2]),
+                Name = Truncate(splits[3], 25),
+                MarkerIconName = splits[4].ToLower(),
+                Color = GetColor(Truncate(splits[5], 10)),
+                ColorName = Truncate(splits[5], 10),
+                ZoomIndex = splits.Length == 7 ? int.Parse(splits[6]) : 3
+            };
+
+            if (_markerIcons.TryGetValue(splits[4].ToLower(), out Texture2D value))
+            {
+                marker.MarkerIcon = value;
+            }
+
+            return marker;
+        }
+
+        /// <summary>
+        /// Truncate string to max length
+        /// </summary>
+        /// <param name="s">String</param>
+        /// <param name="maxLen">Max Length</param>
+        /// <returns>Truncated String</returns>
+        private static string Truncate(string s, int maxLen)
+        {
+            return s.Length > maxLen ? s.Remove(maxLen) : s;
+        }
+
+        /// <summary>
+        /// Map Color name to Color in XNA
+        /// </summary>
+        private static readonly Dictionary<string, Color> _colorMap = new Dictionary<string, Color>
+        {
+            { "red", Color.Red },
+            { "green", Color.Green },
+            { "blue", Color.Blue },
+            { "purple", Color.Purple },
+            { "black", Color.Black },
+            { "yellow", Color.Yellow },
+            { "white", Color.White },
+            { "none", Color.Transparent },
+        };
+
+        /// <summary>
+        /// Get Color for Texture by name
+        /// </summary>
+        /// <param name="name">Color name</param>
+        /// <returns>Color in XNA (RGBA)</returns>
+        public static Color GetColor(string name)
+        {
+            return _colorMap.TryGetValue(name, out var color) ? color : Color.White;
+        }
+
+        /// <summary>
         /// Converts latitudes and longitudes to X and Y locations based on Lord British's throne is located at 1323.1624 or 0° 0'N 0° 0'E
         /// </summary>
         /// <param name="coords"></param>
@@ -2554,11 +2672,11 @@ namespace ClassicUO.Game.UI.Gumps
 
             if (yCoord.Substring(yCoord.Length - 1).Equals("N"))
             {
-                yAxis = (int) (1624 - (yMinute / 60) * (4096.0 / 360) - yDegree * (4096.0 / 360));
+                yAxis = (int)(1624 - (yMinute / 60) * (4096.0 / 360) - yDegree * (4096.0 / 360));
             }
             else
             {
-                yAxis = (int) (1624 + (yMinute / 60) * (4096.0 / 360) + yDegree * (4096.0 / 360));
+                yAxis = (int)(1624 + (yMinute / 60) * (4096.0 / 360) + yDegree * (4096.0 / 360));
             }
 
             // Calc X next
@@ -2568,11 +2686,11 @@ namespace ClassicUO.Game.UI.Gumps
 
             if (xCoord.Substring(xCoord.Length - 1).Equals("W"))
             {
-                xAxis = (int) (1323 - (xMinute / 60) * (5120.0 / 360) - xDegree * (5120.0 / 360));
+                xAxis = (int)(1323 - (xMinute / 60) * (5120.0 / 360) - xDegree * (5120.0 / 360));
             }
             else
             {
-                xAxis = (int) (1323 + (xMinute / 60) * (5120.0 / 360) + xDegree * (5120.0 / 360));
+                xAxis = (int)(1323 + (xMinute / 60) * (5120.0 / 360) + xDegree * (5120.0 / 360));
             }
 
             // Normalize values outside of map range.
