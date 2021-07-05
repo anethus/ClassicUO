@@ -1180,11 +1180,6 @@ namespace ClassicUO.Game.UI.Gumps
                         using (File.Create(UserMarkersFilePath)) { }
                     }
 
-                    if (!File.Exists(UserMarkersFilePath))
-                    {
-                        using (File.Create(UserMarkersFilePath)) { }
-                    }
-
                     _markerIcons.Clear();
 
                     if (!Directory.Exists(_mapIconsPath))
