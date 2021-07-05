@@ -736,6 +736,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Window Manager.
+        /// </summary>
+        public static string WindowManager {
+            get {
+                return ResourceManager.GetString("WindowManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to - Container scale:.
         /// </summary>
         public static string ContainerScale {
