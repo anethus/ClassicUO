@@ -709,6 +709,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Window Manager.
+        /// </summary>
+        public static string WindowManager {
+            get {
+                return ResourceManager.GetString("WindowManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to - Container scale:.
         /// </summary>
         public static string ContainerScale {
@@ -3971,6 +3980,24 @@ namespace ClassicUO.Resources {
         public static string TreesStumps {
             get {
                 return ResourceManager.GetString("TreesStumps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Gump Name.
+        /// </summary>
+        public static string UIManagerGumpName {
+            get {
+                return ResourceManager.GetString("UIManagerGumpName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Reset.
+        /// </summary>
+        public static string UIManagerGumpReset {
+            get {
+                return ResourceManager.GetString("UIManagerGumpReset", resourceCulture);
             }
         }
         
