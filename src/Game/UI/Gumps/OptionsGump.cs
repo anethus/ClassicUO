@@ -350,6 +350,13 @@ namespace ClassicUO.Game.UI.Gumps
                 ) { ButtonParameter = 12 }
             );
 
+            Add(
+                new NiceButton(
+                    10, 10 + 30 *i++, 140, 25, ButtonAction.SwitchPage, ResGumps.WindowManager)
+                {
+                    ButtonParameter = 13
+                }
+            );
 
             Add
             (
@@ -425,6 +432,7 @@ namespace ClassicUO.Game.UI.Gumps
             BuildCounters();
             BuildInfoBar();
             BuildInterface();
+            BuildWindowManager();
             BuildExperimental();
 
             ChangePage(1);
@@ -3386,6 +3394,13 @@ namespace ClassicUO.Game.UI.Gumps
             );
 
             Add(rightArea, PAGE);
+        }
+
+        private void BuildWindowManager()
+        {
+            const int PAGE = 13;
+
+            Add(new UIManagerGump { X = 200 }, PAGE);
         }
 
 
