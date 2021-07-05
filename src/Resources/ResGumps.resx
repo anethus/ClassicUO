@@ -1513,4 +1513,13 @@ Client version: '{0}'</value>
   <data name="MarkerY" xml:space="preserve">
     <value>Y</value>
   </data>
+  <data name="OpenUIManager" xml:space="preserve">
+    <value>Open UI Manager</value>
+  </data>
+  <data name="UIManagerGumpName" xml:space="preserve">
+    <value>Gump Name</value>
+  </data>
+  <data name="UIManegerGumpReset" xml:space="preserve">
+    <value>Reset</value>
+  </data>
 </root>
