@@ -1102,7 +1102,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                                         ref uint cc = ref buffer[blockCurrent];
 
-                                        byte r = (byte) (cc & 0xFF);
+                                        byte r = (byte)(cc & 0xFF);
                                         byte g = (byte)((cc >> 8) & 0xFF);
                                         byte b = (byte)((cc >> 16) & 0xFF);
                                         byte a = (byte)((cc >> 24) & 0xFF);
