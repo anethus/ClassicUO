@@ -97,7 +97,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         private WMapMarker _gotoMarker;
 
-        private readonly float[] _zooms = { 0.125f, 0.25f, 0.5f, 0.75f, 1f, 1.5f, 2f, 4f, 6f, 8f };
+        private readonly float[] _zooms = new float[10] { 0.125f, 0.25f, 0.5f, 0.75f, 1f, 1.5f, 2f, 4f, 6f, 8f };
 
         public WorldMapGump() : base
         (
@@ -1346,10 +1346,6 @@ namespace ClassicUO.Game.UI.Gumps
                             {
                                 markerFile.Markers = LoadUserMarkers();
                             }
-                            else if (mapFile != null && Path.GetExtension(mapFile).ToLower().Equals(".usr"))
-                            {
-                                markerFile.Markers = LoadUserMarkers();
-                            }
                             else if (mapFile != null) //CSV x,y,mapindex,name of marker,iconname,color,zoom
                             {
                                 using (StreamReader reader = new StreamReader(mapFile))
@@ -1483,6 +1479,7 @@ namespace ClassicUO.Game.UI.Gumps
             int halfHeight = gHeight >> 1;
 
             ResetHueVector();
+
 
             batcher.Draw2D
             (
