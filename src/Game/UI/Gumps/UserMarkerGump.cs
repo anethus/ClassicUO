@@ -124,7 +124,7 @@ namespace ClassicUO.Game.UI.Gumps
             Add(new Label(ResGumps.MarkerX, true, HUE_FONT, 0, 255, Renderer.FontStyle.BlackBorder) { X = fx, Y = fy });
 
             // Y Field
-            fy += Y_OFFSET; 
+            fy += Y_OFFSET;
             Add(new ResizePic(0x0BB8)
             {
                 X = fx + LABEL_OFFSET,

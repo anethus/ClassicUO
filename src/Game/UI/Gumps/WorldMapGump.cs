@@ -1102,7 +1102,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                                         ref uint cc = ref buffer[blockCurrent];
 
-                                        byte r = (byte)(cc & 0xFF);
+                                        byte r = (byte) (cc & 0xFF);
                                         byte g = (byte)((cc >> 8) & 0xFF);
                                         byte b = (byte)((cc >> 16) & 0xFF);
                                         byte a = (byte)((cc >> 24) & 0xFF);
@@ -1137,7 +1137,6 @@ namespace ClassicUO.Game.UI.Gumps
                                 {
                                     _mapTexture = new UOTexture(realWidth, realHeight);
                                 }
-
                                 _mapTexture.SetData(buffer, 0, realWidth * realHeight);
                             }
                             finally
@@ -1174,6 +1173,11 @@ namespace ClassicUO.Game.UI.Gumps
                         {
                             t.Dispose();
                         }
+                    }
+
+                    if (!File.Exists(UserMarkersFilePath))
+                    {
+                        using (File.Create(UserMarkersFilePath)) { }
                     }
 
                     if (!File.Exists(UserMarkersFilePath))
@@ -1342,6 +1346,10 @@ namespace ClassicUO.Game.UI.Gumps
                                         }
                                     }
                                 }
+                            }
+                            else if (mapFile != null && Path.GetExtension(mapFile).ToLower().Equals(".usr"))
+                            {
+                                markerFile.Markers = LoadUserMarkers();
                             }
                             else if (mapFile != null && Path.GetExtension(mapFile).ToLower().Equals(".usr"))
                             {
