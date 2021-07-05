@@ -317,6 +317,40 @@ namespace ClassicUO.Game.UI.Gumps
 
             Add
             (
+                new NiceButton
+                (
+                    10,
+                    10 + 30 * i++,
+                    140,
+                    25,
+                    ButtonAction.SwitchPage,
+                    ResGumps.Interface
+                ) { ButtonParameter = 11 }
+            );
+
+            Add
+            (
+                new NiceButton
+                (
+                    10,
+                    10 + 30 * i++,
+                    140,
+                    25,
+                    ButtonAction.SwitchPage,
+                    ResGumps.Experimental
+                ) { ButtonParameter = 12 }
+            );
+
+            Add(
+                new NiceButton(
+                    10, 10 + 30 *i++, 140, 25, ButtonAction.SwitchPage, ResGumps.WindowManager)
+                {
+                    ButtonParameter = 13
+                }
+            );
+
+            Add
+            (
                 new Line
                 (
                     160,
@@ -385,6 +419,7 @@ namespace ClassicUO.Game.UI.Gumps
             BuildSpeech();
             BuildCombat();
             BuildInterface();
+            BuildWindowManager();
             BuildExperimental();
 
             ChangePage(1);
@@ -3503,6 +3538,14 @@ namespace ClassicUO.Game.UI.Gumps
 
             Add(rightArea, PAGE);
         }
+
+        private void BuildWindowManager()
+        {
+            const int PAGE = 13;
+
+            Add(new UIManagerGump { X = 200 }, PAGE);
+        }
+
 
         public override void OnButtonClick(int buttonID)
         {
