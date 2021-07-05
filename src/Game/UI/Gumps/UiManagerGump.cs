@@ -69,10 +69,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             ScrollArea rightArea = new ScrollArea
             (
-                10,
-                45,
-                GUMP_WIDTH - 15,
-                GUMP_HEIGHT - 60,
+                10, 45, GUMP_WIDTH - 15, GUMP_HEIGHT - 60,
                 true
             );
             
@@ -93,6 +90,10 @@ namespace ClassicUO.Game.UI.Gumps
 
             public UiManagerRecordControl(Gump gump)
             {
+                CanMove = true;
+                CanCloseWithRightClick = true;
+                AcceptMouseInput = true;
+
                 _gump = gump;
                 StringBuilder sb = new StringBuilder(gump.ToString().Split('.').Last());
                 // If gump is Angorable Append text
