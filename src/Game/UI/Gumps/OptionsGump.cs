@@ -109,7 +109,9 @@ namespace ClassicUO.Game.UI.Gumps
                          _alwaysRun,
                          _alwaysRunUnlessHidden,
                          _showHpMobile,
-                         _highlightByState,
+                         _highlightByPoisoned,
+                         _highlightByParalyzed,
+                         _highlightByInvul,
                          _drawRoofs,
                          _treeToStumps,
                          _hideVegetation,
@@ -732,11 +734,11 @@ namespace ClassicUO.Game.UI.Gumps
 
             section2.Add
             (
-                _highlightByState = AddCheckBox
+                _highlightByPoisoned = AddCheckBox
                 (
                     null,
-                    ResGumps.HighlighState,
-                    _currentProfile.HighlightMobilesByFlags,
+                    ResGumps.HighlightPoisoned,
+                    _currentProfile.HighlightMobilesByPoisoned,
                     startX,
                     startY
                 )
@@ -758,6 +760,22 @@ namespace ClassicUO.Game.UI.Gumps
 
             section2.AddRight(AddLabel(null, ResGumps.PoisonedColor, 0, 0), 2);
 
+            section2.PopIndent();
+
+            section2.Add
+            (
+                _highlightByParalyzed = AddCheckBox
+                (
+                    null,
+                    ResGumps.HighlightParalyzed,
+                    _currentProfile.HighlightMobilesByParalize,
+                    startX,
+                    startY
+                )
+            );
+
+            section2.PushIndent();
+
             section2.Add
             (
                 _paralyzedColorPickerBox = AddColorBox
@@ -771,6 +789,22 @@ namespace ClassicUO.Game.UI.Gumps
             );
 
             section2.AddRight(AddLabel(null, ResGumps.ParalyzedColor, 0, 0), 2);
+
+            section2.PopIndent();
+
+            section2.Add
+            (
+                _highlightByInvul = AddCheckBox
+                (
+                    null,
+                    ResGumps.HighlightInvulnerable,
+                    _currentProfile.HighlightMobilesByInvul,
+                    startX,
+                    startY
+                )
+            );
+
+            section2.PushIndent();
 
             section2.Add
             (
@@ -3433,7 +3467,9 @@ namespace ClassicUO.Game.UI.Gumps
                     _showHpMobile.IsChecked = false;
                     _hpComboBox.SelectedIndex = 0;
                     _hpComboBoxShowWhen.SelectedIndex = 0;
-                    _highlightByState.IsChecked = true;
+                    _highlightByPoisoned.IsChecked = true;
+                    _highlightByParalyzed.IsChecked = true;
+                    _highlightByInvul.IsChecked = true;
                     _poisonColorPickerBox.Hue = 0x0044;
                     _paralyzedColorPickerBox.Hue = 0x014C;
                     _invulnerableColorPickerBox.Hue = 0x0030;
@@ -3643,7 +3679,9 @@ namespace ClassicUO.Game.UI.Gumps
             _currentProfile.AlwaysRun = _alwaysRun.IsChecked;
             _currentProfile.AlwaysRunUnlessHidden = _alwaysRunUnlessHidden.IsChecked;
             _currentProfile.ShowMobilesHP = _showHpMobile.IsChecked;
-            _currentProfile.HighlightMobilesByFlags = _highlightByState.IsChecked;
+            _currentProfile.HighlightMobilesByPoisoned = _highlightByPoisoned.IsChecked;
+            _currentProfile.HighlightMobilesByParalize = _highlightByParalyzed.IsChecked;
+            _currentProfile.HighlightMobilesByInvul = _highlightByInvul.IsChecked;
             _currentProfile.PoisonHue = _poisonColorPickerBox.Hue;
             _currentProfile.ParalyzedHue = _paralyzedColorPickerBox.Hue;
             _currentProfile.InvulnerableHue = _invulnerableColorPickerBox.Hue;
