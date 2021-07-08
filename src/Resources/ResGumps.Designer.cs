@@ -1709,20 +1709,20 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Highlight by state (poisoned, yellow hits, paralyzed).
-        /// </summary>
-        public static string HighlighState {
-            get {
-                return ResourceManager.GetString("HighlighState", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Highlight container on ground when mouse is over a container gump.
         /// </summary>
         public static string HighlightContainerWhenSelected {
             get {
                 return ResourceManager.GetString("HighlightContainerWhenSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Highlight invulnerable.
+        /// </summary>
+        public static string HighlightInvulnerable {
+            get {
+                return ResourceManager.GetString("HighlightInvulnerable", resourceCulture);
             }
         }
         
@@ -1741,6 +1741,24 @@ namespace ClassicUO.Resources {
         public static string HighlightOnUse {
             get {
                 return ResourceManager.GetString("HighlightOnUse", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Highlight paralyzed.
+        /// </summary>
+        public static string HighlightParalyzed {
+            get {
+                return ResourceManager.GetString("HighlightParalyzed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Highlight poisoned.
+        /// </summary>
+        public static string HighlightPoisoned {
+            get {
+                return ResourceManager.GetString("HighlightPoisoned", resourceCulture);
             }
         }
         
