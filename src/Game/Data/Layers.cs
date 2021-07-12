@@ -242,5 +242,49 @@ namespace ClassicUO.Game.Data
                 yield return mobile.FindItemByLayer(layers[i]);
             }
         }
+
+        public static IEnumerable<Item> GetItemsOnVendor(Mobile mobile)
+        {
+            Item item;
+
+            item = mobile.FindItemByLayer(Layer.ShopBuyRestock);
+
+            if (item != null)
+            {
+                yield return item;
+            }
+
+            item = mobile.FindItemByLayer(Layer.ShopBuy);
+
+            if (item != null)
+            {
+                yield return item;
+            }
+
+            item = mobile.FindItemByLayer(Layer.ShopSell);
+
+            if (item != null)
+            {
+                yield return item;
+            }
+        }
+
+        public static bool IsHiddenLayer(Layer layer)
+        {
+            // Note that this doesn't include the backpack layer, which technically is
+            // visible on the paperdoll
+            switch (layer)
+            {
+                case Layer.Invalid:
+                case Layer.Mount:
+                case Layer.ShopBuyRestock:
+                case Layer.ShopBuy:
+                case Layer.ShopSell:
+                case Layer.Bank:
+                    return true;
+            }
+
+            return false;
+        }
     }
 }
