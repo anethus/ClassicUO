@@ -1077,7 +1077,7 @@ namespace ClassicUO.Game.Managers
                             break;
                         }
 
-                        Item item = World.Player.FindItemByLayer(Layer.OneHanded + (byte) handIndex);
+                        Item item = World.Player.FindItemByLayer((byte)(Layer.OneHanded + handIndex));
 
                         if (item != null)
                         {

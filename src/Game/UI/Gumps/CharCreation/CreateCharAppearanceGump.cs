@@ -62,8 +62,8 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
         private readonly StbTextBox _nameTextBox;
         private PaperDollInteractable _paperDoll;
         private readonly Button _nextButton;
-        private readonly Dictionary<Layer, Tuple<int, ushort>> CurrentColorOption = new Dictionary<Layer, Tuple<int, ushort>>();
-        private readonly Dictionary<Layer, int> CurrentOption = new Dictionary<Layer, int>
+        private readonly Dictionary<byte, Tuple<int, ushort>> CurrentColorOption = new Dictionary<byte, Tuple<int, ushort>>();
+        private readonly Dictionary<byte, int> CurrentOption = new Dictionary<byte, int>
         {
             {
                 Layer.Hair, 1
@@ -362,7 +362,7 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
         private void UpdateEquipments()
         {
             RaceType race = _characterInfo.Race;
-            Layer layer;
+            byte layer;
             CharacterCreationValues.ComboContent content;
 
             _character.Hue = CurrentColorOption[Layer.Invalid].Item2;
@@ -606,7 +606,7 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
             int x,
             int y,
             ushort[] pallet,
-            Layer layer,
+            byte layer,
             int clilocLabel,
             int rows,
             int columns
@@ -981,7 +981,7 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
             "origin"
         };
 
-        private Item CreateItem(int id, ushort hue, Layer layer)
+        private Item CreateItem(int id, ushort hue, byte layer)
         {
             Item existsItem = _character.FindItemByLayer(layer);
 
@@ -1022,14 +1022,14 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
 
         private class ColorSelectedEventArgs : EventArgs
         {
-            public ColorSelectedEventArgs(Layer layer, ushort[] pallet, int selectedIndex)
+            public ColorSelectedEventArgs(byte layer, ushort[] pallet, int selectedIndex)
             {
                 Layer = layer;
                 Pallet = pallet;
                 SelectedIndex = selectedIndex;
             }
 
-            public Layer Layer { get; }
+            public byte Layer { get; }
 
             private ushort[] Pallet { get; }
 
@@ -1047,10 +1047,10 @@ namespace ClassicUO.Game.UI.Gumps.CharCreation
             private ColorPickerBox _colorPickerBox;
             private readonly int _columns, _rows;
             private int _lastSelectedIndex;
-            private readonly Layer _layer;
+            private readonly byte _layer;
             private readonly ushort[] _pallet;
 
-            public CustomColorPicker(Layer layer, int label, ushort[] pallet, int rows, int columns)
+            public CustomColorPicker(byte layer, int label, ushort[] pallet, int rows, int columns)
             {
                 Width = 121;
                 Height = 25;
