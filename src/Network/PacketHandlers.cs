@@ -1212,10 +1212,8 @@ namespace ClassicUO.Network
                 ShopGump gump = new ShopGump(serial, true, 150, 5);
                 UIManager.Add(gump);
 
-                for (Layer layer = Layer.ShopBuyRestock; layer < Layer.ShopBuy + 1; layer++)
+                foreach (var item in Layers.GetItemsOnVendor(vendor))
                 {
-                    Item item = vendor.FindItemByLayer(layer);
-
                     LinkedObject first = item.Items;
 
                     if (first == null)
@@ -1687,11 +1685,11 @@ namespace ClassicUO.Network
 
             entity?.PushToBack(item);
 
-            if (item.Layer >= Layer.ShopBuyRestock && item.Layer <= Layer.ShopSell)
+            if (item.Layer == Layer.ShopBuyRestock || item.Layer == Layer.ShopBuy || item.Layer == Layer.ShopSell)
             {
                 //item.Clear();
             }
-            else if (SerialHelper.IsValid(item.Container) && item.Layer < Layer.Mount)
+            else if (SerialHelper.IsValid(item.Container) && !Layers.IsHiddenLayer(item.Layer))
             {
                 UIManager.GetGump<PaperDollGump>(item.Container)?.RequestUpdateContents();
             }
