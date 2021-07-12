@@ -16,7 +16,7 @@ namespace ClassicUO.Game.UI.Gumps
     {
         private const ushort HUE_FONT = 0xFFFF;
         private const ushort BACKGROUND_COLOR = 999;
-        private const ushort GUMP_WIDTH = 450;
+        private const ushort GUMP_WIDTH = 500;
         private const ushort GUMP_HEIGHT = 400;
 
         public UiManagerGump(): base(130, 130)
@@ -69,7 +69,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             ScrollArea rightArea = new ScrollArea
             (
-                10, 45, GUMP_WIDTH - 15, GUMP_HEIGHT - 60,
+                10, 45, GUMP_WIDTH - 25, GUMP_HEIGHT - 60,
                 true
             );
             
@@ -91,8 +91,7 @@ namespace ClassicUO.Game.UI.Gumps
             public UiManagerRecordControl(Gump gump)
             {
                 CanMove = true;
-                CanCloseWithRightClick = true;
-                AcceptMouseInput = true;
+                AcceptMouseInput = false;
 
                 _gump = gump;
                 StringBuilder sb = new StringBuilder(gump.ToString().Split('.').Last());
@@ -107,7 +106,16 @@ namespace ClassicUO.Game.UI.Gumps
                             sb.Append($" [{(aGump as SkillButtonGump)?.SkillName}]");
                             break;
                         case ANCHOR_TYPE.HEALTHBAR:
-                            sb.Append($" [{(aGump as HealthBarGump)?.Name}]");
+                            if (aGump is HealthBarGump hb)
+                            {
+                                sb.Append($" [{hb.Name}]");
+                                break;
+                            }
+                            if (aGump is HealthBarGumpCustom hbc)
+                            {
+                                sb.Append($" [{hbc.Name}]");
+                                break;
+                            }
                             break;
                         case ANCHOR_TYPE.MACRO:
                             sb.Append($" [{(aGump as MacroButtonGump)?._macro.Name}]");
@@ -123,7 +131,7 @@ namespace ClassicUO.Game.UI.Gumps
                 //Gump Reset button
                 Add(new Button(1, 0xFAB, 0xFAC) { X = 380, ButtonAction = ButtonAction.Activate });
             }
-
+            
             public override void OnButtonClick(int buttonId)
             {
                 //Center of Game Window
