@@ -233,13 +233,13 @@ namespace ClassicUO.Game.GameObjects
         public ref StaticTiles ItemData => ref TileDataLoader.Instance.StaticData[IsMulti ? MultiGraphic : Graphic];
 
         public bool IsLootable =>
-            ItemData.Layer != (int) Layer.Hair && ItemData.Layer != (int) Layer.Beard && ItemData.Layer != (int) Layer.Face && Graphic != 0;
+            ItemData.Layer != Data.Layer.Hair && ItemData.Layer != Data.Layer.Beard && ItemData.Layer != Data.Layer.Face && Graphic != 0;
 
         public ushort Amount;
         public uint Container = 0xFFFF_FFFF;
 
         public bool IsDamageable;
-        public Layer Layer;
+        public byte Layer;
         public byte LightID;
 
         public Rectangle? MultiInfo;
@@ -531,7 +531,7 @@ namespace ClassicUO.Game.GameObjects
                         UsedLayer = false;
                     }
 
-                    Layer = (Layer) Direction;
+                    Layer = (byte)Direction;
                     AllowedToDraw = true;
                 }
             }
@@ -563,7 +563,7 @@ namespace ClassicUO.Game.GameObjects
         {
             ushort graphic = Graphic;
 
-            if (Layer == Layer.Mount)
+            if (Layer == Data.Layer.Mount)
             {
                 switch (graphic)
                 {

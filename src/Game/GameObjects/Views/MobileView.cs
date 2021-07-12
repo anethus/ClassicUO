@@ -786,7 +786,7 @@ namespace ClassicUO.Game.GameObjects
             return 0;
         }
 
-        internal static bool IsCovered(Mobile mobile, Layer layer)
+        internal static bool IsCovered(Mobile mobile, byte layer)
         {
             if (mobile.IsEmpty)
             {
