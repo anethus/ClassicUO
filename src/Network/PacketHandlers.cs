@@ -1675,7 +1675,7 @@ namespace ClassicUO.Network
             }
 
             item.Graphic = (ushort) (p.ReadUInt16BE() + p.ReadInt8());
-            item.Layer = (Layer) p.ReadUInt8();
+            item.Layer = p.ReadUInt8();
             item.Container = p.ReadUInt32BE();
             item.FixHue(p.ReadUInt16BE());
             item.Amount = 1;
@@ -2844,7 +2844,7 @@ namespace ClassicUO.Network
                 item.Amount = 1;
                 World.RemoveItemFromContainer(item);
                 item.Container = serial;
-                item.Layer = (Layer) layer;
+                item.Layer = layer;
 
                 item.CheckGraphicChange();
 
@@ -3050,7 +3050,7 @@ namespace ClassicUO.Network
                 return;
             }
 
-            Layer layer = (Layer) p.ReadUInt8();
+            byte layer = p.ReadUInt8();
 
             while (layer != Layer.Invalid && p.Position < p.Length)
             {
@@ -3062,11 +3062,11 @@ namespace ClassicUO.Network
 
                     World.RemoveItemFromContainer(item);
                     item.Container = serial;
-                    item.Layer = layer - 1;
+                    item.Layer = (byte)(layer - 1);
                     corpse.PushToBack(item);
                 }
 
-                layer = (Layer) p.ReadUInt8();
+                layer = p.ReadUInt8();
             }
         }
 
@@ -6195,7 +6195,7 @@ namespace ClassicUO.Network
 
                 if (graphic == 0x2006)
                 {
-                    item.Layer = (Layer) direction;
+                    item.Layer = (byte) direction;
                 }
 
                 item.FixHue(hue);
