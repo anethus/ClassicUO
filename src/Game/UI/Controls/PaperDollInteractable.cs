@@ -46,21 +46,6 @@ namespace ClassicUO.Game.UI.Controls
 {
     internal class PaperDollInteractable : Control
     {
-        private static readonly Layer[] _layerOrder =
-        {
-            Layer.Cloak, Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Arms, Layer.Torso, Layer.Tunic,
-            Layer.Ring, Layer.Bracelet, Layer.Face, Layer.Gloves, Layer.Skirt, Layer.Robe, Layer.Waist, Layer.Necklace,
-            Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
-        };
-
-        private static readonly Layer[] _layerOrder_quiver_fix =
-        {
-            Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Arms, Layer.Torso, Layer.Tunic,
-            Layer.Ring, Layer.Bracelet, Layer.Face, Layer.Gloves, Layer.Skirt, Layer.Robe, Layer.Cloak, Layer.Waist,
-            Layer.Necklace,
-            Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
-        };
-
         private readonly PaperDollGump _paperDollGump;
 
 
@@ -180,82 +165,36 @@ namespace ClassicUO.Game.UI.Controls
             }
 
             // equipment
-            Item equipItem = mobile.FindItemByLayer(Layer.Cloak);
-            Item arms = mobile.FindItemByLayer(Layer.Arms);
-
-            bool switch_arms_with_torso = false;
-
-            if (arms != null)
+            foreach (var item in Layers.GetItemsOnPaperdoll(mobile))
             {
-                switch_arms_with_torso = arms.Graphic == 0x1410 || arms.Graphic == 0x1417;
-            }
-            else if (HasFakeItem && ItemHold.Enabled && !ItemHold.IsFixedPosition && (byte) Layer.Arms == ItemHold.ItemData.Layer)
-            {
-                switch_arms_with_torso = ItemHold.Graphic == 0x1410 || ItemHold.Graphic == 0x1417;
-            }
-
-            Layer[] layers;
-
-            if (equipItem != null)
-            {
-                layers = equipItem.ItemData.IsContainer ? _layerOrder_quiver_fix : _layerOrder;
-            }
-            else if (HasFakeItem && ItemHold.Enabled && !ItemHold.IsFixedPosition && (byte) Layer.Cloak == ItemHold.ItemData.Layer)
-            {
-                layers = ItemHold.ItemData.IsContainer ? _layerOrder_quiver_fix : _layerOrder;
-            }
-            else
-            {
-                layers = _layerOrder;
-            }
-
-
-            for (int i = 0; i < layers.Length; i++)
-            {
-                Layer layer = layers[i];
-
-                if (switch_arms_with_torso)
+                if (item != null)
                 {
-                    if (layer == Layer.Arms)
-                    {
-                        layer = Layer.Torso;
-                    }
-                    else if (layer == Layer.Torso)
-                    {
-                        layer = Layer.Arms;
-                    }
-                }
-
-                equipItem = mobile.FindItemByLayer(layer);
-
-                if (equipItem != null)
-                {
-                    if (Mobile.IsCovered(mobile, layer))
+                    if (Mobile.IsCovered(mobile, item.Layer))
                     {
                         continue;
                     }
 
-                    ushort id = GetAnimID(mobile.Graphic, equipItem.ItemData.AnimID, mobile.IsFemale);
+                    ushort id = GetAnimID(mobile.Graphic, item.ItemData.AnimID, mobile.IsFemale);
 
                     Add
                     (
                         new GumpPicEquipment
                         (
-                            equipItem.Serial,
+                            item.Serial,
                             0,
                             0,
                             id,
-                            (ushort) (equipItem.Hue & 0x3FFF),
-                            layer
+                            (ushort) (item.Hue & 0x3FFF),
+                            item.Layer
                         )
                         {
                             AcceptMouseInput = true,
-                            IsPartialHue = equipItem.ItemData.IsPartialHue,
-                            CanLift = World.InGame && !World.Player.IsDead && layer != Layer.Beard && layer != Layer.Hair && (_paperDollGump.CanLift || LocalSerial == World.Player)
+                            IsPartialHue = item.ItemData.IsPartialHue,
+                            CanLift = World.InGame && !World.Player.IsDead && item.Layer != Layer.Beard && item.Layer != Layer.Hair && (_paperDollGump.CanLift || LocalSerial == World.Player)
                         }
                     );
                 }
-                else if (HasFakeItem && ItemHold.Enabled && !ItemHold.IsFixedPosition && (byte) layer == ItemHold.ItemData.Layer && ItemHold.ItemData.AnimID != 0)
+                else if (HasFakeItem && ItemHold.Enabled && !ItemHold.IsFixedPosition && (byte)item.Layer == ItemHold.ItemData.Layer && ItemHold.ItemData.AnimID != 0)
                 {
                     ushort id = GetAnimID(mobile.Graphic, ItemHold.ItemData.AnimID, mobile.IsFemale);
 
@@ -280,7 +219,7 @@ namespace ClassicUO.Game.UI.Controls
             }
 
 
-            equipItem = mobile.FindItemByLayer(Layer.Backpack);
+            var equipItem = mobile.FindItemByLayer(Layer.Backpack);
 
             if (equipItem != null && equipItem.ItemData.AnimID != 0)
             {
