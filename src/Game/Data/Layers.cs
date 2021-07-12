@@ -35,45 +35,45 @@ using System.Collections.Generic;
 
 namespace ClassicUO.Game.Data
 {
-    internal enum Layer : byte
+    internal static class Layer
     {
-        Invalid = 0x00,
-        OneHanded = 0x01,
-        TwoHanded = 0x02,
-        Shoes = 0x03,
-        Pants = 0x04,
-        Shirt = 0x05,
-        Helmet = 0x06,
-        Gloves = 0x07,
-        Ring = 0x08,
-        Talisman = 0x09,
-        Necklace = 0x0A,
-        Hair = 0x0B,
-        Waist = 0x0C,
-        Torso = 0x0D,
-        Bracelet = 0x0E,
-        Face = 0x0F,
-        Beard = 0x10,
-        Tunic = 0x11,
-        Earrings = 0x12,
-        Arms = 0x13,
-        Cloak = 0x14,
-        Backpack = 0x15,
-        Robe = 0x16,
-        Skirt = 0x17,
-        Legs = 0x18,
-        Mount = 0x19,
-        ShopBuyRestock = 0x1A,
-        ShopBuy = 0x1B,
-        ShopSell = 0x1C,
-        Bank = 0x1D
+        public const byte Invalid = 0x00;
+        public const byte OneHanded = 0x01;
+        public const byte TwoHanded = 0x02;
+        public const byte Shoes = 0x03;
+        public const byte Pants = 0x04;
+        public const byte Shirt = 0x05;
+        public const byte Helmet = 0x06;
+        public const byte Gloves = 0x07;
+        public const byte Ring = 0x08;
+        public const byte Talisman = 0x09;
+        public const byte Necklace = 0x0A;
+        public const byte Hair = 0x0B;
+        public const byte Waist = 0x0C;
+        public const byte Torso = 0x0D;
+        public const byte Bracelet = 0x0E;
+        public const byte Face = 0x0F;
+        public const byte Beard = 0x10;
+        public const byte Tunic = 0x11;
+        public const byte Earrings = 0x12;
+        public const byte Arms = 0x13;
+        public const byte Cloak = 0x14;
+        public const byte Backpack = 0x15;
+        public const byte Robe = 0x16;
+        public const byte Skirt = 0x17;
+        public const byte Legs = 0x18;
+        public const byte Mount = 0x19;
+        public const byte ShopBuyRestock = 0x1A;
+        public const byte ShopBuy = 0x1B;
+        public const byte ShopSell = 0x1C;
+        public const byte Bank = 0x1D;
     }
 
     internal static class Layers
     {
-        private static Layer[][] LayerSortByDirection { get; } = new Layer[8][]
+        private static byte[][] LayerSortByDirection { get; } = new byte[8][]
         {
-            new Layer[]
+            new byte[]
             {
                 // 0
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -81,7 +81,7 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Helmet,
                 Layer.TwoHanded, Layer.Cloak
             },
-            new Layer[]
+            new byte[]
             {
                 // 1
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -89,7 +89,7 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
                 Layer.Helmet, Layer.TwoHanded
             },
-            new Layer[]
+            new byte[]
             {
                 // 2
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -97,14 +97,14 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
                 Layer.Helmet, Layer.TwoHanded
             },
-            new Layer[]
+            new byte[]
             {
                 // 3
                 Layer.Cloak, Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
                 Layer.Bracelet, Layer.Face, Layer.Arms, Layer.Gloves, Layer.Skirt, Layer.Tunic, Layer.Robe, Layer.Waist,
                 Layer.Necklace, Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded
             },
-            new Layer[]
+            new byte[]
             {
                 // 4
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -112,7 +112,7 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
                 Layer.Helmet, Layer.TwoHanded
             },
-            new Layer[]
+            new byte[]
             {
                 // 5
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -120,7 +120,7 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
                 Layer.Helmet, Layer.TwoHanded
             },
-            new Layer[]
+            new byte[]
             {
                 // 6
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -128,7 +128,7 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
                 Layer.Helmet, Layer.TwoHanded
             },
-            new Layer[]
+            new byte[]
             {
                 // 7
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -146,16 +146,16 @@ namespace ClassicUO.Game.Data
             PLATEARMS_AND_QUIVER = 3
         };
 
-        private static Layer[][] LayerSortPaperdoll { get; } = new Layer[4][]
+        private static byte[][] LayerSortPaperdoll { get; } = new byte[4][]
         {
-            new Layer[]
+            new byte[]
             {
                 // Standard sort
                 Layer.Cloak, Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Arms, Layer.Torso, Layer.Tunic,
                 Layer.Ring, Layer.Bracelet, Layer.Face, Layer.Gloves, Layer.Skirt, Layer.Robe, Layer.Waist, Layer.Necklace,
                 Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
             },
-            new Layer[]
+            new byte[]
             {
                 // Quiver
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Arms, Layer.Torso, Layer.Tunic,
@@ -163,14 +163,14 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace,
                 Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
             },
-            new Layer[]
+            new byte[]
             {
                 // Plate Arms (Torso and Arms Swapped)
                 Layer.Cloak, Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Arms , Layer.Tunic,
                 Layer.Ring, Layer.Bracelet, Layer.Face, Layer.Gloves, Layer.Skirt, Layer.Robe, Layer.Waist, Layer.Necklace,
                 Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
             },
-            new Layer[]
+            new byte[]
             {
                 // Quiver and Plate Arms
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Arms, Layer.Tunic,
@@ -182,7 +182,7 @@ namespace ClassicUO.Game.Data
 
         public static IEnumerable<Item> GetItemsOnMap(Entity entity, byte dir)
         {
-            Layer[] layers = LayerSortByDirection[dir];
+            byte[] layers = LayerSortByDirection[dir];
 
             for (int i = 0; i < layers.Length; i++)
             {
@@ -208,7 +208,7 @@ namespace ClassicUO.Game.Data
             {
                 graphic = arms.Graphic;
             }
-            else if (ItemHold.Enabled && !ItemHold.IsFixedPosition && (byte)Layer.Arms == ItemHold.ItemData.Layer)
+            else if (ItemHold.Enabled && !ItemHold.IsFixedPosition && Layer.Arms == ItemHold.ItemData.Layer)
             {
                 graphic = ItemHold.Graphic;
             }
@@ -227,7 +227,7 @@ namespace ClassicUO.Game.Data
                     sortType = sortType + 1;
                 }
             }
-            else if (ItemHold.Enabled && !ItemHold.IsFixedPosition && (byte)Layer.Cloak == ItemHold.ItemData.Layer)
+            else if (ItemHold.Enabled && !ItemHold.IsFixedPosition && Layer.Cloak == ItemHold.ItemData.Layer)
             {
                 if (ItemHold.ItemData.IsContainer)
                 {
@@ -235,7 +235,7 @@ namespace ClassicUO.Game.Data
                 }
             }
 
-            Layer[] layers = LayerSortPaperdoll[(int)sortType];
+            byte[] layers = LayerSortPaperdoll[(int)sortType];
 
             for (int i = 0; i < layers.Length; i++)
             {
@@ -269,7 +269,7 @@ namespace ClassicUO.Game.Data
             }
         }
 
-        public static bool IsHiddenLayer(Layer layer)
+        public static bool IsHiddenLayer(byte layer)
         {
             // Note that this doesn't include the backpack layer, which technically is
             // visible on the paperdoll
