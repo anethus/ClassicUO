@@ -421,7 +421,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                         for (Item item = (Item) World.Player.Items; item != null; item = (Item) item.Next)
                         {
-                            if (item.ItemData.IsContainer && !item.IsEmpty && item.Layer >= Layer.OneHanded && item.Layer <= Layer.Legs)
+                            if (item.ItemData.IsContainer && !item.IsEmpty && !Layers.IsHiddenLayer(item.Layer))
                             {
                                 GetAmount(item, Graphic, Hue, ref _amount);
                             }
