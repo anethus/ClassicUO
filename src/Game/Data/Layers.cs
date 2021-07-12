@@ -71,10 +71,9 @@ namespace ClassicUO.Game.Data
 
     internal static class Layers
     {
-        private const int VISIBLE_LAYERS = 23;
-
-        private static Layer[,] LayerSortByDirection { get; } = new Layer[8, VISIBLE_LAYERS]
+        private static Layer[][] LayerSortByDirection { get; } = new Layer[8][]
         {
+            new Layer[]
             {
                 // 0
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -82,6 +81,7 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Helmet,
                 Layer.TwoHanded, Layer.Cloak
             },
+            new Layer[]
             {
                 // 1
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -89,6 +89,7 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
                 Layer.Helmet, Layer.TwoHanded
             },
+            new Layer[]
             {
                 // 2
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -96,12 +97,14 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
                 Layer.Helmet, Layer.TwoHanded
             },
+            new Layer[]
             {
                 // 3
                 Layer.Cloak, Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
                 Layer.Bracelet, Layer.Face, Layer.Arms, Layer.Gloves, Layer.Skirt, Layer.Tunic, Layer.Robe, Layer.Waist,
                 Layer.Necklace, Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded
             },
+            new Layer[]
             {
                 // 4
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -109,6 +112,7 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
                 Layer.Helmet, Layer.TwoHanded
             },
+            new Layer[]
             {
                 // 5
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -116,6 +120,7 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
                 Layer.Helmet, Layer.TwoHanded
             },
+            new Layer[]
             {
                 // 6
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -123,6 +128,7 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
                 Layer.Helmet, Layer.TwoHanded
             },
+            new Layer[]
             {
                 // 7
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
@@ -140,14 +146,16 @@ namespace ClassicUO.Game.Data
             PLATEARMS_AND_QUIVER = 3
         };
 
-        private static Layer[,] LayerSortPaperdoll { get; } = new Layer[4, VISIBLE_LAYERS]
+        private static Layer[][] LayerSortPaperdoll { get; } = new Layer[4][]
         {
+            new Layer[]
             {
                 // Standard sort
                 Layer.Cloak, Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Arms, Layer.Torso, Layer.Tunic,
                 Layer.Ring, Layer.Bracelet, Layer.Face, Layer.Gloves, Layer.Skirt, Layer.Robe, Layer.Waist, Layer.Necklace,
                 Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
             },
+            new Layer[]
             {
                 // Quiver
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Arms, Layer.Torso, Layer.Tunic,
@@ -155,12 +163,14 @@ namespace ClassicUO.Game.Data
                 Layer.Necklace,
                 Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
             },
+            new Layer[]
             {
                 // Plate Arms (Torso and Arms Swapped)
                 Layer.Cloak, Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Arms , Layer.Tunic,
                 Layer.Ring, Layer.Bracelet, Layer.Face, Layer.Gloves, Layer.Skirt, Layer.Robe, Layer.Waist, Layer.Necklace,
                 Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
             },
+            new Layer[]
             {
                 // Quiver and Plate Arms
                 Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Arms, Layer.Tunic,
@@ -172,11 +182,11 @@ namespace ClassicUO.Game.Data
 
         public static IEnumerable<Item> GetItemsOnMap(Entity entity, byte dir)
         {
-            for (int i = 0; i < VISIBLE_LAYERS; i++)
-            {
-                Layer layer = LayerSortByDirection[dir, i];
+            Layer[] layers = LayerSortByDirection[dir];
 
-                Item item = entity.FindItemByLayer(layer);
+            for (int i = 0; i < layers.Length; i++)
+            {
+                Item item = entity.FindItemByLayer(layers[i]);
 
                 if (item == null)
                 {
@@ -225,9 +235,11 @@ namespace ClassicUO.Game.Data
                 }
             }
 
-            for (int i = 0; i < VISIBLE_LAYERS; i++)
+            Layer[] layers = LayerSortPaperdoll[(int)sortType];
+
+            for (int i = 0; i < layers.Length; i++)
             {
-                yield return mobile.FindItemByLayer(LayerSortPaperdoll[(int)sortType, i]);
+                yield return mobile.FindItemByLayer(layers[i]);
             }
         }
     }
