@@ -337,7 +337,7 @@ namespace ClassicUO.Game.UI.Controls
 
         private class GumpPicEquipment : GumpPic
         {
-            private readonly Layer _layer;
+            private readonly byte _layer;
 
             public GumpPicEquipment
             (
@@ -346,7 +346,7 @@ namespace ClassicUO.Game.UI.Controls
                 int y,
                 ushort graphic,
                 ushort hue,
-                Layer layer
+                byte layer
             ) : base(x, y, graphic, hue)
             {
                 LocalSerial = serial;

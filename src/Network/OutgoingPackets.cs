@@ -661,7 +661,7 @@ namespace ClassicUO.Network
             writer.Dispose();
         }
 
-        public static void Send_EquipRequest(this NetClient socket, uint serial, Layer layer, uint container)
+        public static void Send_EquipRequest(this NetClient socket, uint serial, byte layer, uint container)
         {
             const byte ID = 0x13;
 
@@ -676,7 +676,7 @@ namespace ClassicUO.Network
             }
 
             writer.WriteUInt32BE(serial);
-            writer.WriteUInt8((byte) layer);
+            writer.WriteUInt8(layer);
             writer.WriteUInt32BE(container);
 
             if (length < 0)
