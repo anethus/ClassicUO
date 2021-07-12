@@ -31,7 +31,12 @@
 #endregion
 
 using ClassicUO.Game.GameObjects;
+using ClassicUO.Utility;
+using ClassicUO.Utility.Logging;
+using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace ClassicUO.Game.Data
 {
@@ -71,6 +76,112 @@ namespace ClassicUO.Game.Data
 
     internal static class Layers
     {
+        public static void Load()
+        {
+            string path = Path.Combine(CUOEnviroment.ExecutablePath, "Data", "Client");
+
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+
+            string layersFile = Path.Combine(path, "layers.txt");
+            Dictionary<string, byte> layers = new Dictionary<string, byte>();
+
+            if (File.Exists(layersFile))
+            {
+                TextFileParser parser = new TextFileParser(File.ReadAllText(layersFile), new[] { ' ', '\t', ',' }, new[] { '#', ';' }, new[] { '"', '"' });
+
+                while (!parser.IsEOF())
+                {
+                    var tokens = parser.ReadTokens();
+
+                    if (tokens == null)
+                    {
+                        continue;
+                    }
+
+                    byte layer = byte.Parse(tokens[0]);
+                    string fullName = tokens[1];
+                    string shortName = tokens[2];
+
+                    if (layers.TryGetValue(shortName, out var num))
+                    {
+                        Log.Error($"Duplicate layer in layers.txt: {shortName}");
+                        continue;
+                    }
+
+                    layers[shortName] = layer;
+                }
+            }
+
+            string layerOrderFile = Path.Combine(path, "layerOrder.txt");
+
+            if (File.Exists(layerOrderFile))
+            {
+                // 8 directions + paperdoll
+                List<byte>[] layerSet = new List<byte>[9];
+
+                TextFileParser parser = new TextFileParser(File.ReadAllText(layerOrderFile), new[] { ' ', '\t', ',' }, new[] { '#', ';' }, new[] { '"', '"' });
+
+                int idx = 0;
+                while (!parser.IsEOF() && idx < 9)
+                {
+                    var tokens = parser.ReadTokens();
+
+                    if (tokens == null)
+                    {
+                        continue;
+                    }
+
+                    List<byte> ordering = new List<byte>();
+
+                    for (int i = 0; i < tokens.Count; i++)
+                    {
+                        ordering.Add(layers[tokens[i]]);
+                    }
+
+                    layerSet[idx] = ordering;
+
+                    idx++;
+                }
+
+                for (int i = 0; i < 8; i++)
+                {
+                    LayerSortByDirection[i] = layerSet[i].ToArray();
+                }
+
+                LayerSortPaperdoll[0] = layerSet[8].ToArray();
+
+                // Quiver version
+                var quiverOrdering = new List<byte>(layerSet[8]);
+                quiverOrdering.Remove((byte)Layer.Cloak);
+                quiverOrdering.Insert(0, (byte)Layer.Cloak);
+                LayerSortPaperdoll[1] = quiverOrdering.ToArray();
+
+
+                // Plate arms
+                var plateArmsOrdering = new List<byte>(layerSet[8]);
+                for (int i = 0; i < plateArmsOrdering.Count; i++)
+                {
+                    if (plateArmsOrdering[i] == (byte)Layer.Arms)
+                    {
+                        plateArmsOrdering[i] = (byte)Layer.Torso;
+                    }
+                    else if (plateArmsOrdering[i] == (byte)Layer.Torso)
+                    {
+                        plateArmsOrdering[i] = (byte)Layer.Arms;
+                    }
+                }
+                LayerSortPaperdoll[2] = plateArmsOrdering.ToArray();
+
+                // Quiver and plate arms
+                plateArmsOrdering.Remove((byte)Layer.Cloak);
+                plateArmsOrdering.Insert(0, (byte)Layer.Cloak);
+                LayerSortPaperdoll[3] = plateArmsOrdering.ToArray();
+            }
+        }
+
         private static byte[][] LayerSortByDirection { get; } = new byte[8][]
         {
             new byte[]
@@ -239,7 +350,16 @@ namespace ClassicUO.Game.Data
 
             for (int i = 0; i < layers.Length; i++)
             {
-                yield return mobile.FindItemByLayer(layers[i]);
+                Item item = mobile.FindItemByLayer(layers[i]);
+
+                if (item != null)
+                {
+                    yield return item;
+                }
+                else if (ItemHold.Enabled && !ItemHold.IsFixedPosition && layers[i] == ItemHold.ItemData.Layer && ItemHold.ItemData.AnimID != 0)
+                {
+                    yield return null;
+                }
             }
         }
 
