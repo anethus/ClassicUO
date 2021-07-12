@@ -16,7 +16,7 @@ namespace ClassicUO.Game.UI.Gumps
     {
         private const ushort HUE_FONT = 0xFFFF;
         private const ushort BACKGROUND_COLOR = 999;
-        private const ushort GUMP_WIDTH = 500;
+        private const ushort GUMP_WIDTH = 470;
         private const ushort GUMP_HEIGHT = 400;
 
         public UiManagerGump(): base(130, 130)
@@ -69,7 +69,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             ScrollArea rightArea = new ScrollArea
             (
-                10, 45, GUMP_WIDTH - 25, GUMP_HEIGHT - 60,
+                10, 45, GUMP_WIDTH - 20, GUMP_HEIGHT - 60,
                 true
             );
             
