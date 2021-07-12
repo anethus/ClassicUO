@@ -30,6 +30,9 @@
 
 #endregion
 
+using ClassicUO.Game.GameObjects;
+using System.Collections.Generic;
+
 namespace ClassicUO.Game.Data
 {
     internal enum Layer : byte
@@ -64,5 +67,168 @@ namespace ClassicUO.Game.Data
         ShopBuy = 0x1B,
         ShopSell = 0x1C,
         Bank = 0x1D
+    }
+
+    internal static class Layers
+    {
+        private const int VISIBLE_LAYERS = 23;
+
+        private static Layer[,] LayerSortByDirection { get; } = new Layer[8, VISIBLE_LAYERS]
+        {
+            {
+                // 0
+                Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
+                Layer.Bracelet, Layer.Face, Layer.Arms, Layer.Gloves, Layer.Skirt, Layer.Tunic, Layer.Robe,
+                Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Helmet,
+                Layer.TwoHanded, Layer.Cloak
+            },
+            {
+                // 1
+                Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
+                Layer.Bracelet, Layer.Face, Layer.Arms, Layer.Gloves, Layer.Skirt, Layer.Tunic, Layer.Robe,
+                Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
+                Layer.Helmet, Layer.TwoHanded
+            },
+            {
+                // 2
+                Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
+                Layer.Bracelet, Layer.Face, Layer.Arms, Layer.Gloves, Layer.Skirt, Layer.Tunic, Layer.Robe,
+                Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
+                Layer.Helmet, Layer.TwoHanded
+            },
+            {
+                // 3
+                Layer.Cloak, Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
+                Layer.Bracelet, Layer.Face, Layer.Arms, Layer.Gloves, Layer.Skirt, Layer.Tunic, Layer.Robe, Layer.Waist,
+                Layer.Necklace, Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded
+            },
+            {
+                // 4
+                Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
+                Layer.Bracelet, Layer.Face, Layer.Arms, Layer.Gloves, Layer.Skirt, Layer.Tunic, Layer.Robe,
+                Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
+                Layer.Helmet, Layer.TwoHanded
+            },
+            {
+                // 5
+                Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
+                Layer.Bracelet, Layer.Face, Layer.Arms, Layer.Gloves, Layer.Skirt, Layer.Tunic, Layer.Robe,
+                Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
+                Layer.Helmet, Layer.TwoHanded
+            },
+            {
+                // 6
+                Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
+                Layer.Bracelet, Layer.Face, Layer.Arms, Layer.Gloves, Layer.Skirt, Layer.Tunic, Layer.Robe,
+                Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
+                Layer.Helmet, Layer.TwoHanded
+            },
+            {
+                // 7
+                Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Ring, Layer.Talisman,
+                Layer.Bracelet, Layer.Face, Layer.Arms, Layer.Gloves, Layer.Skirt, Layer.Tunic, Layer.Robe,
+                Layer.Necklace, Layer.Hair, Layer.Waist, Layer.Beard, Layer.Earrings, Layer.OneHanded, Layer.Cloak,
+                Layer.Helmet, Layer.TwoHanded
+            }
+        };
+
+        private enum PaperDollSortType
+        {
+            STANDARD = 0,
+            QUIVER = 1,
+            PLATEARMS = 2,
+            PLATEARMS_AND_QUIVER = 3
+        };
+
+        private static Layer[,] LayerSortPaperdoll { get; } = new Layer[4, VISIBLE_LAYERS]
+        {
+            {
+                // Standard sort
+                Layer.Cloak, Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Arms, Layer.Torso, Layer.Tunic,
+                Layer.Ring, Layer.Bracelet, Layer.Face, Layer.Gloves, Layer.Skirt, Layer.Robe, Layer.Waist, Layer.Necklace,
+                Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
+            },
+            {
+                // Quiver
+                Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Arms, Layer.Torso, Layer.Tunic,
+                Layer.Ring, Layer.Bracelet, Layer.Face, Layer.Gloves, Layer.Skirt, Layer.Robe, Layer.Cloak, Layer.Waist,
+                Layer.Necklace,
+                Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
+            },
+            {
+                // Plate Arms (Torso and Arms Swapped)
+                Layer.Cloak, Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Arms , Layer.Tunic,
+                Layer.Ring, Layer.Bracelet, Layer.Face, Layer.Gloves, Layer.Skirt, Layer.Robe, Layer.Waist, Layer.Necklace,
+                Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
+            },
+            {
+                // Quiver and Plate Arms
+                Layer.Shirt, Layer.Pants, Layer.Shoes, Layer.Legs, Layer.Torso, Layer.Arms, Layer.Tunic,
+                Layer.Ring, Layer.Bracelet, Layer.Face, Layer.Gloves, Layer.Skirt, Layer.Robe, Layer.Cloak, Layer.Waist,
+                Layer.Necklace,
+                Layer.Hair, Layer.Beard, Layer.Earrings, Layer.Helmet, Layer.OneHanded, Layer.TwoHanded, Layer.Talisman
+            },
+        };
+
+        public static IEnumerable<Item> GetItemsOnMap(Entity entity, byte dir)
+        {
+            for (int i = 0; i < VISIBLE_LAYERS; i++)
+            {
+                Layer layer = LayerSortByDirection[dir, i];
+
+                Item item = entity.FindItemByLayer(layer);
+
+                if (item == null)
+                {
+                    continue;
+                }
+
+                yield return item;
+            }
+        }
+
+        public static IEnumerable<Item> GetItemsOnPaperdoll(Mobile mobile)
+        {
+            PaperDollSortType sortType = PaperDollSortType.STANDARD;
+
+            ushort graphic = 0;
+
+            Item arms = mobile.FindItemByLayer(Layer.Arms);
+            if (arms != null)
+            {
+                graphic = arms.Graphic;
+            }
+            else if (ItemHold.Enabled && !ItemHold.IsFixedPosition && (byte)Layer.Arms == ItemHold.ItemData.Layer)
+            {
+                graphic = ItemHold.Graphic;
+            }
+
+            if (graphic == 0x1410 || graphic == 0x1417)
+            {
+                sortType = PaperDollSortType.PLATEARMS;
+            }
+
+            Item cloak = mobile.FindItemByLayer(Layer.Cloak);
+
+            if (cloak != null)
+            {
+                if (cloak.ItemData.IsContainer)
+                {
+                    sortType = sortType + 1;
+                }
+            }
+            else if (ItemHold.Enabled && !ItemHold.IsFixedPosition && (byte)Layer.Cloak == ItemHold.ItemData.Layer)
+            {
+                if (ItemHold.ItemData.IsContainer)
+                {
+                    sortType = sortType + 1;
+                }
+            }
+
+            for (int i = 0; i < VISIBLE_LAYERS; i++)
+            {
+                yield return mobile.FindItemByLayer(LayerSortPaperdoll[(int)sortType, i]);
+            }
+        }
     }
 }
