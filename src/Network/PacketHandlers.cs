@@ -2071,6 +2071,8 @@ namespace ClassicUO.Network
 
                 List<Gump> gumps = ProfileManager.CurrentProfile.ReadGumps(ProfileManager.ProfilePath);
 
+                IgnoreManager.Initialize();
+
                 if (gumps != null)
                 {
                     foreach (Gump gump in gumps)
