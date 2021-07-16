@@ -139,7 +139,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 //Center of Game Window
                 var x = ProfileManager.CurrentProfile.GameWindowSize.X >> 1;
-                var y = ProfileManager.CurrentProfile.GameWindowSize.X >> 1;
+                var y = ProfileManager.CurrentProfile.GameWindowSize.Y >> 1;
 
                 switch (buttonId)
                 {
