@@ -496,7 +496,7 @@ namespace ClassicUO.Game.UI.Gumps
                 {
                     if (ItemHold.ItemData.AnimID != 0)
                     {
-                        if (mobile != null && mobile.FindItemByLayer((Layer) ItemHold.ItemData.Layer) == null)
+                        if (mobile != null && mobile.FindItemByLayer(ItemHold.ItemData.Layer) == null)
                         {
                             _paperDollInteractable.SetFakeItem(true);
                         }
@@ -538,7 +538,7 @@ namespace ClassicUO.Game.UI.Gumps
                         {
                             if (ItemHold.ItemData.IsWearable)
                             {
-                                Item equipment = container.FindItemByLayer((Layer) ItemHold.ItemData.Layer);
+                                Item equipment = container.FindItemByLayer(ItemHold.ItemData.Layer);
 
                                 if (equipment == null)
                                 {
@@ -618,9 +618,9 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 for (int i = 0; i < _slots.Length; i++)
                 {
-                    int idx = (int) _slots[i].Layer;
+                    byte idx = _slots[i].Layer;
 
-                    _slots[i].LocalSerial = mobile.FindItemByLayer((Layer) idx)?.Serial ?? 0;
+                    _slots[i].LocalSerial = mobile.FindItemByLayer(idx)?.Serial ?? 0;
                 }
             }
         }
@@ -745,7 +745,7 @@ namespace ClassicUO.Game.UI.Gumps
             private ItemGumpFixed _itemGump;
             private readonly PaperDollGump _paperDollGump;
 
-            public EquipmentSlot(uint serial, int x, int y, Layer layer, PaperDollGump paperDollGump)
+            public EquipmentSlot(uint serial, int x, int y, byte layer, PaperDollGump paperDollGump)
             {
                 X = x;
                 Y = y;
@@ -783,7 +783,7 @@ namespace ClassicUO.Game.UI.Gumps
                 WantUpdateSize = false;
             }
 
-            public Layer Layer { get; }
+            public byte Layer { get; }
 
             public override void Update(double totalTime, double frameTime)
             {

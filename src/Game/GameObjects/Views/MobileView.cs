@@ -177,7 +177,7 @@ namespace ClassicUO.Game.GameObjects
             if (isHuman && mount != null)
             {
                 ushort mountGraphic = mount.GetGraphicForAnimation();
-                byte animGroupMount = 0;
+                byte animGroupMount;
 
                 if (mountGraphic != 0xFFFF)
                 {
@@ -328,27 +328,19 @@ namespace ClassicUO.Game.GameObjects
                 forceUOP: isGargoyle
             );
 
+            // Draw clothing
             if (!IsEmpty)
             {
-                for (int i = 0; i < Constants.USED_LAYER_COUNT; i++)
+                foreach (var item in Layers.GetItemsOnMap(this, layerDir))
                 {
-                    Layer layer = LayerOrder.UsedLayers[layerDir, i];
-
-                    Item item = FindItemByLayer(layer);
-
-                    if (item == null)
-                    {
-                        continue;
-                    }
-
-                    if (IsDead && (layer == Layer.Hair || layer == Layer.Beard))
+                    if (IsDead && (item.Layer == Layer.Hair || item.Layer == Layer.Beard))
                     {
                         continue;
                     }
 
                     if (isHuman)
                     {
-                        if (IsCovered(this, layer))
+                        if (IsCovered(this, item.Layer))
                         {
                             continue;
                         }
@@ -436,7 +428,7 @@ namespace ClassicUO.Game.GameObjects
                                 animIndex,
                                 false,
                                 graphic,
-                                isGargoyle /*&& item.ItemData.IsWeapon*/ && seatData.Graphic == 0 ? GetGroupForAnimation(this, graphic, true) : animGroup,
+                                isGargoyle && seatData.Graphic == 0 ? GetGroupForAnimation(this, graphic, true) : animGroup,
                                 dir,
                                 isHuman,
                                 false,
@@ -460,43 +452,10 @@ namespace ClassicUO.Game.GameObjects
                         if (item.ItemData.IsLight)
                         {
                             Client.Game.GetScene<GameScene>().AddLight(this, this, drawX, drawY);
-
-                            /*DrawInternal
-                            (
-                                batcher,
-                                this,
-                                item,
-                                drawX,
-                                drawY,
-                                IsFlipped,
-                                animIndex,
-                                false,
-                                graphic,
-                                animGroup,
-                                dir,
-                                isHuman,
-                                false,
-                                alpha: HueVector.Z
-                            );
-                            */
-                            //break;
                         }
                     }
                 }
             }
-
-
-            //if (FileManager.Animations.SittingValue != 0)
-            //{
-            //    ref var sittingData = ref FileManager.Animations.SittingInfos[FileManager.Animations.SittingValue - 1];
-
-            //    if (FileManager.Animations.Direction == 3 && sittingData.DrawBack &&
-            //        HasEquipment && Equipment[(int) Layer.Cloak] == null)
-            //    {
-
-            //    }
-            //}
-            // 
 
             FrameInfo.X = Math.Abs(FrameInfo.X);
             FrameInfo.Y = Math.Abs(FrameInfo.Y);
@@ -827,7 +786,7 @@ namespace ClassicUO.Game.GameObjects
             return 0;
         }
 
-        internal static bool IsCovered(Mobile mobile, Layer layer)
+        internal static bool IsCovered(Mobile mobile, byte layer)
         {
             if (mobile.IsEmpty)
             {

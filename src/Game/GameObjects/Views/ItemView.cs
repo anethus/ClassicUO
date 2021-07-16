@@ -253,10 +253,9 @@ namespace ClassicUO.Game.GameObjects
                 batcher,
                 posX,
                 posY,
+                null,
                 this,
-                Layer.Invalid,
                 animIndex,
-                ishuman,
                 Hue,
                 IsFlipped,
                 hueVec.Z,
@@ -265,26 +264,26 @@ namespace ClassicUO.Game.GameObjects
                 ref hueVec
             );
 
-            for (int i = 0; i < Constants.USED_LAYER_COUNT; i++)
+            if (ishuman)
             {
-                Layer layer = LayerOrder.UsedLayers[direction, i];
-
-                DrawLayer
-                (
-                    batcher,
-                    posX,
-                    posY,
-                    this,
-                    layer,
-                    animIndex,
-                    ishuman,
-                    0,
-                    IsFlipped,
-                    hueVec.Z,
-                    group,
-                    direction,
-                    ref hueVec
-                );
+                foreach (var item in Layers.GetItemsOnMap(this, direction))
+                {
+                    DrawLayer
+                    (
+                        batcher,
+                        posX,
+                        posY,
+                        item,
+                        this,
+                        animIndex,
+                        0,
+                        IsFlipped,
+                        hueVec.Z,
+                        group,
+                        direction,
+                        ref hueVec
+                    );
+                }
             }
 
             return true;
@@ -295,10 +294,9 @@ namespace ClassicUO.Game.GameObjects
             UltimaBatcher2D batcher,
             int posX,
             int posY,
+            Item item,
             Item owner,
-            Layer layer,
             byte animIndex,
-            bool ishuman,
             ushort color,
             bool flipped,
             float alpha,
@@ -312,21 +310,14 @@ namespace ClassicUO.Game.GameObjects
 
             ushort graphic;
 
-            if (layer == Layer.Invalid)
+            if (item == null)
             {
                 graphic = owner.GetGraphicForAnimation();
             }
-            else if (ishuman)
+            else
             {
-                Item itemEquip = owner.FindItemByLayer(layer);
-
-                if (itemEquip == null)
-                {
-                    return;
-                }
-
-                graphic = itemEquip.ItemData.AnimID;
-                ispartialhue = itemEquip.ItemData.IsPartialHue;
+                graphic = item.ItemData.AnimID;
+                ispartialhue = item.ItemData.IsPartialHue;
 
                 if (AnimationsLoader.Instance.EquipConversions.TryGetValue(graphic, out Dictionary<ushort, EquipConvData> map))
                 {
@@ -337,16 +328,13 @@ namespace ClassicUO.Game.GameObjects
                     }
                 }
 
-                color = itemEquip.Hue;
-            }
-            else
-            {
-                return;
+                color = item.Hue;
             }
 
             ushort newHue = 0;
 
-            AnimationGroup gr = layer == Layer.Invalid ? AnimationsLoader.Instance.GetCorpseAnimationGroup(ref graphic, ref animGroup, ref newHue) : AnimationsLoader.Instance.GetBodyAnimationGroup(ref graphic, ref animGroup, ref newHue);
+            AnimationGroup gr = (item == null) ? AnimationsLoader.Instance.GetCorpseAnimationGroup(ref graphic, ref animGroup, ref newHue) :
+                                                 AnimationsLoader.Instance.GetBodyAnimationGroup(ref graphic, ref animGroup, ref newHue);
 
             if (color == 0)
             {

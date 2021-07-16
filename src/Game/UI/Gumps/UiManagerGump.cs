@@ -16,7 +16,10 @@ namespace ClassicUO.Game.UI.Gumps
     {
         private const ushort HUE_FONT = 0xFFFF;
         private const ushort BACKGROUND_COLOR = 999;
+
         private const ushort GUMP_WIDTH = 470;
+        private const ushort GUMP_WIDTH = 450;
+
         private const ushort GUMP_HEIGHT = 400;
 
         public UiManagerGump(): base(130, 130)
@@ -131,7 +134,7 @@ namespace ClassicUO.Game.UI.Gumps
                 //Gump Reset button
                 Add(new Button(1, 0xFAB, 0xFAC) { X = 380, ButtonAction = ButtonAction.Activate });
             }
-            
+
             public override void OnButtonClick(int buttonId)
             {
                 //Center of Game Window
