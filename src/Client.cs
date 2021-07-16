@@ -177,6 +177,7 @@ namespace ClassicUO
             UOFileManager.Load();
             StaticFilters.Load();
 
+            Layers.Load();
             BuffTable.Load();
             ChairTable.Load();
 

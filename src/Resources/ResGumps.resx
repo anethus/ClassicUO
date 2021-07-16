@@ -1546,4 +1546,5 @@ Client version: '{0}'</value>
   <data name="IgnoreListName" xml:space="preserve">
     <value>Character name</value>
   </data>
+
 </root>
