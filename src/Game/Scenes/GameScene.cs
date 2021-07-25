@@ -347,11 +347,14 @@ namespace ClassicUO.Game.Scenes
 
             // special case for wmap. this allow us to save settings
             UIManager.GetGump<WorldMapGump>()?.SaveSettings();
-
-            ProfileManager.CurrentProfile?.Save(ProfileManager.ProfilePath);
-
-            Macros.Save();
-            InfoBars.Save();
+            
+            // When user Copy Profiles to prevent overwritten on logout - we need to prevent save
+            if (!ProfileManager.PreventSave)
+            {
+                ProfileManager.CurrentProfile?.Save(ProfileManager.ProfilePath);
+                Macros.Save();
+                InfoBars.Save();
+            }
             ProfileManager.UnLoadProfile();
 
             StaticFilters.CleanCaveTextures();

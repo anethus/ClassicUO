@@ -32,6 +32,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ClassicUO.Configuration;
 using ClassicUO.Game.UI.Controls;
 using ClassicUO.Game.UI.Gumps;
@@ -417,6 +418,14 @@ namespace ClassicUO.Game.Managers
         public static void Clear()
         {
             foreach (Gump s in Gumps)
+            {
+                s.Dispose();
+            }
+        }
+
+        public static void Reset()
+        {
+            foreach (Gump s in Gumps.Where(ss => ss.CanBeSaved && ss.GumpType != GumpType.PaperDoll))
             {
                 s.Dispose();
             }
