@@ -437,6 +437,14 @@ namespace ClassicUO.Game.UI.Gumps
                 }
             );
 
+            Add
+            (
+                new Button((int)Buttons.ProfileCopier, 0x00F9, 0x00F8, 0x00F7)
+                {
+                    X = 510 + offsetX, Y = 405 + offsetY, ButtonAction = ButtonAction.Activate
+                }
+            );
+
             AcceptMouseInput = true;
             CanMove = true;
             CanCloseWithRightClick = true;
@@ -3462,7 +3470,10 @@ namespace ClassicUO.Game.UI.Gumps
                     Dispose();
 
                     break;
-
+                case Buttons.ProfileCopier:
+                    UIManager.Add(new ProfileManagerGump());
+                    break;
+;
                 case Buttons.NewMacro: break;
 
                 case Buttons.DeleteMacro:
@@ -4479,6 +4490,7 @@ namespace ClassicUO.Game.UI.Gumps
             EnemyColor,
             MurdererColor,
 
+            ProfileCopier,
             OpenIgnoreList,
             NewMacro,
             DeleteMacro,

@@ -447,6 +447,20 @@ namespace ClassicUO.Configuration
             }
         }
 
+        public void ReloadGumps(string path)
+        {
+            var gumpList = ReadGumps(path);
+
+            UIManager.Reset();
+
+            if (gumpList != null)
+            {
+                foreach (Gump gump in gumpList)
+                {
+                    UIManager.Add(gump);
+                }
+            }
+        }
 
         public List<Gump> ReadGumps(string path)
         {
