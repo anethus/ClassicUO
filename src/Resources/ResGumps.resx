@@ -1462,4 +1462,7 @@ Client version: '{0}'</value>
   <data name="UIManegerGumpReset" xml:space="preserve">
     <value>Reset</value>
   </data>
+  <data name="UiManager" xml:space="preserve">
+    <value>UI Manager</value>
+  </data>
 </root>

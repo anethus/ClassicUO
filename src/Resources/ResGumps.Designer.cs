@@ -3786,6 +3786,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to UI Manager.
+        /// </summary>
+        public static string UiManager {
+            get {
+                return ResourceManager.GetString("UiManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Gump Name.
         /// </summary>
         public static string UIManagerGumpName {

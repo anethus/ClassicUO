@@ -170,7 +170,6 @@ namespace ClassicUO.Game.UI.Gumps
         private Checkbox _showStatsMessage, _showSkillsMessage;
         private HSliderBar _showSkillsMessageDelta;
 
-
         private Profile _currentProfile = ProfileManager.CurrentProfile;
 
         public OptionsGump() : base(0, 0)
@@ -346,6 +345,12 @@ namespace ClassicUO.Game.UI.Gumps
                 ) { ButtonParameter = 12 }
             );
 
+            Add(
+                new NiceButton(
+                    10, 10 + 30 *i++, 140, 25, ButtonAction.SwitchPage, ResGumps.UiManager)
+                {
+                    ButtonParameter = 13
+                });
 
             Add
             (
@@ -422,6 +427,7 @@ namespace ClassicUO.Game.UI.Gumps
             BuildInfoBar();
             BuildContainers();
             BuildExperimental();
+            BuildUiManager();
 
             ChangePage(1);
         }
@@ -3010,7 +3016,12 @@ namespace ClassicUO.Game.UI.Gumps
             Add(rightArea, PAGE);
         }
 
+        private void BuildUiManager()
+        {
+            const int PAGE = 13;
 
+            Add(new UiManagerGump { X = 200 }, PAGE);
+        }
         private void BuildInfoBar()
         {
             const int PAGE = 10;

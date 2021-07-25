@@ -19,7 +19,7 @@ namespace ClassicUO.Game.UI.Gumps
         private const ushort GUMP_WIDTH = 450;
         private const ushort GUMP_HEIGHT = 400;
 
-        public UiManagerGump(): base(130, 130)
+        public UiManagerGump(): base(0, 0)
         {
             CanMove = true;
 
@@ -37,28 +37,7 @@ namespace ClassicUO.Game.UI.Gumps
                     CanCloseWithRightClick = true,
                 }
             );
-            #region Border Draw
-            Add
-            (
-                new Line(0, 0, GUMP_WIDTH, 1, Color.Gray.PackedValue)
-            );
-
-            Add
-            (
-                new Line(0, 0, 1, GUMP_HEIGHT, Color.Gray.PackedValue)
-            );
-
-            Add
-            (
-                new Line(0, GUMP_HEIGHT, GUMP_WIDTH, 1, Color.Gray.PackedValue)
-            );
-
-            Add
-            (
-                new Line(GUMP_WIDTH, 0, 1, GUMP_HEIGHT, Color.Gray.PackedValue)
-            );
-            #endregion
-
+            
             #region Legend
             Add(new Label(ResGumps.UIManagerGumpName, true, HUE_FONT, 0, 255, Renderer.FontStyle.BlackBorder) { X = 5, Y = 10 });
             Add(new Label("X", true, HUE_FONT, 0, 255, Renderer.FontStyle.BlackBorder) { X = 300, Y = 10 });
@@ -92,7 +71,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 CanMove = true;
                 CanCloseWithRightClick = true;
-                AcceptMouseInput = true;
+                AcceptMouseInput = false;
 
                 _gump = gump;
                 StringBuilder sb = new StringBuilder(gump.ToString().Split('.').Last());
@@ -107,7 +86,15 @@ namespace ClassicUO.Game.UI.Gumps
                             sb.Append($" [{(aGump as SkillButtonGump)?.SkillName}]");
                             break;
                         case ANCHOR_TYPE.HEALTHBAR:
-                            sb.Append($" [{(aGump as HealthBarGump)?.Name}]");
+                            if (aGump is HealthBarGump hb)
+                            {
+                                sb.Append($" [{hb.Name}]");
+                                break;
+                            }
+                            if (aGump is HealthBarGumpCustom hbc)
+                            {
+                                sb.Append($" [{hbc.Name}]");
+                            }
                             break;
                         case ANCHOR_TYPE.MACRO:
                             sb.Append($" [{(aGump as MacroButtonGump)?._macro.Name}]");
@@ -128,7 +115,7 @@ namespace ClassicUO.Game.UI.Gumps
             {
                 //Center of Game Window
                 var x = ProfileManager.CurrentProfile.GameWindowSize.X >> 1;
-                var y = ProfileManager.CurrentProfile.GameWindowSize.X >> 1;
+                var y = ProfileManager.CurrentProfile.GameWindowSize.Y >> 1;
 
                 switch (buttonId)
                 {
