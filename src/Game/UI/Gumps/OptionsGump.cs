@@ -351,6 +351,17 @@ namespace ClassicUO.Game.UI.Gumps
                 ) { ButtonParameter = 12 }
             );
 
+            Add
+            (
+                new NiceButton
+                (
+                    10, 10 + 30 * i++, 140, 25,
+                    ButtonAction.Activate, ResGumps.ProfileCopyManager
+                )
+                {
+                    ButtonParameter = (int)Buttons.ProfileCopier
+                }
+            );
             Add(
                 new NiceButton
                 (
@@ -436,15 +447,7 @@ namespace ClassicUO.Game.UI.Gumps
                     X = 443 + offsetX, Y = 405 + offsetY, ButtonAction = ButtonAction.Activate
                 }
             );
-
-            Add
-            (
-                new Button((int)Buttons.ProfileCopier, 0x00F9, 0x00F8, 0x00F7)
-                {
-                    X = 510 + offsetX, Y = 405 + offsetY, ButtonAction = ButtonAction.Activate
-                }
-            );
-
+            
             AcceptMouseInput = true;
             CanMove = true;
             CanCloseWithRightClick = true;

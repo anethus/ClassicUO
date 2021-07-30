@@ -425,7 +425,7 @@ namespace ClassicUO.Game.Managers
 
         public static void Reset()
         {
-            foreach (Gump s in Gumps.Where(s => s.CanBeSaved))
+            foreach (Gump s in Gumps.Where(ss => ss.CanBeSaved && ss.GumpType != GumpType.PaperDoll))
             {
                 s.Dispose();
             }

@@ -2990,6 +2990,96 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Account.
+        /// </summary>
+        public static string ProfileCopyAccount {
+            get {
+                return ResourceManager.GetString("ProfileCopyAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to We recommend that you log out of your account.
+        /// </summary>
+        public static string ProfileCopyAskLogout {
+            get {
+                return ResourceManager.GetString("ProfileCopyAskLogout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string ProfileCopyCancel {
+            get {
+                return ResourceManager.GetString("ProfileCopyCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Character.
+        /// </summary>
+        public static string ProfileCopyCharacter {
+            get {
+                return ResourceManager.GetString("ProfileCopyCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy.
+        /// </summary>
+        public static string ProfileCopyCopy {
+            get {
+                return ResourceManager.GetString("ProfileCopyCopy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From Character.
+        /// </summary>
+        public static string ProfileCopyFrom {
+            get {
+                return ResourceManager.GetString("ProfileCopyFrom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Logout.
+        /// </summary>
+        public static string ProfileCopyLogout {
+            get {
+                return ResourceManager.GetString("ProfileCopyLogout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile Manager.
+        /// </summary>
+        public static string ProfileCopyManager {
+            get {
+                return ResourceManager.GetString("ProfileCopyManager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Server.
+        /// </summary>
+        public static string ProfileCopyServer {
+            get {
+                return ResourceManager.GetString("ProfileCopyServer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to To Character.
+        /// </summary>
+        public static string ProfileCopyTo {
+            get {
+                return ResourceManager.GetString("ProfileCopyTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Query before attack.
         /// </summary>
         public static string QueryAttack {

@@ -46,6 +46,8 @@ namespace ClassicUO.Configuration
         /// </summary>
         public static string ServerPath { get; private set; }
 
+        public static bool PreventSave { get; set; } = false;
+
         public static void Load(string servername, string username, string charactername)
         {
             string rootpath;
