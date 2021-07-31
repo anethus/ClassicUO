@@ -1204,6 +1204,24 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Starting X position of health bars.
+        /// </summary>
+        public static string DragSelectStartingPosX {
+            get {
+                return ResourceManager.GetString("DragSelectStartingPosX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting Y position of health bars.
+        /// </summary>
+        public static string DragSelectStartingPosY {
+            get {
+                return ResourceManager.GetString("DragSelectStartingPosY", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dump.
         /// </summary>
         public static string Dump {

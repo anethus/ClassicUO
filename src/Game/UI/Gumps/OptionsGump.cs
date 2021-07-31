@@ -85,6 +85,7 @@ namespace ClassicUO.Game.UI.Gumps
         //counters
         private Checkbox _enableCounters, _highlightOnUse, _highlightOnAmount, _enableAbbreviatedAmount;
         private Checkbox _enableDragSelect, _dragSelectHumanoidsOnly;
+        private HSliderBar _dragSelectStartX, _dragSelectStartY;
 
         // sounds
         private Checkbox _enableSounds, _enableMusic, _footStepsSound, _combatMusic, _musicInBackground, _loginMusic;
@@ -1210,6 +1211,12 @@ namespace ClassicUO.Game.UI.Gumps
                     startY
                 )
             );
+            section4.Add(new Label(ResGumps.DragSelectStartingPosX, true, HUE_FONT));
+            section4.Add(_dragSelectStartX = new HSliderBar(startX, startY, 200, 0, _currentProfile.GameWindowSize.X, _currentProfile.DragSelectStartX, HSliderBarStyle.MetalWidgetRecessedBar, true, 0, HUE_FONT));
+
+            section4.Add(new Label(ResGumps.DragSelectStartingPosY, true, HUE_FONT));
+            section4.Add(_dragSelectStartY = new HSliderBar(startX, startY, 200, 0, _currentProfile.GameWindowSize.Y, _currentProfile.DragSelectStartY, HSliderBarStyle.MetalWidgetRecessedBar, true, 0, HUE_FONT));
+
 
             section4.PopIndent();
 
@@ -3642,6 +3649,8 @@ namespace ClassicUO.Game.UI.Gumps
                     _textFading.IsChecked = true;
                     _enableDragSelect.IsChecked = false;
                     _dragSelectHumanoidsOnly.IsChecked = false;
+                    _dragSelectStartX.Value = 100;
+                    _dragSelectStartY.Value = 100;
                     _showTargetRangeIndicator.IsChecked = false;
                     _customBars.IsChecked = false;
                     _customBarsBBG.IsChecked = false;
@@ -4244,6 +4253,8 @@ namespace ClassicUO.Game.UI.Gumps
             _currentProfile.EnableDragSelect = _enableDragSelect.IsChecked;
             _currentProfile.DragSelectModifierKey = _dragSelectModifierKey.SelectedIndex;
             _currentProfile.DragSelectHumanoidsOnly = _dragSelectHumanoidsOnly.IsChecked;
+            _currentProfile.DragSelectStartX = _dragSelectStartX.Value;
+            _currentProfile.DragSelectStartY = _dragSelectStartY.Value;
 
             _currentProfile.ShowSkillsChangedMessage = _showSkillsMessage.IsChecked;
             _currentProfile.ShowSkillsChangedDeltaValue = _showSkillsMessageDelta.Value;

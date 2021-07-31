@@ -1528,6 +1528,12 @@ Client version: '{0}'</value>
   <data name="UIManagerGumpReset" xml:space="preserve">
     <value>Reset</value>
   </data>
+  <data name="DragSelectStartingPosX" xml:space="preserve">
+    <value>Starting X position of health bars</value>
+  </data>
+  <data name="DragSelectStartingPosY" xml:space="preserve">
+    <value>Starting Y position of health bars</value>
+  </data>
   <data name="AddToIgnoreListExist" xml:space="preserve">
     <value>Character {0} already exist in a list.</value>
   </data>

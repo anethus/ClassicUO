@@ -179,8 +179,8 @@ namespace ClassicUO.Game.Scenes
             _rectangleObj.Width = _selectionEnd.X - Camera.Bounds.X - _rectangleObj.X;
             _rectangleObj.Height = _selectionEnd.Y - Camera.Bounds.Y - _rectangleObj.Y;
 
-            int finalX = 100;
-            int finalY = 100;
+            int finalX = ProfileManager.CurrentProfile.DragSelectStartX;
+            int finalY = ProfileManager.CurrentProfile.DragSelectStartY;
 
             bool useCHB = ProfileManager.CurrentProfile.CustomBarsToggled;
 
@@ -231,15 +231,15 @@ namespace ClassicUO.Game.Scenes
                             hbgc = new HealthBarGump(mobile);
                         }
 
-                        if (finalY >= ProfileManager.CurrentProfile.GameWindowPosition.Y + ProfileManager.CurrentProfile.GameWindowSize.Y - 100)
+                        if (finalY >= ProfileManager.CurrentProfile.GameWindowPosition.Y + ProfileManager.CurrentProfile.GameWindowSize.Y - 20)
                         {
-                            finalY = 100;
+                            finalY = ProfileManager.CurrentProfile.DragSelectStartY;
                             finalX += rect.Width + 2;
                         }
 
-                        if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 100)
+                        if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 20)
                         {
-                            finalX = 100;
+                            finalX = ProfileManager.CurrentProfile.DragSelectStartX;
                         }
 
                         hbgc.X = finalX;
@@ -258,13 +258,13 @@ namespace ClassicUO.Game.Scenes
 
                                 if (finalY >= ProfileManager.CurrentProfile.GameWindowPosition.Y + ProfileManager.CurrentProfile.GameWindowSize.Y - 100)
                                 {
-                                    finalY = 100;
+                                    finalY = ProfileManager.CurrentProfile.DragSelectStartY;
                                     finalX = bar.Bounds.Right + 2;
                                 }
 
                                 if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 100)
                                 {
-                                    finalX = 100;
+                                    finalX = ProfileManager.CurrentProfile.DragSelectStartX;
                                 }
 
                                 hbgc.X = finalX;
@@ -518,80 +518,80 @@ namespace ClassicUO.Game.Scenes
                     case CursorTarget.Position:
                     case CursorTarget.Object:
                     case CursorTarget.MultiPlacement when World.CustomHouseManager == null:
-                    {
-                        BaseGameObject obj = lastObj;
-
-                        if (obj is TextObject ov)
                         {
-                            obj = ov.Owner;
+                            BaseGameObject obj = lastObj;
+
+                            if (obj is TextObject ov)
+                            {
+                                obj = ov.Owner;
+                            }
+
+                            switch (obj)
+                            {
+                                case Entity ent:
+                                    TargetManager.Target(ent.Serial);
+
+                                    break;
+
+                                case Land land:
+                                    TargetManager.Target
+                                    (
+                                        0,
+                                        land.X,
+                                        land.Y,
+                                        land.Z,
+                                        land.TileData.IsWet
+                                    );
+
+                                    break;
+
+                                case GameObject o:
+                                    TargetManager.Target(o.Graphic, o.X, o.Y, o.Z);
+
+                                    break;
+                            }
                         }
-
-                        switch (obj)
-                        {
-                            case Entity ent:
-                                TargetManager.Target(ent.Serial);
-
-                                break;
-
-                            case Land land:
-                                TargetManager.Target
-                                (
-                                    0,
-                                    land.X,
-                                    land.Y,
-                                    land.Z,
-                                    land.TileData.IsWet
-                                );
-
-                                break;
-
-                            case GameObject o:
-                                TargetManager.Target(o.Graphic, o.X, o.Y, o.Z);
-
-                                break;
-                        }
-                    }
 
                         Mouse.LastLeftButtonClickTime = 0;
 
                         break;
 
                     case CursorTarget.SetTargetClientSide:
-                    {
-                        BaseGameObject obj = lastObj;
-
-                        if (obj is TextObject ov)
                         {
-                            obj = ov.Owner;
+                            BaseGameObject obj = lastObj;
+
+                            if (obj is TextObject ov)
+                            {
+                                obj = ov.Owner;
+                            }
+                            else if (obj is GameEffect eff && eff.Source != null)
+                            {
+                                obj = eff.Source;
+                            }
+
+                            switch (obj)
+                            {
+                                case Entity ent:
+                                    TargetManager.Target(ent.Serial);
+                                    UIManager.Add(new InspectorGump(ent));
+
+                                    break;
+
+                                case Land land:
+                                    TargetManager.Target(0, land.X, land.Y, land.Z);
+                                    UIManager.Add(new InspectorGump(land));
+
+                                    break;
+
+                                case GameObject o:
+                                    TargetManager.Target(o.Graphic, o.X, o.Y, o.Z);
+                                    UIManager.Add(new InspectorGump(o));
+
+                                    break;
+                            }
+
+                            Mouse.LastLeftButtonClickTime = 0;
                         }
-                        else if (obj is GameEffect eff && eff.Source != null)
-                        {
-                            obj = eff.Source;
-                        }
-
-                        switch (obj)
-                        {
-                            case Entity ent:
-                                TargetManager.Target(ent.Serial);
-                                UIManager.Add(new InspectorGump(ent));
-
-                                break;
-
-                            case Land land:
-                                TargetManager.Target(0, land.X, land.Y, land.Z);
-                                UIManager.Add(new InspectorGump(land));
-
-                                break;
-
-                            case GameObject o:
-                                TargetManager.Target(o.Graphic, o.X, o.Y, o.Z);
-                                UIManager.Add(new InspectorGump(o));
-
-                                break;
-                        }
-
-                        Mouse.LastLeftButtonClickTime = 0;
-                    }
 
                         break;
 
