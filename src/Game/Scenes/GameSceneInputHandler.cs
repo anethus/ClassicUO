@@ -75,7 +75,7 @@ namespace ClassicUO.Game.Scenes
                 int x = ProfileManager.CurrentProfile.GameWindowPosition.X + (ProfileManager.CurrentProfile.GameWindowSize.X >> 1);
                 int y = ProfileManager.CurrentProfile.GameWindowPosition.Y + (ProfileManager.CurrentProfile.GameWindowSize.Y >> 1);
 
-                Direction direction = (Direction) GameCursor.GetMouseDirection
+                Direction direction = (Direction)GameCursor.GetMouseDirection
                 (
                     x,
                     y,
@@ -90,7 +90,7 @@ namespace ClassicUO.Game.Scenes
 
                 if (facing == Direction.North)
                 {
-                    facing = (Direction) 8;
+                    facing = (Direction)8;
                 }
 
                 bool run = mouseRange >= 190;
@@ -103,7 +103,7 @@ namespace ClassicUO.Game.Scenes
                         _lastBoatDirection = facing - 1;
                         _boatIsMoving = true;
 
-                        BoatMovingManager.MoveRequest(facing - 1, (byte) (run ? 2 : 1));
+                        BoatMovingManager.MoveRequest(facing - 1, (byte)(run ? 2 : 1));
                     }
                 }
                 else
@@ -195,8 +195,8 @@ namespace ClassicUO.Game.Scenes
 
                 Point p = mobile.RealScreenPosition;
 
-                p.X += (int) mobile.Offset.X + 22 + 5;
-                p.Y += (int) (mobile.Offset.Y - mobile.Offset.Z) + 22 + 5;
+                p.X += (int)mobile.Offset.X + 22 + 5;
+                p.Y += (int)(mobile.Offset.Y - mobile.Offset.Z) + 22 + 5;
                 p.X -= mobile.FrameInfo.X;
                 p.Y -= mobile.FrameInfo.Y;
 
@@ -239,7 +239,7 @@ namespace ClassicUO.Game.Scenes
 
                         if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 20)
                         {
-                            finalX = ProfileManager.CurrentProfile.DragSelectStartX;
+                            finalY = ProfileManager.CurrentProfile.DragSelectStartX;
                         }
 
                         hbgc.X = finalX;
@@ -264,7 +264,7 @@ namespace ClassicUO.Game.Scenes
 
                                 if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 100)
                                 {
-                                    finalX = ProfileManager.CurrentProfile.DragSelectStartX;
+                                    finalY = ProfileManager.CurrentProfile.DragSelectStartX;
                                 }
 
                                 hbgc.X = finalX;
@@ -445,7 +445,7 @@ namespace ClassicUO.Game.Scenes
 
                             if (it2.ItemData.IsSurface)
                             {
-                                dropZ += (sbyte) (it2.ItemData.Height == 0xFF ? 0 : it2.ItemData.Height);
+                                dropZ += (sbyte)(it2.ItemData.Height == 0xFF ? 0 : it2.ItemData.Height);
                             }
                             else
                             {
