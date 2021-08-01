@@ -75,7 +75,7 @@ namespace ClassicUO.Game.Scenes
                 int x = ProfileManager.CurrentProfile.GameWindowPosition.X + (ProfileManager.CurrentProfile.GameWindowSize.X >> 1);
                 int y = ProfileManager.CurrentProfile.GameWindowPosition.Y + (ProfileManager.CurrentProfile.GameWindowSize.Y >> 1);
 
-                Direction direction = (Direction)GameCursor.GetMouseDirection
+                Direction direction = (Direction) GameCursor.GetMouseDirection
                 (
                     x,
                     y,
@@ -90,7 +90,7 @@ namespace ClassicUO.Game.Scenes
 
                 if (facing == Direction.North)
                 {
-                    facing = (Direction)8;
+                    facing = (Direction) 8;
                 }
 
                 bool run = mouseRange >= 190;
@@ -103,7 +103,7 @@ namespace ClassicUO.Game.Scenes
                         _lastBoatDirection = facing - 1;
                         _boatIsMoving = true;
 
-                        BoatMovingManager.MoveRequest(facing - 1, (byte)(run ? 2 : 1));
+                        BoatMovingManager.MoveRequest(facing - 1, (byte) (run ? 2 : 1));
                     }
                 }
                 else
@@ -179,8 +179,8 @@ namespace ClassicUO.Game.Scenes
             _rectangleObj.Width = _selectionEnd.X - Camera.Bounds.X - _rectangleObj.X;
             _rectangleObj.Height = _selectionEnd.Y - Camera.Bounds.Y - _rectangleObj.Y;
 
-            int finalX = 100;
-            int finalY = 100;
+            int finalX = ProfileManager.CurrentProfile.DragSelectStartX;
+            int finalY = ProfileManager.CurrentProfile.DragSelectStartY;
 
             bool useCHB = ProfileManager.CurrentProfile.CustomBarsToggled;
 
@@ -195,8 +195,8 @@ namespace ClassicUO.Game.Scenes
 
                 Point p = mobile.RealScreenPosition;
 
-                p.X += (int)mobile.Offset.X + 22 + 5;
-                p.Y += (int)(mobile.Offset.Y - mobile.Offset.Z) + 22 + 5;
+                p.X += (int) mobile.Offset.X + 22 + 5;
+                p.Y += (int) (mobile.Offset.Y - mobile.Offset.Z) + 22 + 5;
                 p.X -= mobile.FrameInfo.X;
                 p.Y -= mobile.FrameInfo.Y;
 
@@ -231,15 +231,15 @@ namespace ClassicUO.Game.Scenes
                             hbgc = new HealthBarGump(mobile);
                         }
 
-                        if (finalY >= ProfileManager.CurrentProfile.GameWindowPosition.Y + ProfileManager.CurrentProfile.GameWindowSize.Y - 100)
+                        if (finalY >= ProfileManager.CurrentProfile.GameWindowPosition.Y + ProfileManager.CurrentProfile.GameWindowSize.Y - 20)
                         {
-                            finalY = 100;
+                            finalY = ProfileManager.CurrentProfile.DragSelectStartY;
                             finalX += rect.Width + 2;
                         }
 
-                        if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 100)
+                        if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 20)
                         {
-                            finalX = 100;
+                            finalX = ProfileManager.CurrentProfile.DragSelectStartX;
                         }
 
                         hbgc.X = finalX;
@@ -258,13 +258,13 @@ namespace ClassicUO.Game.Scenes
 
                                 if (finalY >= ProfileManager.CurrentProfile.GameWindowPosition.Y + ProfileManager.CurrentProfile.GameWindowSize.Y - 100)
                                 {
-                                    finalY = 100;
+                                    finalY = ProfileManager.CurrentProfile.DragSelectStartY;
                                     finalX = bar.Bounds.Right + 2;
                                 }
 
                                 if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 100)
                                 {
-                                    finalX = 100;
+                                    finalX = ProfileManager.CurrentProfile.DragSelectStartX;
                                 }
 
                                 hbgc.X = finalX;
@@ -518,39 +518,39 @@ namespace ClassicUO.Game.Scenes
                     case CursorTarget.Position:
                     case CursorTarget.Object:
                     case CursorTarget.MultiPlacement when World.CustomHouseManager == null:
+                    {
+                        BaseGameObject obj = lastObj;
+
+                        if (obj is TextObject ov)
                         {
-                            BaseGameObject obj = lastObj;
-
-                            if (obj is TextObject ov)
-                            {
-                                obj = ov.Owner;
-                            }
-
-                            switch (obj)
-                            {
-                                case Entity ent:
-                                    TargetManager.Target(ent.Serial);
-
-                                    break;
-
-                                case Land land:
-                                    TargetManager.Target
-                                    (
-                                        0,
-                                        land.X,
-                                        land.Y,
-                                        land.Z,
-                                        land.TileData.IsWet
-                                    );
-
-                                    break;
-
-                                case GameObject o:
-                                    TargetManager.Target(o.Graphic, o.X, o.Y, o.Z);
-
-                                    break;
-                            }
+                            obj = ov.Owner;
                         }
+
+                        switch (obj)
+                        {
+                            case Entity ent:
+                                TargetManager.Target(ent.Serial);
+
+                                break;
+
+                            case Land land:
+                                TargetManager.Target
+                                (
+                                    0,
+                                    land.X,
+                                    land.Y,
+                                    land.Z,
+                                    land.TileData.IsWet
+                                );
+
+                                break;
+
+                            case GameObject o:
+                                TargetManager.Target(o.Graphic, o.X, o.Y, o.Z);
+
+                                break;
+                        }
+                    }
 
                         Mouse.LastLeftButtonClickTime = 0;
 
