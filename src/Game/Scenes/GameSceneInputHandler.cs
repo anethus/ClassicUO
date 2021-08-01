@@ -518,43 +518,43 @@ namespace ClassicUO.Game.Scenes
                     case CursorTarget.Position:
                     case CursorTarget.Object:
                     case CursorTarget.MultiPlacement when World.CustomHouseManager == null:
+                    {
+                        BaseGameObject obj = lastObj;
+
+                        if (obj is TextObject ov)
                         {
-                            BaseGameObject obj = lastObj;
-
-                            if (obj is TextObject ov)
-                            {
-                                obj = ov.Owner;
-                            }
-
-                            switch (obj)
-                            {
-                                case Entity ent:
-                                    TargetManager.Target(ent.Serial);
-
-                                    break;
-
-                                case Land land:
-                                    TargetManager.Target
-                                    (
-                                        0,
-                                        land.X,
-                                        land.Y,
-                                        land.Z,
-                                        land.TileData.IsWet
-                                    );
-
-                                    break;
-
-                                case GameObject o:
-                                    TargetManager.Target(o.Graphic, o.X, o.Y, o.Z);
-
-                                    break;
-                            }
+                            obj = ov.Owner;
                         }
 
-                        Mouse.LastLeftButtonClickTime = 0;
+                        switch (obj)
+                        {
+                            case Entity ent:
+                                TargetManager.Target(ent.Serial);
 
-                        break;
+                                break;
+
+                            case Land land:
+                                TargetManager.Target
+                                (
+                                    0,
+                                    land.X,
+                                    land.Y,
+                                    land.Z,
+                                    land.TileData.IsWet
+                                );
+
+                                break;
+
+                            case GameObject o:
+                                TargetManager.Target(o.Graphic, o.X, o.Y, o.Z);
+
+                                break;
+                        }
+                    }
+
+                    Mouse.LastLeftButtonClickTime = 0;
+
+                    break;
 
                     case CursorTarget.SetTargetClientSide:
                         {
