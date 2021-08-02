@@ -94,6 +94,7 @@ namespace ClassicUO.Game.UI.Gumps
             GroupMatrixWidth = 44;
             GroupMatrixHeight = 44;
             AnchorType = ANCHOR_TYPE.SPELL;
+            GroupType = GROUP_TYPE.SPELL_SKILL_MACRO;
         }
 
         public override bool Draw(UltimaBatcher2D batcher, int x, int y)
