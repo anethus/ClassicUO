@@ -553,7 +553,7 @@ namespace ClassicUO.Game
                     container = World.Player.Serial;
                 }
 
-                Socket.Send_EquipRequest(ItemHold.Serial, (Layer)ItemHold.ItemData.Layer, container);
+                Socket.Send_EquipRequest(ItemHold.Serial, ItemHold.ItemData.Layer, container);
 
                 ItemHold.Enabled = false;
                 ItemHold.Dropped = true;

@@ -288,7 +288,7 @@ namespace ClassicUO.Game.GameObjects
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public Item FindItemByLayer(Layer layer)
+        public Item FindItemByLayer(byte layer)
         {
             for (LinkedObject i = Items; i != null; i = i.Next)
             {

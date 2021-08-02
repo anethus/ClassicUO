@@ -64,7 +64,7 @@ namespace ClassicUO.Game
         public static bool IsWearable { get; private set; }
         public static bool IsCoin { get; private set; }
         public static bool HasAlpha { get; private set; }
-        public static Layer Layer { get; private set; }
+        public static byte Layer { get; private set; }
         public static Flags Flags { get; private set; }
 
         public static bool Enabled
@@ -129,7 +129,7 @@ namespace ClassicUO.Game
             OnGround = false;
             Amount = 0;
             IsWearable = IsStackable = IsPartialHue = HasAlpha = IsCoin = false;
-            Layer = Layer.Invalid;
+            Layer = Data.Layer.Invalid;
             Flags = Flags.None;
             MouseOffset = Point.Zero;
 
