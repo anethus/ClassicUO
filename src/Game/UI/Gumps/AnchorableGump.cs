@@ -40,6 +40,9 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace ClassicUO.Game.UI.Gumps
 {
+    /// <summary>
+    /// Define Anchor Gump Type
+    /// </summary>
     internal enum ANCHOR_TYPE
     {
         NONE,
@@ -47,6 +50,16 @@ namespace ClassicUO.Game.UI.Gumps
         HEALTHBAR,
         SKILL,
         MACRO
+    }
+
+    /// <summary>
+    /// Determine with anchor gumps can be Overlapead
+    /// </summary>
+    internal enum GROUP_NAME
+    {
+        NONE,
+        SPELL_SKILL_MACRO,
+        HEALTHBAR
     }
 
     internal abstract class AnchorableGump : Gump
@@ -60,6 +73,7 @@ namespace ClassicUO.Game.UI.Gumps
         }
 
         public ANCHOR_TYPE AnchorType { get; protected set; }
+        public GROUP_NAME GroupName { get; protected set; }
         public virtual int GroupMatrixWidth { get; protected set; }
         public virtual int GroupMatrixHeight { get; protected set; }
         public int WidthMultiplier { get; protected set; } = 1;

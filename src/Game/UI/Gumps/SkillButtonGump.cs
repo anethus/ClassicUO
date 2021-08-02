@@ -65,6 +65,7 @@ namespace ClassicUO.Game.UI.Gumps
             GroupMatrixWidth = 44;
             GroupMatrixHeight = 44;
             AnchorType = ANCHOR_TYPE.SKILL;
+            GroupName = GROUP_NAME.SPELL_SKILL_MACRO;
         }
 
         public string SkillName => _skill.Name;

@@ -75,9 +75,10 @@ namespace ClassicUO.Game.UI.Gumps
 
                 _gump = gump;
                 StringBuilder sb = new StringBuilder(gump.ToString().Split('.').Last());
-                // If gump is Angorable Append text
+                // If gump is Anchorable Append text
                 if(_gump is AnchorableGump aGump)
                 {
+                    // Depend of AnchorType get button name (displayed in window)
                     switch (aGump.AnchorType) {
                         case ANCHOR_TYPE.SPELL:
                             sb.Append($" [{aGump.Tooltip}]");

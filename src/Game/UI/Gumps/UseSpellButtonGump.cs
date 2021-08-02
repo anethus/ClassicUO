@@ -86,6 +86,7 @@ namespace ClassicUO.Game.UI.Gumps
             GroupMatrixWidth = 44;
             GroupMatrixHeight = 44;
             AnchorType = ANCHOR_TYPE.SPELL;
+            GroupName = GROUP_NAME.SPELL_SKILL_MACRO;
         }
 
         private static int GetSpellTooltip(int id)
