@@ -18,11 +18,10 @@ namespace ClassicUO.Game.UI.Gumps
         private const ushort BACKGROUND_COLOR = 999;
 
         private const ushort GUMP_WIDTH = 470;
-        private const ushort GUMP_WIDTH = 450;
 
         private const ushort GUMP_HEIGHT = 400;
 
-        public UiManagerGump(): base(130, 130)
+        public UiManagerGump(): base(0, 0)
         {
             CanMove = true;
 
@@ -40,27 +39,6 @@ namespace ClassicUO.Game.UI.Gumps
                     CanCloseWithRightClick = true,
                 }
             );
-            #region Border Draw
-            Add
-            (
-                new Line(0, 0, GUMP_WIDTH, 1, Color.Gray.PackedValue)
-            );
-
-            Add
-            (
-                new Line(0, 0, 1, GUMP_HEIGHT, Color.Gray.PackedValue)
-            );
-
-            Add
-            (
-                new Line(0, GUMP_HEIGHT, GUMP_WIDTH, 1, Color.Gray.PackedValue)
-            );
-
-            Add
-            (
-                new Line(GUMP_WIDTH, 0, 1, GUMP_HEIGHT, Color.Gray.PackedValue)
-            );
-            #endregion
 
             #region Legend
             Add(new Label(ResGumps.UIManagerGumpName, true, HUE_FONT, 0, 255, Renderer.FontStyle.BlackBorder) { X = 5, Y = 10 });
@@ -72,7 +50,7 @@ namespace ClassicUO.Game.UI.Gumps
 
             ScrollArea rightArea = new ScrollArea
             (
-                10, 45, GUMP_WIDTH - 20, GUMP_HEIGHT - 60,
+                10, 45, GUMP_WIDTH - 15, GUMP_HEIGHT - 60,
                 true
             );
             
@@ -94,6 +72,7 @@ namespace ClassicUO.Game.UI.Gumps
             public UiManagerRecordControl(Gump gump)
             {
                 CanMove = true;
+                CanCloseWithRightClick = true;
                 AcceptMouseInput = false;
 
                 _gump = gump;

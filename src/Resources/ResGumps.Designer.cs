@@ -124,15 +124,6 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add Marker.
-        /// </summary>
-        public static string AddMarker {
-            get {
-                return ResourceManager.GetString("AddMarker", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Add New Member.
         /// </summary>
         public static string AddNewMember {
@@ -489,15 +480,6 @@ namespace ClassicUO.Resources {
         public static string CanAttackColor {
             get {
                 return ResourceManager.GetString("CanAttackColor", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Cancel.
-        /// </summary>
-        public static string Cancel {
-            get {
-                return ResourceManager.GetString("Cancel", resourceCulture);
             }
         }
         
@@ -889,15 +871,6 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Create.
-        /// </summary>
-        public static string CreateMarker {
-            get {
-                return ResourceManager.GetString("CreateMarker", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Criminal Color.
         /// </summary>
         public static string CriminalColor {
@@ -1177,24 +1150,6 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Edit.
-        /// </summary>
-        public static string Edit {
-            get {
-                return ResourceManager.GetString("Edit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Edit Marker.
-        /// </summary>
-        public static string EditMarker {
-            get {
-                return ResourceManager.GetString("EditMarker", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to [Emote]: .
         /// </summary>
         public static string Emote {
@@ -1255,15 +1210,6 @@ namespace ClassicUO.Resources {
         public static string EnableDragHPBars {
             get {
                 return ResourceManager.GetString("EnableDragHPBars", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Enable Fast Spells Assign (Ctrl + Alt).
-        /// </summary>
-        public static string EnableFastSpellsAssign {
-            get {
-                return ResourceManager.GetString("EnableFastSpellsAssign", resourceCulture);
             }
         }
         
@@ -1660,15 +1606,6 @@ namespace ClassicUO.Resources {
         public static string Help {
             get {
                 return ResourceManager.GetString("Help", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Hidden Sails.
-        /// </summary>
-        public static string HiddenSails {
-            get {
-                return ResourceManager.GetString("HiddenSails", resourceCulture);
             }
         }
         
@@ -2333,69 +2270,6 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Color.
-        /// </summary>
-        public static string MarkerColor {
-            get {
-                return ResourceManager.GetString("MarkerColor", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to MarkerName.
-        /// </summary>
-        public static string MarkerDefName {
-            get {
-                return ResourceManager.GetString("MarkerDefName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Icon.
-        /// </summary>
-        public static string MarkerIcon {
-            get {
-                return ResourceManager.GetString("MarkerIcon", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Name.
-        /// </summary>
-        public static string MarkerName {
-            get {
-                return ResourceManager.GetString("MarkerName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Markers Manager.
-        /// </summary>
-        public static string MarkersManager {
-            get {
-                return ResourceManager.GetString("MarkersManager", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to X.
-        /// </summary>
-        public static string MarkerX {
-            get {
-                return ResourceManager.GetString("MarkerX", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Y.
-        /// </summary>
-        public static string MarkerY {
-            get {
-                return ResourceManager.GetString("MarkerY", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Maximum Stats.
         /// </summary>
         public static string MaximumStats {
@@ -2540,15 +2414,6 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New Sails.
-        /// </summary>
-        public static string NewSails {
-            get {
-                return ResourceManager.GetString("NewSails", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &gt;&gt;.
         /// </summary>
         public static string Next {
@@ -2662,15 +2527,6 @@ namespace ClassicUO.Resources {
         public static string OpenUIManager {
             get {
                 return ResourceManager.GetString("OpenUIManager", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Original Sails.
-        /// </summary>
-        public static string OriginalSails {
-            get {
-                return ResourceManager.GetString("OriginalSails", resourceCulture);
             }
         }
         
@@ -3095,15 +2951,6 @@ namespace ClassicUO.Resources {
         public static string RunMouseInASeparateThread {
             get {
                 return ResourceManager.GetString("RunMouseInASeparateThread", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Ship Sail Type.
-        /// </summary>
-        public static string SailType {
-            get {
-                return ResourceManager.GetString("SailType", resourceCulture);
             }
         }
         
@@ -3980,6 +3827,15 @@ namespace ClassicUO.Resources {
         public static string TreesStumps {
             get {
                 return ResourceManager.GetString("TreesStumps", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to UI Manager.
+        /// </summary>
+        public static string UiManager {
+            get {
+                return ResourceManager.GetString("UiManager", resourceCulture);
             }
         }
         

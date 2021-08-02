@@ -174,7 +174,6 @@ namespace ClassicUO.Game.UI.Gumps
         private Checkbox _showStatsMessage, _showSkillsMessage;
         private HSliderBar _showSkillsMessageDelta;
 
-
         private Profile _currentProfile = ProfileManager.CurrentProfile;
 
         public OptionsGump() : base(0, 0)
@@ -350,6 +349,12 @@ namespace ClassicUO.Game.UI.Gumps
                 ) { ButtonParameter = 12 }
             );
 
+            Add(
+                new NiceButton(
+                    10, 10 + 30 *i++, 140, 25, ButtonAction.SwitchPage, ResGumps.UiManager)
+                {
+                    ButtonParameter = 13
+                });
 
             Add
             (
@@ -426,6 +431,7 @@ namespace ClassicUO.Game.UI.Gumps
             BuildInfoBar();
             BuildInterface();
             BuildExperimental();
+            BuildUiManager();
 
             ChangePage(1);
         }
@@ -3043,7 +3049,12 @@ namespace ClassicUO.Game.UI.Gumps
             Add(rightArea, PAGE);
         }
 
+        private void BuildUiManager()
+        {
+            const int PAGE = 13;
 
+            Add(new UiManagerGump { X = 200 }, PAGE);
+        }
         private void BuildInfoBar()
         {
             const int PAGE = 10;
@@ -3360,47 +3371,6 @@ namespace ClassicUO.Game.UI.Gumps
                 UIManager.Add(new UiManagerGump());
             };
             rightArea.Add(openUiManagerGump);
-
-            startY += button.Height + 5;
-
-            _newReagents = AddCheckBox
-            (
-                rightArea,
-                ResGumps.NewReagents,
-                _currentProfile.NewReagents,
-                startX,
-                startY
-            );
-
-            startY += _newReagents.Height + 2;
-
-            _newGems = AddCheckBox
-            (
-                rightArea,
-                ResGumps.NewGems,
-                _currentProfile.NewGems,
-                startX,
-                startY
-            );
-
-            startY += _newGems.Height + 2;
-
-            text = AddLabel(rightArea, ResGumps.SailType, startX, startY);
-            startX += text.Width + 10;
-
-            _sailStyle = AddCombobox
-            (
-                rightArea,
-                new[] {
-                    ResGumps.OriginalSails,
-                    ResGumps.NewSails,
-                    ResGumps.HiddenSails
-                },
-                _currentProfile.SailStyle,
-                startX,
-                startY - 3,
-                200
-            );
 
             Add(rightArea, PAGE);
         }
