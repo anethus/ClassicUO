@@ -1465,9 +1465,6 @@ Client version: '{0}'</value>
   <data name="IgnoreAllianceMessages" xml:space="preserve">
     <value>Hide alliance chat</value>
   </data>
-  <data name="OpenUIManager" xml:space="preserve">
-    <value>Open UI Manager</value>
-  </data>
   <data name="UIManagerGumpName" xml:space="preserve">
     <value>Gump Name</value>
   </data>
@@ -1477,7 +1474,58 @@ Client version: '{0}'</value>
   <data name="UiManager" xml:space="preserve">
     <value>UI Manager</value>
   </data>
+  <data name="AddMarker" xml:space="preserve">
+    <value>Add Marker</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="CreateMarker" xml:space="preserve">
+    <value>Create</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="EditMarker" xml:space="preserve">
+    <value>Edit Marker</value>
+  </data>
+  <data name="EnableFastSpellsAssign" xml:space="preserve">
+    <value>Enable Fast Spells Assign (Ctrl + Alt)</value>
+  </data>
+  <data name="HiddenSails" xml:space="preserve">
+    <value>Hidden Sails</value>
+  </data>
+  <data name="MarkerColor" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="MarkerDefName" xml:space="preserve">
+    <value>MarkerName</value>
+  </data>
+  <data name="MarkerIcon" xml:space="preserve">
+    <value>Icon</value>
+  </data>
+  <data name="MarkerName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="MarkersManager" xml:space="preserve">
+    <value>Markers Manager</value>
+  </data>
+  <data name="MarkerX" xml:space="preserve">
+    <value>X</value>
+  </data>
+  <data name="MarkerY" xml:space="preserve">
+    <value>Y</value>
+  </data>
+  <data name="NewSails" xml:space="preserve">
+    <value>New Sails</value>
+  </data>
   <data name="OpenMacroSettings" xml:space="preserve">
     <value>Open Macro Settings</value>
+  </data>
+  <data name="OriginalSails" xml:space="preserve">
+    <value>Original Sails</value>
+  </data>
+  <data name="SailType" xml:space="preserve">
+    <value>Ship Sail Type</value>
   </data>
 </root>

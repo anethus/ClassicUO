@@ -3355,22 +3355,46 @@ namespace ClassicUO.Game.UI.Gumps
             button.MouseUp += (sender, e) => { ContainerManager.BuildContainerFile(true); };
             rightArea.Add(button);
 
-            var openUiManagerGump = new NiceButton
-            (
-                startX + button.Width + 20, startY, 130, 30,
-                ButtonAction.Activate, ResGumps.OpenUIManager
-            )
-            {
-                ButtonParameter = -1,
-                IsSelectable = true,
-                IsSelected = true
-            };
+            startY += button.Height + 5;
 
-            openUiManagerGump.MouseUp += (sender, e) =>
-            {
-                UIManager.Add(new UiManagerGump());
-            };
-            rightArea.Add(openUiManagerGump);
+            _newReagents = AddCheckBox
+            (
+                rightArea,
+                ResGumps.NewReagents,
+                _currentProfile.NewReagents,
+                startX,
+                startY
+            );
+
+            startY += _newReagents.Height + 2;
+
+            _newGems = AddCheckBox
+            (
+                rightArea,
+                ResGumps.NewGems,
+                _currentProfile.NewGems,
+                startX,
+                startY
+            );
+
+            startY += _newGems.Height + 2;
+
+            text = AddLabel(rightArea, ResGumps.SailType, startX, startY);
+            startX += text.Width + 10;
+
+            _sailStyle = AddCombobox
+            (
+                rightArea,
+                new[] {
+                    ResGumps.OriginalSails,
+                    ResGumps.NewSails,
+                    ResGumps.HiddenSails
+                },
+                _currentProfile.SailStyle,
+                startX,
+                startY - 3,
+                200
+            );
 
             Add(rightArea, PAGE);
         }
