@@ -49,6 +49,13 @@ namespace ClassicUO.Game.UI.Gumps
         MACRO
     }
 
+    internal enum GROUP_TYPE
+    {
+        NONE,
+        SPELL_SKILL_MACRO,
+        HEALTHBAR,
+    }
+
     internal abstract class AnchorableGump : Gump
     {
         private AnchorableGump _anchorCandidate;
@@ -60,6 +67,7 @@ namespace ClassicUO.Game.UI.Gumps
         }
 
         public ANCHOR_TYPE AnchorType { get; protected set; }
+        public GROUP_TYPE GroupType { get; protected set; }
         public virtual int GroupMatrixWidth { get; protected set; }
         public virtual int GroupMatrixHeight { get; protected set; }
         public int WidthMultiplier { get; protected set; } = 1;
