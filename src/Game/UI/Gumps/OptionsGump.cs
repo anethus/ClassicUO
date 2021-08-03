@@ -255,7 +255,7 @@ namespace ClassicUO.Game.UI.Gumps
                     140,
                     25,
                     ButtonAction.SwitchPage,
-                    ResGumps.Tooltip
+                    ResGumps.Speech
                 ) { ButtonParameter = 5 }
             );
 
@@ -268,7 +268,7 @@ namespace ClassicUO.Game.UI.Gumps
                     140,
                     25,
                     ButtonAction.SwitchPage,
-                    ResGumps.Fonts
+                    ResGumps.CombatSpells
                 ) { ButtonParameter = 6 }
             );
 
@@ -281,7 +281,7 @@ namespace ClassicUO.Game.UI.Gumps
                     140,
                     25,
                     ButtonAction.SwitchPage,
-                    ResGumps.Speech
+                    ResGumps.Interface
                 ) { ButtonParameter = 7 }
             );
 
@@ -294,68 +294,8 @@ namespace ClassicUO.Game.UI.Gumps
                     140,
                     25,
                     ButtonAction.SwitchPage,
-                    ResGumps.CombatSpells
-                ) { ButtonParameter = 8 }
-            );
-
-            Add
-            (
-                new NiceButton
-                (
-                    10,
-                    10 + 30 * i++,
-                    140,
-                    25,
-                    ButtonAction.SwitchPage,
-                    ResGumps.Counters
-                ) { ButtonParameter = 9 }
-            );
-
-            Add
-            (
-                new NiceButton
-                (
-                    10,
-                    10 + 30 * i++,
-                    140,
-                    25,
-                    ButtonAction.SwitchPage,
-                    ResGumps.InfoBar
-                ) { ButtonParameter = 10 }
-            );
-
-            Add
-            (
-                new NiceButton
-                (
-                    10,
-                    10 + 30 * i++,
-                    140,
-                    25,
-                    ButtonAction.SwitchPage,
-                    ResGumps.Interface
-                ) { ButtonParameter = 11 }
-            );
-
-            Add
-            (
-                new NiceButton
-                (
-                    10,
-                    10 + 30 * i++,
-                    140,
-                    25,
-                    ButtonAction.SwitchPage,
                     ResGumps.Experimental
-                ) { ButtonParameter = 12 }
-            );
-
-            Add(
-                new NiceButton(
-                    10, 10 + 30 *i++, 140, 25, ButtonAction.SwitchPage, ResGumps.WindowManager)
-                {
-                    ButtonParameter = 13
-                }
+                ) { ButtonParameter = 8 }
             );
 
             Add
@@ -425,14 +365,9 @@ namespace ClassicUO.Game.UI.Gumps
             BuildSounds();
             BuildVideo();
             BuildCommands();
-            BuildFonts();
             BuildSpeech();
             BuildCombat();
-            BuildTooltip();
-            BuildCounters();
-            BuildInfoBar();
             BuildInterface();
-            BuildWindowManager();
             BuildExperimental();
 
             ChangePage(1);
@@ -2255,78 +2190,9 @@ namespace ClassicUO.Game.UI.Gumps
             Add(rightArea, PAGE);
         }
 
-        private void BuildFonts()
-        {
-            const int PAGE = 6;
-
-            ScrollArea rightArea = new ScrollArea
-            (
-                190,
-                20,
-                WIDTH - 210,
-                420,
-                true
-            );
-
-            int startX = 5;
-            int startY = 5;
-
-            _overrideAllFonts = AddCheckBox
-            (
-                rightArea,
-                ResGumps.OverrideGameFont,
-                _currentProfile.OverrideAllFonts,
-                startX,
-                startY
-            );
-
-            startX += _overrideAllFonts.Width + 5;
-
-            _overrideAllFontsIsUnicodeCheckbox = AddCombobox
-            (
-                rightArea,
-                new[]
-                {
-                    ResGumps.ASCII, ResGumps.Unicode
-                },
-                _currentProfile.OverrideAllFontsIsUnicode ? 1 : 0,
-                startX,
-                startY,
-                100
-            );
-
-            startX = 5;
-            startY += _overrideAllFonts.Height + 2;
-
-            _forceUnicodeJournal = AddCheckBox
-            (
-                rightArea,
-                ResGumps.ForceUnicodeInJournal,
-                _currentProfile.ForceUnicodeJournal,
-                startX,
-                startY
-            );
-
-            startY += _forceUnicodeJournal.Height + 2;
-
-            Label text = AddLabel(rightArea, ResGumps.SpeechFont, startX, startY);
-            startX += 40;
-            startY += text.Height + 2;
-
-            _fontSelectorChat = new FontSelector(20, _currentProfile.ChatFont, ResGumps.ThatSClassicUO)
-            {
-                X = startX,
-                Y = startY
-            };
-
-            rightArea.Add(_fontSelectorChat);
-
-            Add(rightArea, PAGE);
-        }
-
         private void BuildSpeech()
         {
-            const int PAGE = 7;
+            const int PAGE = 5;
 
             ScrollArea rightArea = new ScrollArea
             (
@@ -2582,7 +2448,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         private void BuildCombat()
         {
-            const int PAGE = 8;
+            const int PAGE = 6;
 
             ScrollArea rightArea = new ScrollArea
             (
@@ -2810,175 +2676,9 @@ namespace ClassicUO.Game.UI.Gumps
             Add(rightArea, PAGE);
         }
 
-        private void BuildCounters()
-        {
-            const int PAGE = 9;
-
-            ScrollArea rightArea = new ScrollArea
-            (
-                190,
-                20,
-                WIDTH - 210,
-                420,
-                true
-            );
-
-            int startX = 5;
-            int startY = 5;
-
-
-            _enableCounters = AddCheckBox
-            (
-                rightArea,
-                ResGumps.EnableCounters,
-                _currentProfile.CounterBarEnabled,
-                startX,
-                startY
-            );
-
-            startX += 40;
-            startY += _enableCounters.Height + 2;
-
-            _highlightOnUse = AddCheckBox
-            (
-                rightArea,
-                ResGumps.HighlightOnUse,
-                _currentProfile.CounterBarHighlightOnUse,
-                startX,
-                startY
-            );
-
-            startY += _highlightOnUse.Height + 2;
-
-            _enableAbbreviatedAmount = AddCheckBox
-            (
-                rightArea,
-                ResGumps.EnableAbbreviatedAmountCountrs,
-                _currentProfile.CounterBarDisplayAbbreviatedAmount,
-                startX,
-                startY
-            );
-
-            startX += _enableAbbreviatedAmount.Width + 5;
-
-            _abbreviatedAmount = AddInputField
-            (
-                rightArea,
-                startX,
-                startY,
-                50,
-                TEXTBOX_HEIGHT,
-                null,
-                50,
-                false,
-                true
-            );
-
-            _abbreviatedAmount.SetText(_currentProfile.CounterBarAbbreviatedAmount.ToString());
-
-            startX = 5;
-            startX += 40;
-            startY += _enableAbbreviatedAmount.Height + 2;
-
-            _highlightOnAmount = AddCheckBox
-            (
-                rightArea,
-                ResGumps.HighlightRedWhenBelow,
-                _currentProfile.CounterBarHighlightOnAmount,
-                startX,
-                startY
-            );
-
-            startX += _highlightOnAmount.Width + 5;
-
-            _highlightAmount = AddInputField
-            (
-                rightArea,
-                startX,
-                startY,
-                50,
-                TEXTBOX_HEIGHT,
-                null,
-                50,
-                false,
-                true,
-                999
-            );
-
-            _highlightAmount.SetText(_currentProfile.CounterBarHighlightAmount.ToString());
-
-            startX = 5;
-            startX += 40;
-            startY += _highlightAmount.Height + 2 + 5;
-
-            startY += 40;
-
-            Label text = AddLabel(rightArea, ResGumps.CounterLayout, startX, startY);
-
-            startX += 40;
-            startY += text.Height + 2;
-            text = AddLabel(rightArea, ResGumps.CellSize, startX, startY);
-
-            int initialX = startX;
-            startX += text.Width + 5;
-
-            _cellSize = AddHSlider
-            (
-                rightArea,
-                30,
-                80,
-                _currentProfile.CounterBarCellSize,
-                startX,
-                startY,
-                80
-            );
-
-
-            startX = initialX;
-            startY += text.Height + 2 + 15;
-
-            _rows = AddInputField
-            (
-                rightArea,
-                startX,
-                startY,
-                50,
-                30,
-                ResGumps.Counter_Rows,
-                50,
-                false,
-                true,
-                60
-            );
-
-            _rows.SetText(_currentProfile.CounterBarRows.ToString());
-
-
-            startX += _rows.Width + 5 + 100;
-
-            _columns = AddInputField
-            (
-                rightArea,
-                startX,
-                startY,
-                50,
-                30,
-                ResGumps.Counter_Columns,
-                50,
-                false,
-                true,
-                60
-            );
-
-            _columns.SetText(_currentProfile.CounterBarColumns.ToString());
-
-
-            Add(rightArea, PAGE);
-        }
-
         private void BuildExperimental()
         {
-            const int PAGE = 12;
+            const int PAGE = 8;
 
             ScrollArea rightArea = new ScrollArea
             (
@@ -3051,10 +2751,9 @@ namespace ClassicUO.Game.UI.Gumps
             Add(rightArea, PAGE);
         }
 
-
-        private void BuildInfoBar()
+        private void BuildInterface()
         {
-            const int PAGE = 10;
+            const int PAGE = 7;
 
             ScrollArea rightArea = new ScrollArea
             (
@@ -3067,54 +2766,420 @@ namespace ClassicUO.Game.UI.Gumps
 
             int startX = 5;
             int startY = 5;
+            Label text;
 
-            _showInfoBar = AddCheckBox
-            (
-                rightArea,
-                ResGumps.ShowInfoBar,
-                _currentProfile.ShowInfoBar,
-                startX,
-                startY
+            DataBox box = new DataBox(startX, startY, rightArea.Width - 15, 1);
+            box.WantUpdateSize = true;
+            rightArea.Add(box);
+
+            #region fonts
+
+            SettingsSection section = AddSettingsSection(box, ResGumps.Fonts);
+
+            section.Add(
+                _overrideAllFonts = AddCheckBox
+                (
+                    null,
+                    ResGumps.OverrideGameFont,
+                    _currentProfile.OverrideAllFonts,
+                    startX,
+                    startY
+                )
+            );
+
+            startX += _overrideAllFonts.Width + 5;
+
+            section.Add(
+                _overrideAllFontsIsUnicodeCheckbox = AddCombobox
+                (
+                    null,
+                    new[]
+                    {
+                        ResGumps.ASCII, ResGumps.Unicode
+                    },
+                    _currentProfile.OverrideAllFontsIsUnicode ? 1 : 0,
+                    startX,
+                    startY,
+                    100
+                )
+            );
+
+            startX = 5;
+            startY += _overrideAllFonts.Height + 2;
+
+            section.Add(
+                _forceUnicodeJournal = AddCheckBox
+                (
+                    null,
+                    ResGumps.ForceUnicodeInJournal,
+                    _currentProfile.ForceUnicodeJournal,
+                    startX,
+                    startY
+                )
+            );
+
+            startY += _forceUnicodeJournal.Height + 2;
+
+            section.Add(text = AddLabel(null, ResGumps.SpeechFont, startX, startY));
+            startX += 40;
+            startY += text.Height + 2;
+
+            section.Add(
+                _fontSelectorChat = new FontSelector(20, _currentProfile.ChatFont, ResGumps.ThatSClassicUO)
+                {
+                    X = startX,
+                    Y = startY
+                }
+            );
+
+            #endregion
+
+            #region containers
+            startY = section.Bounds.Bottom + 10;
+
+            section = AddSettingsSection(box, "Containers");
+            section.Y = startY;
+            startY = 0;
+
+            bool hasBackpacks = Client.Version >= ClientVersion.CV_705301;
+
+            if (hasBackpacks)
+            {
+                section.Add(text = AddLabel(null, ResGumps.BackpackStyle, startX, startY));
+                startX += text.Width + 5;
+
+                section.Add(
+                    _backpackStyle = AddCombobox
+                    (
+                        null,
+                        new[]
+                        {
+                                        ResGumps.BackpackStyle_Default, ResGumps.BackpackStyle_Suede,
+                                        ResGumps.BackpackStyle_PolarBear, ResGumps.BackpackStyle_GhoulSkin
+                        },
+                        _currentProfile.BackpackStyle,
+                        startX,
+                        startY,
+                        200
+                    )
+                );
+
+                startX = 5;
+                startY += _backpackStyle.Height + 2 + 10;
+            }
+
+            section.Add(text = AddLabel(null, ResGumps.ContainerScale, startX, startY));
+            startX += text.Width + 5;
+
+            section.Add(
+                _containersScale = AddHSlider
+                (
+                    null,
+                    Constants.MIN_CONTAINER_SIZE_PERC,
+                    Constants.MAX_CONTAINER_SIZE_PERC,
+                    _currentProfile.ContainersScale,
+                    startX,
+                    startY,
+                    200
+                )
+            );
+
+            startX = 5;
+            startY += text.Height + 2;
+
+            section.Add(
+               _containerScaleItems = AddCheckBox
+                (
+                    null,
+                    ResGumps.ScaleItemsInsideContainers,
+                    _currentProfile.ScaleItemsInsideContainers,
+                    startX,
+                    startY
+                )
+            );
+
+            startY += _containerScaleItems.Height + 2;
+
+            section.Add(
+                _useLargeContianersGumps = AddCheckBox
+                (
+                    null,
+                    ResGumps.UseLargeContainersGump,
+                    _currentProfile.UseLargeContainerGumps,
+                    startX,
+                    startY
+                )
+            );
+
+            _useLargeContianersGumps.IsVisible = Client.Version >= ClientVersion.CV_706000;
+
+            if (_useLargeContianersGumps.IsVisible)
+            {
+                startY += _useLargeContianersGumps.Height + 2;
+            }
+
+            section.Add(
+                _containerDoubleClickToLoot = AddCheckBox
+                (
+                    null,
+                    ResGumps.DoubleClickLootContainers,
+                    _currentProfile.DoubleClickToLootInsideContainers,
+                    startX,
+                    startY
+                )
+            );
+
+            startY += _containerDoubleClickToLoot.Height + 2;
+
+            section.Add(
+                _relativeDragAnDropItems = AddCheckBox
+                (
+                    null,
+                    ResGumps.RelativeDragAndDropContainers,
+                    _currentProfile.RelativeDragAndDropItems,
+                    startX,
+                    startY
+                )
+            );
+
+            startY += _relativeDragAnDropItems.Height + 2;
+
+            section.Add(
+                _highlightContainersWhenMouseIsOver = AddCheckBox
+                (
+                    null,
+                    ResGumps.HighlightContainerWhenSelected,
+                    _currentProfile.HighlightContainerWhenSelected,
+                    startX,
+                    startY
+                )
+            );
+
+            startY += _highlightContainersWhenMouseIsOver.Height + 2;
+
+            section.Add(
+                _overrideContainerLocation = AddCheckBox
+                (
+                    null,
+                    ResGumps.OverrideContainerGumpLocation,
+                    _currentProfile.OverrideContainerLocation,
+                    startX,
+                    startY
+                )
+            );
+
+            startX += _overrideContainerLocation.Width + 5;
+
+            section.Add(
+                _overrideContainerLocationSetting = AddCombobox
+                (
+                    null,
+                    new[]
+                    {
+                        ResGumps.ContLoc_NearContainerPosition, ResGumps.ContLoc_TopRight,
+                        ResGumps.ContLoc_LastDraggedPosition, ResGumps.ContLoc_RememberEveryContainer
+                    },
+                    _currentProfile.OverrideContainerLocationSetting,
+                    startX,
+                    startY,
+                    200
+                )
+            );
+
+            startX = 5;
+            startY += _overrideContainerLocation.Height + 2 + 10;
+
+            NiceButton button;
+            section.Add(
+                button = new NiceButton
+                (
+                    startX,
+                    startY,
+                    130,
+                    30,
+                    ButtonAction.Activate,
+                    ResGumps.RebuildContainers
+                )
+                {
+                    ButtonParameter = -1,
+                    IsSelectable = true,
+                    IsSelected = true
+                }
+            );
+
+            button.MouseUp += (sender, e) => { ContainerManager.BuildContainerFile(true); };
+
+            #endregion
+
+            #region tooltips
+
+            startY = section.Bounds.Bottom + 10;
+
+            section = AddSettingsSection(box, ResGumps.Tooltip);
+            section.Y = startY;
+            startY = 0;
+
+            section.Add(
+                _use_tooltip = AddCheckBox
+                (
+                    null,
+                    ResGumps.UseTooltip,
+                    _currentProfile.UseTooltip,
+                    startX,
+                    startY
+                )
+            );
+
+            startY += _use_tooltip.Height + 2;
+
+            startX += 40;
+
+            section.Add(text = AddLabel(null, ResGumps.DelayBeforeDisplay, startX, startY));
+            startX += text.Width + 5;
+
+            section.Add(
+                _delay_before_display_tooltip = AddHSlider
+                (
+                    null,
+                    0,
+                    1000,
+                    _currentProfile.TooltipDelayBeforeDisplay,
+                    startX,
+                    startY,
+                    200
+                )
+            );
+
+            startX = 5 + 40;
+            startY += text.Height + 2;
+
+            section.Add(text = AddLabel(null, ResGumps.TooltipZoom, startX, startY));
+            startX += text.Width + 5;
+
+            section.Add(
+                _tooltip_zoom = AddHSlider
+                (
+                    null,
+                    100,
+                    200,
+                    _currentProfile.TooltipDisplayZoom,
+                    startX,
+                    startY,
+                    200
+                )
+            );
+
+            startX = 5 + 40;
+            startY += text.Height + 2;
+
+            section.Add(text = AddLabel(null, ResGumps.TooltipBackgroundOpacity, startX, startY));
+            startX += text.Width + 5;
+
+            section.Add(
+                _tooltip_background_opacity = AddHSlider
+                (
+                    null,
+                    0,
+                    100,
+                    _currentProfile.TooltipBackgroundOpacity,
+                    startX,
+                    startY,
+                    200
+                )
+            );
+
+            startX = 5 + 40;
+            startY += text.Height + 2;
+
+            section.Add(
+                _tooltip_font_hue = AddColorBox
+                (
+                    null,
+                    startX,
+                    startY,
+                    _currentProfile.TooltipTextHue,
+                    ResGumps.TooltipFontHue
+                )
+            );
+
+            startY += _tooltip_font_hue.Height + 2;
+
+            startY += 15;
+
+            section.Add(text = AddLabel(null, ResGumps.TooltipFont, startX, startY));
+            startY += text.Height + 2;
+            startX += 40;
+
+            section.Add(
+                _tooltip_font_selector = new FontSelector(7, _currentProfile.TooltipFont, ResGumps.TooltipFontSelect)
+                {
+                    X = startX,
+                    Y = startY
+                }
+            );
+
+            #endregion
+
+            #region info bar
+            startY = section.Bounds.Bottom + 10;
+
+            section = AddSettingsSection(box, ResGumps.InfoBar);
+            section.Y = startY;
+            startY = 0;
+
+            section.Add(
+                _showInfoBar = AddCheckBox
+                (
+                    null,
+                    ResGumps.ShowInfoBar,
+                    _currentProfile.ShowInfoBar,
+                    startX,
+                    startY
+                )
             );
 
             startX += 40;
             startY += _showInfoBar.Height + 2;
 
-            Label text = AddLabel(rightArea, ResGumps.DataHighlightType, startX, startY);
+            section.Add(text = AddLabel(null, ResGumps.DataHighlightType, startX, startY));
 
             startX += text.Width + 5;
 
-            _infoBarHighlightType = AddCombobox
-            (
-                rightArea,
-                new[] { ResGumps.TextColor, ResGumps.ColoredBars },
-                _currentProfile.InfoBarHighlightType,
-                startX,
-                startY,
-                150
+            section.Add(
+                _infoBarHighlightType = AddCombobox
+                (
+                    null,
+                    new[] { ResGumps.TextColor, ResGumps.ColoredBars },
+                    _currentProfile.InfoBarHighlightType,
+                    startX,
+                    startY,
+                    150
+                )
             );
 
             startX = 5;
             startY += _infoBarHighlightType.Height + 5;
 
-            NiceButton nb = new NiceButton
-            (
-                startX,
-                startY,
-                90,
-                20,
-                ButtonAction.Activate,
-                ResGumps.AddItem,
-                0,
-                TEXT_ALIGN_TYPE.TS_LEFT
-            )
-            {
-                ButtonParameter = -1,
-                IsSelectable = true,
-                IsSelected = true
-            };
+            section.Add(
+                button = new NiceButton
+                (
+                    startX,
+                    startY,
+                    90,
+                    20,
+                    ButtonAction.Activate,
+                    ResGumps.AddItem,
+                    0,
+                    TEXT_ALIGN_TYPE.TS_LEFT
+                )
+                {
+                    ButtonParameter = -1,
+                    IsSelectable = true,
+                    IsSelected = true
+                }
+            );
 
-            nb.MouseUp += (sender, e) =>
+            button.MouseUp += (sender, e) =>
             {
                 InfoBarBuilderControl ibbc = new InfoBarBuilderControl(new InfoBarItem("", InfoBarVars.HP, 0x3B9));
                 ibbc.X = 5;
@@ -3124,24 +3189,22 @@ namespace ClassicUO.Game.UI.Gumps
                 _databox.WantUpdateSize = true;
             };
 
-            rightArea.Add(nb);
-
 
             startY += 40;
 
-            text = AddLabel(rightArea, ResGumps.Label, startX, startY);
+            section.Add(text = AddLabel(null, ResGumps.Label, startX, startY));
 
             startX += 150;
 
-            text = AddLabel(rightArea, ResGumps.Color, startX, startY);
+            section.Add(text = AddLabel(null, ResGumps.Color, startX, startY));
 
             startX += 55;
-            text = AddLabel(rightArea, ResGumps.Data, startX, startY);
+            section.Add(text = AddLabel(null, ResGumps.Data, startX, startY));
 
             startX = 5;
             startY += text.Height + 2;
 
-            rightArea.Add
+            section.Add
             (
                 new Line
                 (
@@ -3154,7 +3217,6 @@ namespace ClassicUO.Game.UI.Gumps
             );
 
             startY += 20;
-
 
             InfoBarManager ibmanager = Client.Game.GetScene<GameScene>().InfoBars;
 
@@ -3177,232 +3239,253 @@ namespace ClassicUO.Game.UI.Gumps
                 _databox.Add(ibbc);
             }
 
-            rightArea.Add(_databox);
+            _databox.ReArrangeChildren();
 
-            Add(rightArea, PAGE);
-        }
+            section.Add(_databox);
 
-        private void BuildInterface()
-        {
-            const int PAGE = 11;
+            #endregion
 
-            ScrollArea rightArea = new ScrollArea
-            (
-                190,
-                20,
-                WIDTH - 210,
-                420,
-                true
+            #region counters
+
+            startY = section.Bounds.Bottom + 10;
+
+            section = AddSettingsSection(box, ResGumps.Counters);
+            section.Y = startY;
+            startY = 0;
+
+            section.Add(
+                _enableCounters = AddCheckBox
+                (
+                    null,
+                    ResGumps.EnableCounters,
+                    _currentProfile.CounterBarEnabled,
+                    startX,
+                    startY
+                )
             );
 
-            int startX = 5;
-            int startY = 5;
-            Label text;
+            startX += 40;
+            startY += _enableCounters.Height + 2;
 
-            bool hasBackpacks = Client.Version >= ClientVersion.CV_705301;
-
-            if(hasBackpacks)
-            {
-                text = AddLabel(rightArea, ResGumps.BackpackStyle, startX, startY);
-                startX += text.Width + 5;
-            }
-
-            _backpackStyle = AddCombobox
-            (
-                rightArea,
-                new[]
-                {
-                    ResGumps.BackpackStyle_Default, ResGumps.BackpackStyle_Suede,
-                    ResGumps.BackpackStyle_PolarBear, ResGumps.BackpackStyle_GhoulSkin
-                },
-                _currentProfile.BackpackStyle,
-                startX,
-                startY,
-                200
+            section.Add(
+                _highlightOnUse = AddCheckBox
+                (
+                    null,
+                    ResGumps.HighlightOnUse,
+                    _currentProfile.CounterBarHighlightOnUse,
+                    startX,
+                    startY
+                )
             );
 
-            _backpackStyle.IsVisible = hasBackpacks;
+            startY += _highlightOnUse.Height + 2;
 
-            if (hasBackpacks)
-            {
-                startX = 5;
-                startY += _backpackStyle.Height + 2 + 10;
-            }
+            section.Add(
+                _enableAbbreviatedAmount = AddCheckBox
+                (
+                    null,
+                    ResGumps.EnableAbbreviatedAmountCountrs,
+                    _currentProfile.CounterBarDisplayAbbreviatedAmount,
+                    startX,
+                    startY
+                )
+            );
 
-            text = AddLabel(rightArea, ResGumps.ContainerScale, startX, startY);
+            startX += _enableAbbreviatedAmount.Width + 5;
+
+            section.Add(
+                _abbreviatedAmount = AddInputField
+                (
+                    null,
+                    startX,
+                    startY,
+                    50,
+                    TEXTBOX_HEIGHT,
+                    null,
+                    50,
+                    false,
+                    true
+                )
+            );
+
+            _abbreviatedAmount.SetText(_currentProfile.CounterBarAbbreviatedAmount.ToString());
+
+            startX = 5;
+            startX += 40;
+            startY += _enableAbbreviatedAmount.Height + 2;
+
+            section.Add(
+                _highlightOnAmount = AddCheckBox
+                (
+                    null,
+                    ResGumps.HighlightRedWhenBelow,
+                    _currentProfile.CounterBarHighlightOnAmount,
+                    startX,
+                    startY
+                )
+            );
+
+            startX += _highlightOnAmount.Width + 5;
+
+            section.Add(
+                _highlightAmount = AddInputField
+                (
+                    null,
+                    startX,
+                    startY,
+                    50,
+                    TEXTBOX_HEIGHT,
+                    null,
+                    50,
+                    false,
+                    true,
+                    999
+                )
+            );
+
+            _highlightAmount.SetText(_currentProfile.CounterBarHighlightAmount.ToString());
+
+            startX = 5;
+            startX += 40;
+            startY += _highlightAmount.Height + 2 + 5;
+
+            startY += 40;
+
+            section.Add(text = AddLabel(null, ResGumps.CounterLayout, startX, startY));
+
+            startX += 40;
+            startY += text.Height + 2;
+            section.Add(text = AddLabel(null, ResGumps.CellSize, startX, startY));
+
+            int initialX = startX;
             startX += text.Width + 5;
 
-            _containersScale = AddHSlider
-            (
-                rightArea,
-                Constants.MIN_CONTAINER_SIZE_PERC,
-                Constants.MAX_CONTAINER_SIZE_PERC,
-                _currentProfile.ContainersScale,
-                startX,
-                startY,
-                200
+            section.Add(
+                _cellSize = AddHSlider
+                (
+                    null,
+                    30,
+                    80,
+                    _currentProfile.CounterBarCellSize,
+                    startX,
+                    startY,
+                    80
+                )
             );
 
-            startX = 5;
-            startY += text.Height + 2;
 
-            _containerScaleItems = AddCheckBox
-            (
-                rightArea,
-                ResGumps.ScaleItemsInsideContainers,
-                _currentProfile.ScaleItemsInsideContainers,
-                startX,
-                startY
+            startX = initialX;
+            startY += text.Height + 2 + 15;
+
+            section.Add(
+                _rows = AddInputField
+                (
+                    null,
+                    startX,
+                    startY,
+                    50,
+                    30,
+                    ResGumps.Counter_Rows,
+                    50,
+                    false,
+                    true,
+                    60
+                )
             );
 
-            startY += _containerScaleItems.Height + 2;
+            _rows.SetText(_currentProfile.CounterBarRows.ToString());
 
-            _useLargeContianersGumps = AddCheckBox
-            (
-                rightArea,
-                ResGumps.UseLargeContainersGump,
-                _currentProfile.UseLargeContainerGumps,
-                startX,
-                startY
+            startX += _rows.Width + 5 + 100;
+
+            section.Add(
+                _columns = AddInputField
+                (
+                    null,
+                    startX,
+                    startY,
+                    50,
+                    30,
+                    ResGumps.Counter_Columns,
+                    50,
+                    false,
+                    true,
+                    60
+                )
             );
 
-            _useLargeContianersGumps.IsVisible = Client.Version >= ClientVersion.CV_706000;
+            _columns.SetText(_currentProfile.CounterBarColumns.ToString());
 
-            if (_useLargeContianersGumps.IsVisible)
-            {
-                startY += _useLargeContianersGumps.Height + 2;
-            }
+            #endregion
 
-            _containerDoubleClickToLoot = AddCheckBox
-            (
-                rightArea,
-                ResGumps.DoubleClickLootContainers,
-                _currentProfile.DoubleClickToLootInsideContainers,
-                startX,
-                startY
-            );
+            #region alternate graphics
 
-            startY += _containerDoubleClickToLoot.Height + 2;
+            startY = section.Bounds.Bottom + 10;
 
-            _relativeDragAnDropItems = AddCheckBox
-            (
-                rightArea,
-                ResGumps.RelativeDragAndDropContainers,
-                _currentProfile.RelativeDragAndDropItems,
-                startX,
-                startY
-            );
+            section = AddSettingsSection(box, "Alternate Graphics");
+            section.Y = startY;
+            startY = 0;
 
-            startY += _relativeDragAnDropItems.Height + 2;
-
-            _highlightContainersWhenMouseIsOver = AddCheckBox
-            (
-                rightArea,
-                ResGumps.HighlightContainerWhenSelected,
-                _currentProfile.HighlightContainerWhenSelected,
-                startX,
-                startY
-            );
-
-            startY += _highlightContainersWhenMouseIsOver.Height + 2;
-
-            _overrideContainerLocation = AddCheckBox
-            (
-                rightArea,
-                ResGumps.OverrideContainerGumpLocation,
-                _currentProfile.OverrideContainerLocation,
-                startX,
-                startY
-            );
-
-            startX += _overrideContainerLocation.Width + 5;
-
-            _overrideContainerLocationSetting = AddCombobox
-            (
-                rightArea,
-                new[]
-                {
-                    ResGumps.ContLoc_NearContainerPosition, ResGumps.ContLoc_TopRight,
-                    ResGumps.ContLoc_LastDraggedPosition, ResGumps.ContLoc_RememberEveryContainer
-                },
-                _currentProfile.OverrideContainerLocationSetting,
-                startX,
-                startY,
-                200
-            );
-
-            startX = 5;
-            startY += _overrideContainerLocation.Height + 2 + 10;
-
-            NiceButton button = new NiceButton
-            (
-                startX,
-                startY,
-                130,
-                30,
-                ButtonAction.Activate,
-                ResGumps.RebuildContainers
-            )
-            {
-                ButtonParameter = -1,
-                IsSelectable = true,
-                IsSelected = true
-            };
-
-            button.MouseUp += (sender, e) => { ContainerManager.BuildContainerFile(true); };
-            rightArea.Add(button);
-
-            startY += button.Height + 5;
-
-            _newReagents = AddCheckBox
-            (
-                rightArea,
-                ResGumps.NewReagents,
-                _currentProfile.NewReagents,
-                startX,
-                startY
+            section.Add(
+                _newReagents = AddCheckBox
+                (
+                    null,
+                    ResGumps.NewReagents,
+                    _currentProfile.NewReagents,
+                    startX,
+                    startY
+                )
             );
 
             startY += _newReagents.Height + 2;
 
-            _newGems = AddCheckBox
-            (
-                rightArea,
-                ResGumps.NewGems,
-                _currentProfile.NewGems,
-                startX,
-                startY
+            section.Add(
+                _newGems = AddCheckBox
+                (
+                    null,
+                    ResGumps.NewGems,
+                    _currentProfile.NewGems,
+                    startX,
+                    startY
+                )
             );
 
             startY += _newGems.Height + 2;
 
-            text = AddLabel(rightArea, ResGumps.SailType, startX, startY);
+            section.Add(text = AddLabel(null, ResGumps.SailType, startX, startY));
             startX += text.Width + 10;
 
-            _sailStyle = AddCombobox
-            (
-                rightArea,
-                new[] {
-                    ResGumps.OriginalSails,
-                    ResGumps.NewSails,
-                    ResGumps.HiddenSails
-                },
-                _currentProfile.SailStyle,
-                startX,
-                startY - 3,
-                200
+            section.Add(
+                _sailStyle = AddCombobox
+                (
+                    null,
+                    new[] {
+                        ResGumps.OriginalSails,
+                        ResGumps.NewSails,
+                        ResGumps.HiddenSails
+                    },
+                    _currentProfile.SailStyle,
+                    startX,
+                    startY - 3,
+                    200
+                )
             );
+
+            #endregion
+
+            #region window manager
+
+            startY = section.Bounds.Bottom + 10;
+
+            section = AddSettingsSection(box, ResGumps.WindowManager);
+            section.Y = startY;
+            startY = 0;
+
+            section.Add(new UIManagerGump { X = 200 });
+
+            #endregion
 
             Add(rightArea, PAGE);
         }
-
-        private void BuildWindowManager()
-        {
-            const int PAGE = 13;
-
-            Add(new UIManagerGump { X = 200 }, PAGE);
-        }
-
 
         public override void OnButtonClick(int buttonID)
         {
@@ -3644,7 +3727,10 @@ namespace ClassicUO.Game.UI.Gumps
                     _highlightContainersWhenMouseIsOver.IsChecked = false;
                     _overrideContainerLocation.IsChecked = false;
                     _overrideContainerLocationSetting.SelectedIndex = 0;
-                    _backpackStyle.SelectedIndex = 0;
+                    if (_backpackStyle != null)
+                    {
+                        _backpackStyle.SelectedIndex = 0;
+                    }
 
                     break;
 
@@ -4199,7 +4285,7 @@ namespace ClassicUO.Game.UI.Gumps
             _currentProfile.RelativeDragAndDropItems = _relativeDragAnDropItems.IsChecked;
             _currentProfile.HighlightContainerWhenSelected = _highlightContainersWhenMouseIsOver.IsChecked;
 
-            if (_currentProfile.BackpackStyle != _backpackStyle.SelectedIndex)
+            if (_backpackStyle != null && _currentProfile.BackpackStyle != _backpackStyle.SelectedIndex)
             {
                 _currentProfile.BackpackStyle = _backpackStyle.SelectedIndex;
                 UIManager.GetGump<PaperDollGump>(World.Player.Serial)?.RequestUpdateContents();
@@ -4556,6 +4642,7 @@ namespace ClassicUO.Game.UI.Gumps
                 CanCloseWithRightClick = false;
 
                 int y = 0;
+                int width = 0;
 
                 _buttons = new RadioButton[max_font];
 
@@ -4581,9 +4668,14 @@ namespace ClassicUO.Game.UI.Gumps
                             }
                         );
 
+
+                        width = Math.Max(width, _buttons[i].Width);
                         y += 25;
                     }
                 }
+
+                Height = y;
+                Width = width;
             }
 
             public byte GetSelectedFont()

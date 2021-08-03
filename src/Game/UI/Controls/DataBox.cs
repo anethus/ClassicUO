@@ -49,7 +49,8 @@ namespace ClassicUO.Game.UI.Controls
 
         public void ReArrangeChildren()
         {
-            for (int i = 0, height = 0; i < Children.Count; ++i)
+            int height = 0;
+            for (int i = 0; i < Children.Count; ++i)
             {
                 Control c = Children[i];
 
@@ -61,6 +62,7 @@ namespace ClassicUO.Game.UI.Controls
                 }
             }
 
+            Height = height;
             WantUpdateSize = true;
         }
 
