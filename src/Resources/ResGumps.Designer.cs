@@ -736,15 +736,6 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Window Manager.
-        /// </summary>
-        public static string WindowManager {
-            get {
-                return ResourceManager.GetString("WindowManager", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to - Container scale:.
         /// </summary>
         public static string ContainerScale {
@@ -1200,6 +1191,24 @@ namespace ClassicUO.Resources {
         public static string DragKey {
             get {
                 return ResourceManager.GetString("DragKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting X position of health bars.
+        /// </summary>
+        public static string DragSelectStartingPosX {
+            get {
+                return ResourceManager.GetString("DragSelectStartingPosX", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting Y position of health bars.
+        /// </summary>
+        public static string DragSelectStartingPosY {
+            get {
+                return ResourceManager.GetString("DragSelectStartingPosY", resourceCulture);
             }
         }
         
@@ -1709,7 +1718,7 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hide Chat Gradient.
+        ///   Looks up a localized string similar to Hide chat gradient.
         /// </summary>
         public static string HideChatGradient {
             get {
@@ -4038,7 +4047,7 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Gump Name.
+        ///   Looks up a localized string similar to Window Name.
         /// </summary>
         public static string UIManagerGumpName {
             get {
@@ -4225,6 +4234,15 @@ namespace ClassicUO.Resources {
         public static string WhisperColor {
             get {
                 return ResourceManager.GetString("WhisperColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Window Manager.
+        /// </summary>
+        public static string WindowManager {
+            get {
+                return ResourceManager.GetString("WindowManager", resourceCulture);
             }
         }
         
