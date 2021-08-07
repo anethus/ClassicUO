@@ -178,9 +178,9 @@ namespace ClassicUO.Game.Scenes
             _rectangleObj.Y = _selectionStart.Y - Camera.Bounds.Y;
             _rectangleObj.Width = _selectionEnd.X - Camera.Bounds.X - _rectangleObj.X;
             _rectangleObj.Height = _selectionEnd.Y - Camera.Bounds.Y - _rectangleObj.Y;
-
-            int finalX = 100;
-            int finalY = 100;
+            
+            int finalX = ProfileManager.CurrentProfile.DragSelectStartX;
+            int finalY = ProfileManager.CurrentProfile.DragSelectStartY;
 
             bool useCHB = ProfileManager.CurrentProfile.CustomBarsToggled;
 
@@ -231,15 +231,15 @@ namespace ClassicUO.Game.Scenes
                             hbgc = new HealthBarGump(mobile);
                         }
 
-                        if (finalY >= ProfileManager.CurrentProfile.GameWindowPosition.Y + ProfileManager.CurrentProfile.GameWindowSize.Y - 100)
+                        if (finalY >= ProfileManager.CurrentProfile.GameWindowPosition.Y + ProfileManager.CurrentProfile.GameWindowSize.Y - 20)
                         {
-                            finalY = 100;
+                            finalY = ProfileManager.CurrentProfile.DragSelectStartY;
                             finalX += rect.Width + 2;
                         }
 
-                        if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 100)
+                        if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 20)
                         {
-                            finalX = 100;
+                            finalX = ProfileManager.CurrentProfile.DragSelectStartX;
                         }
 
                         hbgc.X = finalX;
@@ -258,13 +258,13 @@ namespace ClassicUO.Game.Scenes
 
                                 if (finalY >= ProfileManager.CurrentProfile.GameWindowPosition.Y + ProfileManager.CurrentProfile.GameWindowSize.Y - 100)
                                 {
-                                    finalY = 100;
+                                    finalY = ProfileManager.CurrentProfile.DragSelectStartY;
                                     finalX = bar.Bounds.Right + 2;
                                 }
 
                                 if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 100)
                                 {
-                                    finalX = 100;
+                                    finalX = ProfileManager.CurrentProfile.DragSelectStartX;
                                 }
 
                                 hbgc.X = finalX;
