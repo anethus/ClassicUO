@@ -135,7 +135,7 @@ namespace ClassicUO.Game.GameObjects
                     }
                     if (ProfileManager.CurrentProfile.HighlightMobilesByParalize)
                     {
-                        if (IsParalyzed)
+                        if (IsParalyzed && NotorietyFlag != NotorietyFlag.Invulnerable)
                         {
                             _viewHue = ProfileManager.CurrentProfile.ParalyzedHue;
                         }
