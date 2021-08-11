@@ -62,6 +62,7 @@ namespace ClassicUO.Game.Scenes
         private bool _rightMousePressed, _continueRunning;
         private Point _selectionStart, _selectionEnd;
 
+        private int AnchorOffset => ProfileManager.CurrentProfile.DragSelectAsAnchor ? 0 : 2;
 
         private bool MoveCharacterByMouseInput()
         {
@@ -196,7 +197,7 @@ namespace ClassicUO.Game.Scenes
                 Point p = mobile.RealScreenPosition;
 
                 p.X += (int) mobile.Offset.X + 22 + 5;
-                p.Y += (int) (mobile.Offset.Y - mobile.Offset.Z) + 22 + 5;
+                p.Y += (int) (mobile.Offset.Y - mobile.Offset.Z) + 12 * AnchorOffset;
                 p.X -= mobile.FrameInfo.X;
                 p.Y -= mobile.FrameInfo.Y;
 
@@ -254,12 +255,12 @@ namespace ClassicUO.Game.Scenes
                         {
                             if (bar.Bounds.Intersects(hbgc.Bounds))
                             {
-                                finalY = bar.Bounds.Bottom + 2;
+                                finalY = bar.Bounds.Bottom + AnchorOffset;
 
                                 if (finalY >= ProfileManager.CurrentProfile.GameWindowPosition.Y + ProfileManager.CurrentProfile.GameWindowSize.Y - 100)
                                 {
                                     finalY = ProfileManager.CurrentProfile.DragSelectStartY;
-                                    finalX = bar.Bounds.Right + 2;
+                                    finalX = bar.Bounds.Right + AnchorOffset;
                                 }
 
                                 if (finalX >= ProfileManager.CurrentProfile.GameWindowPosition.X + ProfileManager.CurrentProfile.GameWindowSize.X - 100)
@@ -269,11 +270,13 @@ namespace ClassicUO.Game.Scenes
 
                                 hbgc.X = finalX;
                                 hbgc.Y = finalY;
+                                if(ProfileManager.CurrentProfile.DragSelectAsAnchor)
+                                    hbgc.TryAttacheToExist();
                             }
                         }
 
-
-                        finalY += rect.Height + 2;
+                        if(!ProfileManager.CurrentProfile.DragSelectAsAnchor)
+                            finalY += rect.Height + 2;
 
 
                         UIManager.Add(hbgc);
@@ -285,7 +288,7 @@ namespace ClassicUO.Game.Scenes
 
             _isSelectionActive = false;
         }
-
+        
         internal override bool OnMouseDown(MouseButtonType button)
         {
             switch (button)

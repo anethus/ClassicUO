@@ -1585,4 +1585,7 @@ Client version: '{0}'</value>
   <data name="LockRenameFollower" xml:space="preserve">
     <value>Lock Rename Follower (Ctrl + Alt to rename)</value>
   </data>
+  <data name="DragSelectAnchoredHB" xml:space="preserve">
+    <value>Anchored Healthbar</value>
+  </data>
 </root>
