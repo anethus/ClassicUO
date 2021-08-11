@@ -120,10 +120,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         protected override void OnDragEnd(int x, int y)
         {
-            if (_anchorCandidate != null)
-            {
-                Attache();
-            }
+            Attache();
 
             base.OnDragEnd(x, y);
         }
