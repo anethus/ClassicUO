@@ -13,6 +13,18 @@ namespace ClassicUO.Game.UI.Gumps
 {
     internal sealed class ProfileManagerGump : Gump
     {
+        /// <summary>
+        /// Hold map between String send to the user and file name
+        /// </summary>
+        private readonly Dictionary<string, string> _fileNameMap = new Dictionary<string, string>
+        {
+            { "gumps.xml" , "Gumps" },
+            { "skillsgroups.xml", "Skills Groups" },
+            { "infobar.xml", "Info bar data" },
+            { "macros.xml", "Macros" },
+            { "profile.json", "Character settings" }
+        };
+
         private const string DATA_FOLDER = "Data";
         private const string PROFILES_FOLDER = "Profiles";
         private const string GUMP_FILE_NAME = "gumps.xml";
@@ -33,6 +45,7 @@ namespace ClassicUO.Game.UI.Gumps
 
         private List<string> _accList = new List<string>();
 
+        // From Selection
         private Combobox _fromServerCombobox;
         private Combobox _fromCharCombobox;
 
@@ -399,7 +412,10 @@ namespace ClassicUO.Game.UI.Gumps
             // Add Checkbox for file
             foreach (var file in files)
             {
-                var fileInfo = new FileInfo(file);
+                if(!_fileNameMap.TryGetValue(Path.GetFileName(file), out var fileName))
+                    continue;
+
+                var fileInfo = new FileInfo(fileName);
 
                 var checkbox = new Checkbox
                 (
@@ -444,8 +460,13 @@ namespace ClassicUO.Game.UI.Gumps
             }
 
             // Foreach selected file copy it
-            foreach (var fName in _filesToCopy)
+            foreach (var fileMapName in _filesToCopy)
             {
+                var fName =_fileNameMap.FirstOrDefault(x => x.Value == fileMapName).Key;
+
+                if (string.IsNullOrEmpty(fName))
+                    continue;
+
                 var fPath = Path.Combine(_fromPath, fName);
                 var tPath = Path.Combine(_toPath, fName);
 
