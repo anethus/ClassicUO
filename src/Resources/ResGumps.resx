@@ -1465,9 +1465,6 @@ Client version: '{0}'</value>
   <data name="IgnoreAllianceMessages" xml:space="preserve">
     <value>Hide alliance chat</value>
   </data>
-  <data name="OpenMacroSettings" xml:space="preserve">
-    <value>Open Macro Settings</value>
-  </data>
   <data name="EnableFastSpellsAssign" xml:space="preserve">
     <value>Enable Fast Spells Assign (Ctrl + Alt)</value>
   </data>
@@ -1596,9 +1593,6 @@ Client version: '{0}'</value>
   </data>
   <data name="WindowManager" xml:space="preserve">
     <value>Window Manager</value>
-  </data>
-  <data name="UIManagerGumpName" xml:space="preserve">
-    <value>Window Name</value>
   </data>
   <data name="UIManagerGumpReset" xml:space="preserve">
     <value>Reset</value>

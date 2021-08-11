@@ -736,15 +736,6 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Window Manager.
-        /// </summary>
-        public static string WindowManager {
-            get {
-                return ResourceManager.GetString("WindowManager", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to - Container scale:.
         /// </summary>
         public static string ContainerScale {
@@ -2630,15 +2621,6 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to New Sails.
-        /// </summary>
-        public static string NewSails {
-            get {
-                return ResourceManager.GetString("NewSails", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to &gt;&gt;.
         /// </summary>
         public static string Next {
@@ -2739,15 +2721,6 @@ namespace ClassicUO.Resources {
         
         /// <summary>
         ///   Looks up a localized string similar to Open Macro Settings.
-        /// </summary>
-        public static string OpenMacroSettings {
-            get {
-                return ResourceManager.GetString("OpenMacroSettings", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Original Sails.
         /// </summary>
         public static string OpenMacroSettings {
             get {

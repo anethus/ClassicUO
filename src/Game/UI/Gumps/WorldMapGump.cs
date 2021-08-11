@@ -490,8 +490,8 @@ namespace ClassicUO.Game.UI.Gumps
 
         private Point RotatePoint(int x, int y, float zoom, int dist, float angle = 45f)
         {
-            x = (int) (x * zoom);
-            y = (int) (y * zoom);
+            x = (int)(x * zoom);
+            y = (int)(y * zoom);
 
             if (angle == 0.0f)
             {
@@ -501,7 +501,7 @@ namespace ClassicUO.Game.UI.Gumps
             double cos = Math.Cos(dist * Math.PI / 4.0);
             double sin = Math.Sin(dist * Math.PI / 4.0);
 
-            return  new Point((int) Math.Round(cos * x - sin * y), (int) Math.Round(sin * x + cos * y));
+            return new Point((int)Math.Round(cos * x - sin * y), (int)Math.Round(sin * x + cos * y));
         }
 
         private void AdjustPosition
@@ -674,7 +674,7 @@ namespace ClassicUO.Game.UI.Gumps
         {
             public static unsafe Texture2D CreateTextureFromICO_Cur(Stream stream)
             {
-                byte[] buffer = System.Buffers.ArrayPool<byte>.Shared.Rent((int) stream.Length);
+                byte[] buffer = System.Buffers.ArrayPool<byte>.Shared.Rent((int)stream.Length);
 
                 try
                 {
@@ -969,8 +969,8 @@ namespace ClassicUO.Game.UI.Gumps
             private static unsafe IntPtr INTERNAL_convertSurfaceFormat(IntPtr surface)
             {
                 IntPtr result = surface;
-                SDL.SDL_Surface* surPtr = (SDL.SDL_Surface*) surface;
-                SDL.SDL_PixelFormat* pixelFormatPtr = (SDL.SDL_PixelFormat*) surPtr->format;
+                SDL.SDL_Surface* surPtr = (SDL.SDL_Surface*)surface;
+                SDL.SDL_PixelFormat* pixelFormatPtr = (SDL.SDL_PixelFormat*)surPtr->format;
 
                 // SurfaceFormat.Color is SDL_PIXELFORMAT_ABGR8888
                 if (pixelFormatPtr->format != SDL.SDL_PIXELFORMAT_ABGR8888)
@@ -1105,7 +1105,7 @@ namespace ClassicUO.Game.UI.Gumps
 
                                         ref uint cc = ref buffer[blockCurrent];
 
-                                        byte r = (byte) (cc & 0xFF);
+                                        byte r = (byte)(cc & 0xFF);
                                         byte g = (byte)((cc >> 8) & 0xFF);
                                         byte b = (byte)((cc >> 16) & 0xFF);
                                         byte a = (byte)((cc >> 24) & 0xFF);
@@ -1125,7 +1125,7 @@ namespace ClassicUO.Game.UI.Gumps
                                                 b = (byte)Math.Min(0xFF, b * MAG_1);
                                             }
 
-                                            cc = (uint) (r | (g << 8) | (b << 16) | (a << 24));
+                                            cc = (uint)(r | (g << 8) | (b << 16) | (a << 24));
                                         }
                                     }
                                 }
@@ -1433,40 +1433,6 @@ namespace ClassicUO.Game.UI.Gumps
                         continue;
                     }
 
-        /// <summary>
-        /// Reload User Markers File after Changes
-        /// </summary>
-        internal static void ReloadUserMarkers()
-        {
-            var userFile = _markerFiles.FirstOrDefault(f => f.Name == USER_MARKERS_FILE);
-
-            if (userFile == null)
-            {
-                return;
-            }
-
-            userFile.Markers = LoadUserMarkers();
-        }
-
-        /// <summary>
-        /// Load User Markers to List of Markers
-        /// </summary>
-        /// <returns>List of loaded Markers</returns>
-        internal static List<WMapMarker> LoadUserMarkers()
-        {
-            List<WMapMarker> tempList = new List<WMapMarker>();
-
-            using (StreamReader reader = new StreamReader(UserMarkersFilePath))
-            {
-                while (!reader.EndOfStream)
-                {
-                    string line = reader.ReadLine();
-
-                    if (string.IsNullOrEmpty(line))
-                    {
-                        continue;
-                    }
-
                     string[] splits = line.Split(',');
 
                     if (splits.Length <= 1)
@@ -1507,9 +1473,9 @@ namespace ClassicUO.Game.UI.Gumps
             int sx = _center.X + 1;
             int sy = _center.Y + 1;
 
-            int size = (int) Math.Max(gWidth * 1.75f, gHeight * 1.75f);
+            int size = (int)Math.Max(gWidth * 1.75f, gHeight * 1.75f);
 
-            int size_zoom = (int) (size / Zoom);
+            int size_zoom = (int)(size / Zoom);
             int size_zoom_half = size_zoom >> 1;
 
             int halfWidth = gWidth >> 1;
@@ -1926,24 +1892,24 @@ namespace ClassicUO.Game.UI.Gumps
 
                 if (rot.X + size.X / 2 > x + Width - 8)
                 {
-                    rot.X = x + Width - 8 - (int) (size.X / 2);
+                    rot.X = x + Width - 8 - (int)(size.X / 2);
                 }
                 else if (rot.X - size.X / 2 < x)
                 {
-                    rot.X = x + (int) (size.X / 2);
+                    rot.X = x + (int)(size.X / 2);
                 }
 
                 if (rot.Y + size.Y > y + Height)
                 {
-                    rot.Y = y + Height - (int) size.Y;
+                    rot.Y = y + Height - (int)size.Y;
                 }
                 else if (rot.Y - size.Y < y)
                 {
-                    rot.Y = y + (int) size.Y;
+                    rot.Y = y + (int)size.Y;
                 }
 
-                int xx = (int) (rot.X - size.X / 2);
-                int yy = (int) (rot.Y - size.Y);
+                int xx = (int)(rot.X - size.X / 2);
+                int yy = (int)(rot.Y - size.Y);
 
                 HueVector.X = 0;
                 HueVector.Y = 1;
@@ -2065,7 +2031,7 @@ namespace ClassicUO.Game.UI.Gumps
             else
             {
                 batcher.Draw2D(marker.MarkerIcon, rot.X - (marker.MarkerIcon.Width >> 1), rot.Y - (marker.MarkerIcon.Height >> 1), ref HueVector);
-               
+
                 if (!showMarkerName)
                 {
                     if (Mouse.Position.X >= rot.X - (marker.MarkerIcon.Width >> 1) &&
@@ -2197,7 +2163,7 @@ namespace ClassicUO.Game.UI.Gumps
                 _flipMap ? 45f : 0f
             );
 
-          
+
             rot.X += x + width;
             rot.Y += y + height;
 
@@ -2327,24 +2293,24 @@ namespace ClassicUO.Game.UI.Gumps
 
                 if (rot.X + size.X / 2 > x + Width - 8)
                 {
-                    rot.X = x + Width - 8 - (int) (size.X / 2);
+                    rot.X = x + Width - 8 - (int)(size.X / 2);
                 }
                 else if (rot.X - size.X / 2 < x)
                 {
-                    rot.X = x + (int) (size.X / 2);
+                    rot.X = x + (int)(size.X / 2);
                 }
 
                 if (rot.Y + size.Y > y + Height)
                 {
-                    rot.Y = y + Height - (int) size.Y;
+                    rot.Y = y + Height - (int)size.Y;
                 }
                 else if (rot.Y - size.Y < y)
                 {
-                    rot.Y = y + (int) size.Y;
+                    rot.Y = y + (int)size.Y;
                 }
 
-                int xx = (int) (rot.X - size.X / 2);
-                int yy = (int) (rot.Y - size.Y);
+                int xx = (int)(rot.X - size.X / 2);
+                int yy = (int)(rot.Y - size.Y);
 
                 HueVector.X = 0;
                 HueVector.Y = 1;
@@ -2547,8 +2513,8 @@ namespace ClassicUO.Game.UI.Gumps
                     _flipMap ? 45f : 0f
                 );
 
-                _center.X += (int) (scroll.X / Zoom);
-                _center.Y += (int) (scroll.Y / Zoom);
+                _center.X += (int)(scroll.X / Zoom);
+                _center.Y += (int)(scroll.Y / Zoom);
 
                 if (_center.X < 0)
                 {
@@ -2710,11 +2676,11 @@ namespace ClassicUO.Game.UI.Gumps
 
             if (yCoord.Substring(yCoord.Length - 1).Equals("N"))
             {
-                yAxis = (int) (1624 - (yMinute / 60) * (4096.0 / 360) - yDegree * (4096.0 / 360));
+                yAxis = (int)(1624 - (yMinute / 60) * (4096.0 / 360) - yDegree * (4096.0 / 360));
             }
             else
             {
-                yAxis = (int) (1624 + (yMinute / 60) * (4096.0 / 360) + yDegree * (4096.0 / 360));
+                yAxis = (int)(1624 + (yMinute / 60) * (4096.0 / 360) + yDegree * (4096.0 / 360));
             }
 
             // Calc X next
@@ -2724,11 +2690,11 @@ namespace ClassicUO.Game.UI.Gumps
 
             if (xCoord.Substring(xCoord.Length - 1).Equals("W"))
             {
-                xAxis = (int) (1323 - (xMinute / 60) * (5120.0 / 360) - xDegree * (5120.0 / 360));
+                xAxis = (int)(1323 - (xMinute / 60) * (5120.0 / 360) - xDegree * (5120.0 / 360));
             }
             else
             {
-                xAxis = (int) (1323 + (xMinute / 60) * (5120.0 / 360) + xDegree * (5120.0 / 360));
+                xAxis = (int)(1323 + (xMinute / 60) * (5120.0 / 360) + xDegree * (5120.0 / 360));
             }
 
             // Normalize values outside of map range.
