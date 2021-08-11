@@ -1552,4 +1552,7 @@ Client version: '{0}'</value>
   <data name="DragSelectStartingPosY" xml:space="preserve">
     <value>Starting Y position of health bars</value>
   </data>
+  <data name="LockRenameFollower" xml:space="preserve">
+    <value>Lock Rename Follower (Ctrl + Alt to rename)</value>
+  </data>
 </root>
