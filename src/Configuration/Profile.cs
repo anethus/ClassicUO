@@ -155,6 +155,7 @@ namespace ClassicUO.Configuration
         public bool GameWindowFullSize { get; set; }
         public bool WindowBorderless { get; set; } = false;
         public Point GameWindowSize { get; set; } = new Point(600, 480);
+        public bool LockFollowerRename { get; set; } = false;
         public Point TopbarGumpPosition { get; set; } = new Point(0, 0);
         public bool TopbarGumpIsMinimized { get; set; }
         public bool TopbarGumpIsDisabled { get; set; }

@@ -1582,4 +1582,7 @@ Client version: '{0}'</value>
   <data name="ProfileCopyServer" xml:space="preserve">
     <value>Server</value>
   </data>
+  <data name="LockRenameFollower" xml:space="preserve">
+    <value>Lock Rename Follower (Ctrl + Alt to rename)</value>
+  </data>
 </root>

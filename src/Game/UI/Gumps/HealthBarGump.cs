@@ -53,6 +53,7 @@ namespace ClassicUO.Game.UI.Gumps
     internal abstract class BaseHealthBarGump : AnchorableGump
     {
         private bool _targetBroke;
+        private bool ShowEdit => Keyboard.Ctrl && Keyboard.Alt && ProfileManager.CurrentProfile.LockFollowerRename;
 
         protected BaseHealthBarGump(Entity entity) : this(0, 0)
         {
@@ -157,7 +158,7 @@ namespace ClassicUO.Game.UI.Gumps
                 TargetManager.Target(LocalSerial);
                 Mouse.LastLeftButtonClickTime = 0;
             }
-            else if (_canChangeName && !_targetBroke)
+            else if (_canChangeName && !_targetBroke && (!ProfileManager.CurrentProfile.LockFollowerRename || ShowEdit))
             {
                 _textBox.IsEditable = true;
                 _textBox.SetKeyboardFocus();

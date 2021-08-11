@@ -2277,6 +2277,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Lock Rename Follower (Ctrl + Alt to rename).
+        /// </summary>
+        public static string LockRenameFollower {
+            get {
+                return ResourceManager.GetString("LockRenameFollower", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login music.
         /// </summary>
         public static string LoginMusic {
