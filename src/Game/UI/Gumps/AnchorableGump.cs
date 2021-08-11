@@ -122,14 +122,28 @@ namespace ClassicUO.Game.UI.Gumps
         {
             if (_anchorCandidate != null)
             {
-                Location = UIManager.AnchorManager.GetCandidateDropLocation(this, _anchorCandidate);
-                UIManager.AnchorManager.DropControl(this, _anchorCandidate);
-                _anchorCandidate = null;
+                Attache();
             }
 
             base.OnDragEnd(x, y);
         }
 
+        public void TryAttacheToExist()
+        {
+            _anchorCandidate = UIManager.AnchorManager.GetAnchorableControlUnder(this);
+
+            Attache();
+        }
+
+        private void Attache()
+        {
+            if (_anchorCandidate != null)
+            {
+                Location = UIManager.AnchorManager.GetCandidateDropLocation(this, _anchorCandidate);
+                UIManager.AnchorManager.DropControl(this, _anchorCandidate);
+                _anchorCandidate = null;
+            }
+        }
 
         protected override void OnMouseUp(int x, int y, MouseButtonType button)
         {

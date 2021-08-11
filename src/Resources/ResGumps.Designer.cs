@@ -1195,6 +1195,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Anchored Healthbar.
+        /// </summary>
+        public static string DragSelectAnchoredHB {
+            get {
+                return ResourceManager.GetString("DragSelectAnchoredHB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Starting X position of health bars.
         /// </summary>
         public static string DragSelectStartingPosX {

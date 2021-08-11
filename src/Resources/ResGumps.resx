@@ -1552,4 +1552,40 @@ Client version: '{0}'</value>
   <data name="DragSelectStartingPosY" xml:space="preserve">
     <value>Starting Y position of health bars</value>
   </data>
+  <data name="OpenMacroSettings" xml:space="preserve">
+    <value>Open Macro Settings</value>
+  </data>
+  <data name="ProfileCopyAskLogout" xml:space="preserve">
+    <value>We recommend that you log out of your account</value>
+  </data>
+  <data name="ProfileCopyCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ProfileCopyCopy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="ProfileCopyFrom" xml:space="preserve">
+    <value>From Character</value>
+  </data>
+  <data name="ProfileCopyLogout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+  <data name="ProfileCopyTo" xml:space="preserve">
+    <value>To Character</value>
+  </data>
+  <data name="ProfileCopyAccount" xml:space="preserve">
+    <value>Account</value>
+  </data>
+  <data name="ProfileCopyCharacter" xml:space="preserve">
+    <value>Character</value>
+  </data>
+  <data name="ProfileCopyManager" xml:space="preserve">
+    <value>Profile Manager</value>
+  </data>
+  <data name="ProfileCopyServer" xml:space="preserve">
+    <value>Server</value>
+  </data>
+  <data name="DragSelectAnchoredHB" xml:space="preserve">
+    <value>Anchored Healthbar</value>
+  </data>
 </root>

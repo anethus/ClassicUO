@@ -86,6 +86,7 @@ namespace ClassicUO.Game.UI.Gumps
         private Checkbox _enableCounters, _highlightOnUse, _highlightOnAmount, _enableAbbreviatedAmount;
         private Checkbox _enableDragSelect, _dragSelectHumanoidsOnly;
         private HSliderBar _dragSelectStartX, _dragSelectStartY;
+        private Checkbox _dragSelectAsAnchor;
 
         // sounds
         private Checkbox _enableSounds, _enableMusic, _footStepsSound, _combatMusic, _musicInBackground, _loginMusic;
@@ -1249,6 +1250,15 @@ namespace ClassicUO.Game.UI.Gumps
 
             section4.Add(new Label(ResGumps.DragSelectStartingPosY, true, HUE_FONT));
             section4.Add(_dragSelectStartY = new HSliderBar(startX, startY, 200, 0, _currentProfile.GameWindowSize.Y, _currentProfile.DragSelectStartY, HSliderBarStyle.MetalWidgetRecessedBar, true, 0, HUE_FONT));
+
+            section4.Add
+            (
+                _dragSelectAsAnchor = AddCheckBox
+                (
+                    null, ResGumps.DragSelectAnchoredHB, _currentProfile.DragSelectAsAnchor, startX,
+                    startY
+                )
+            );
 
             section4.PopIndent();
 
@@ -4128,6 +4138,7 @@ namespace ClassicUO.Game.UI.Gumps
             _currentProfile.DragSelectHumanoidsOnly = _dragSelectHumanoidsOnly.IsChecked;
             _currentProfile.DragSelectStartX = _dragSelectStartX.Value;
             _currentProfile.DragSelectStartY = _dragSelectStartY.Value;
+            _currentProfile.DragSelectAsAnchor = _dragSelectAsAnchor.IsChecked;
 
             _currentProfile.ShowSkillsChangedMessage = _showSkillsMessage.IsChecked;
             _currentProfile.ShowSkillsChangedDeltaValue = _showSkillsMessageDelta.Value;
