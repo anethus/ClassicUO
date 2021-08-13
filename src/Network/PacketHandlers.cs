@@ -1468,20 +1468,23 @@ namespace ClassicUO.Network
                         if (ItemHold.Layer == Layer.Invalid && SerialHelper.IsValid(ItemHold.Container))
                         {
                             // Server should send an UpdateContainedItem after this packet.
-                            Console.WriteLine("=== DENY === ADD TO CONTAINER");
+                            // It cause Phantom Item Bug  - where there is many request to server acoring lift/drop
+                            // Item will be redraw but acctualy there will be not in container.
+                            // I left commented to quick rollback when something will goes wrong with that.
+                            //Console.WriteLine("=== DENY === ADD TO CONTAINER");
 
-                            AddItemToContainer
-                            (
-                                ItemHold.Serial,
-                                ItemHold.Graphic,
-                                ItemHold.TotalAmount,
-                                ItemHold.X,
-                                ItemHold.Y,
-                                ItemHold.Hue,
-                                ItemHold.Container
-                            );
+                            //AddItemToContainer
+                            //(
+                            //    ItemHold.Serial,
+                            //    ItemHold.Graphic,
+                            //    ItemHold.TotalAmount,
+                            //    ItemHold.X,
+                            //    ItemHold.Y,
+                            //    ItemHold.Hue,
+                            //    ItemHold.Container
+                            //);
 
-                            UIManager.GetGump<ContainerGump>(ItemHold.Container)?.RequestUpdateContents();
+                            //UIManager.GetGump<ContainerGump>(ItemHold.Container)?.RequestUpdateContents();
                         }
                         else
                         {
