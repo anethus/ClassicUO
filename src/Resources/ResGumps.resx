@@ -1588,4 +1588,7 @@ Client version: '{0}'</value>
   <data name="DragSelectAnchoredHB" xml:space="preserve">
     <value>Anchored Healthbar</value>
   </data>
+  <data name="GridLootCloseWhenNoItems" xml:space="preserve">
+    <value>Auto close Grid Loot when no items</value>
+  </data>
 </root>

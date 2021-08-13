@@ -104,6 +104,7 @@ namespace ClassicUO.Game.UI.Gumps
         // GameWindowSize
         private InputField _gameWindowWidth;
         private Combobox _gridLoot;
+        private Checkbox _gridLootCloseWhenZero;
         private Checkbox _hideScreenshotStoredInMessage;
         private Checkbox _highlightObjects, /*_smoothMovements,*/
                          _enablePathfind,
@@ -1098,6 +1099,15 @@ namespace ClassicUO.Game.UI.Gumps
                     120
                 ),
                 2
+            );
+
+            section3.Add
+            (
+                _gridLootCloseWhenZero = AddCheckBox
+                (
+                    null, ResGumps.GridLootCloseWhenNoItems,  _currentProfile.GridLootCloseWhenZero, startX,
+                    startY
+                )
             );
 
             section3.Add
@@ -3554,6 +3564,7 @@ namespace ClassicUO.Game.UI.Gumps
                     _showCorpseNameIncoming.IsChecked = true;
                     _showMobileNameIncoming.IsChecked = true;
                     _gridLoot.SelectedIndex = 0;
+                    _gridLootCloseWhenZero.IsChecked = true;
                     _sallosEasyGrab.IsChecked = false;
                     _partyInviteGump.IsChecked = false;
                     _showHouseContent.IsChecked = false;
@@ -3841,6 +3852,7 @@ namespace ClassicUO.Game.UI.Gumps
             _currentProfile.ShowNewCorpseNameIncoming = _showCorpseNameIncoming.IsChecked;
             _currentProfile.LockFollowerRename = _lockFollowerRename.IsChecked;
             _currentProfile.GridLootType = _gridLoot.SelectedIndex;
+            _currentProfile.GridLootCloseWhenZero = _gridLootCloseWhenZero.IsChecked;
             _currentProfile.SallosEasyGrab = _sallosEasyGrab.IsChecked;
             _currentProfile.PartyInviteGump = _partyInviteGump.IsChecked;
             _currentProfile.UseObjectsFading = _objectsFading.IsChecked;

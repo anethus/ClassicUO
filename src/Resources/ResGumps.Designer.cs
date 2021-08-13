@@ -1673,6 +1673,15 @@ namespace ClassicUO.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Auto close Grid Loot when no items.
+        /// </summary>
+        public static string GridLootCloseWhenNoItems {
+            get {
+                return ResourceManager.GetString("GridLootCloseWhenNoItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to [Guild]: .
         /// </summary>
         public static string Guild {
