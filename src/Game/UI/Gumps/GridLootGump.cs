@@ -274,7 +274,7 @@ namespace ClassicUO.Game.UI.Gumps
                 _buttonPrev.IsVisible = true;
             }
 
-            if (count == 0)
+            if (count == 0 && ProfileManager.CurrentProfile.GridLootCloseWhenZero)
             {
                 GameActions.Print(ResGumps.CorpseIsEmpty);
                 Dispose();

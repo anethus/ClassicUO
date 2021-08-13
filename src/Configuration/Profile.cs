@@ -255,6 +255,7 @@ namespace ClassicUO.Configuration
         public uint GrabBagSerial { get; set; }
 
         public int GridLootType { get; set; } // 0 = none, 1 = only grid, 2 = both
+        public bool GridLootCloseWhenZero { get; set; } = true;
 
         public bool ReduceFPSWhenInactive { get; set; } = true;
 
