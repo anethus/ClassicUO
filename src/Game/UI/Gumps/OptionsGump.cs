@@ -380,6 +380,22 @@ namespace ClassicUO.Game.UI.Gumps
 
             Add
             (
+                new NiceButton
+                (
+                    10,
+                    10 + 30 * i++,
+                    140,
+                    25,
+                    ButtonAction.Activate,
+                    ResGumps.IgnoreListManager
+                )
+                {
+                    ButtonParameter = (int)Buttons.OpenAtlas
+                }
+            );
+
+            Add
+            (
                 new Line
                 (
                     160,
@@ -3473,6 +3489,12 @@ namespace ClassicUO.Game.UI.Gumps
                     // Open new
                     UIManager.Add(new IgnoreManagerGump());
                     break;
+                case Buttons.OpenAtlas:
+                    // If other IgnoreManagerGump exist - Dispose it
+                    UIManager.GetGump<AtlasGump>()?.Dispose();
+                    // Open new
+                    UIManager.Add(new AtlasGump());
+                    break;
             }
         }
 
@@ -4480,6 +4502,7 @@ namespace ClassicUO.Game.UI.Gumps
             MurdererColor,
 
             OpenIgnoreList,
+            OpenAtlas,
             NewMacro,
             DeleteMacro,
 
