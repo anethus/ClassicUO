@@ -167,6 +167,7 @@ namespace ClassicUO.Configuration
         public int CloseHealthBarType { get; set; } // 0 = none, 1 == not exists, 2 == is dead
         public bool ActivateChatAfterEnter { get; set; }
         public bool ActivateChatAdditionalButtons { get; set; } = true;
+        public bool HideHelmet { get; set; } = true;
         public bool ActivateChatShiftEnterSupport { get; set; } = true;
         public bool UseObjectsFading { get; set; } = true;
         public bool HoldDownKeyAltToCloseAnchored { get; set; } = true;

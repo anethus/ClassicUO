@@ -167,6 +167,7 @@ namespace ClassicUO.Game.UI.Gumps
         private ClickableColorBox _tooltip_font_hue;
         private FontSelector _tooltip_font_selector;
         private Checkbox _lockFollowerRename;
+        private Checkbox _hideHelmet;
 
         // video
         private Checkbox _use_old_status_gump, _windowBorderless, _enableDeathScreen, _enableBlackWhiteEffect, _altLights, _enableLight, _enableShadows, _enableShadowsStatics, _auraMouse, _runMouseInSeparateThread, _useColoredLights, _darkNights, _partyAura, _hideChatGradient;
@@ -945,10 +946,18 @@ namespace ClassicUO.Game.UI.Gumps
                     ResGumps.PartyAuraColor
                 )
             );
-            
             section2.AddRight(AddLabel(null, ResGumps.PartyAuraColor, 0, 0));
             section2.PopIndent();
             section2.PopIndent();
+
+            section2.Add
+            (
+                _hideHelmet = AddCheckBox
+                (
+                    null, "Hide helmets", _currentProfile.HideHelmet, startX,
+                    startY
+                )
+            );
 
             SettingsSection section3 = AddSettingsSection(box, "Gumps & Context");
             section3.Y = section2.Bounds.Bottom + 40;
@@ -3851,6 +3860,7 @@ namespace ClassicUO.Game.UI.Gumps
             _currentProfile.ShowNewMobileNameIncoming = _showMobileNameIncoming.IsChecked;
             _currentProfile.ShowNewCorpseNameIncoming = _showCorpseNameIncoming.IsChecked;
             _currentProfile.LockFollowerRename = _lockFollowerRename.IsChecked;
+            _currentProfile.HideHelmet = _hideHelmet.IsChecked;
             _currentProfile.GridLootType = _gridLoot.SelectedIndex;
             _currentProfile.GridLootCloseWhenZero = _gridLootCloseWhenZero.IsChecked;
             _currentProfile.SallosEasyGrab = _sallosEasyGrab.IsChecked;

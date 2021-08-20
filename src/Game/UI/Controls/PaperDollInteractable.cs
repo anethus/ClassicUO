@@ -174,6 +174,11 @@ namespace ClassicUO.Game.UI.Controls
                         continue;
                     }
 
+                    if (ProfileManager.CurrentProfile.HideHelmet && item.Layer == Layer.Helmet)
+                    {
+                        continue;
+                    }
+
                     ushort id = GetAnimID(mobile.Graphic, item.ItemData.AnimID, mobile.IsFemale);
 
                     Add
