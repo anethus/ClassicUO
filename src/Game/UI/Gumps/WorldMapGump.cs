@@ -2030,7 +2030,7 @@ namespace ClassicUO.Game.UI.Gumps
             }
             else
             {
-                batcher.Draw2D(marker.MarkerIcon, rotX - (marker.MarkerIcon.Width >> 1), rotY - (marker.MarkerIcon.Height >> 1), ref HueVector);
+                batcher.Draw2D(marker.MarkerIcon, rot.X - (marker.MarkerIcon.Width >> 1), rot.Y - (marker.MarkerIcon.Height >> 1), ref HueVector);
 
                 if (!showMarkerName)
                 {
@@ -2164,8 +2164,8 @@ namespace ClassicUO.Game.UI.Gumps
             );
 
 
-            rotX += x + width;
-            rotY += y + height;
+            rot.X += x + width;
+            rot.Y += y + height;
 
             const int DOT_SIZE = 4;
             const int DOT_SIZE_HALF = DOT_SIZE >> 1;

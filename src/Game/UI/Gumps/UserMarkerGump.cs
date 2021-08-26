@@ -65,8 +65,6 @@ namespace ClassicUO.Game.UI.Gumps
                 selectedColor = 0;
 
             int selectedIcon = Array.IndexOf(_icons, icon);
-            if (selectedIcon < 0)
-                selectedIcon = 0;
 
             AlphaBlendControl markersGumpBackground = new AlphaBlendControl
             {
@@ -316,7 +314,9 @@ namespace ClassicUO.Game.UI.Gumps
 
             var mapIdx = World.MapIndex;
             var color = _colors[_colorsCombo.SelectedIndex];
-            var icon = _icons[_iconsCombo.SelectedIndex];
+            var icon = "";
+            if(_iconsCombo.SelectedIndex >= 0)
+                icon = _icons[_iconsCombo.SelectedIndex];
 
             var marker = new WMapMarker
             {
@@ -355,4 +355,4 @@ namespace ClassicUO.Game.UI.Gumps
             }
         }
     }
-}
+};
