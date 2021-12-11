@@ -2317,17 +2317,6 @@ namespace ClassicUO.Game.UI.Gumps
             startX = 5;
             startY += _overrideAllFonts.Height + 2;
 
-            _forceUnicodeJournal = AddCheckBox
-            (
-                rightArea,
-                ResGumps.ForceUnicodeInJournal,
-                _currentProfile.ForceUnicodeJournal,
-                startX,
-                startY
-            );
-
-            startY += _forceUnicodeJournal.Height + 2;
-
             Label text = AddLabel(rightArea, ResGumps.SpeechFont, startX, startY);
             startX += 40;
             startY += text.Height + 2;
@@ -3098,14 +3087,29 @@ namespace ClassicUO.Game.UI.Gumps
                 _currentProfile.JournalColor,
                 "Journal Color"
             );
-
             section2.Add(_journalColor);
 
             text = AddLabel(null, "Journal Color", startX, startY);
             section2.AddRight(text);
 
+            section2.PopIndent();
+
+            _forceUnicodeJournal = AddCheckBox
+            (
+                null,
+                ResGumps.ForceUnicodeInJournal,
+                _currentProfile.ForceUnicodeJournal,
+                startX,
+                startY
+            );
+            section2.Add(_forceUnicodeJournal);
+
             _journalFont = new FontSelectorCombobox(startX, startY, 200, _currentProfile.JournalFont);
-            section2.Add(_journalFont);
+            section2.AddRight(_journalFont);
+
+            var reloadEntries = new NiceButton(startX, startY, 120, 30, ButtonAction.Activate, "Reload Journal Entries");
+            reloadEntries.MouseUp += (sender, e) => { JournalManager.ReloadEntriesFonts(); };
+            section2.Add(reloadEntries);
 
             Add(rightArea, PAGE);
         }

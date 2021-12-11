@@ -32,6 +32,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
 using ClassicUO.Utility;
@@ -56,10 +57,10 @@ namespace ClassicUO.Game.Managers
 
             byte font = (byte) (isunicode ? 0 : 9);
 
-            if (ProfileManager.CurrentProfile != null && ProfileManager.CurrentProfile.OverrideAllFonts)
+            if (ProfileManager.CurrentProfile != null && ProfileManager.CurrentProfile.ForceUnicodeJournal)
             {
-                font = ProfileManager.CurrentProfile.ChatFont;
-                isunicode = ProfileManager.CurrentProfile.OverrideAllFontsIsUnicode;
+                font = ProfileManager.CurrentProfile.JournalFont;
+                isunicode = true;
             }
 
             DateTime timeNow = DateTime.Now;
@@ -71,12 +72,6 @@ namespace ClassicUO.Game.Managers
             entry.IsUnicode = isunicode;
             entry.Time = timeNow;
             entry.TextType = type;
-
-            if (ProfileManager.CurrentProfile != null && ProfileManager.CurrentProfile.ForceUnicodeJournal)
-            {
-                entry.Font = 0;
-                entry.IsUnicode = true;
-            }
 
             Entries.AddToBack(entry);
             EntryAdded.Raise(entry);
@@ -130,6 +125,15 @@ namespace ClassicUO.Game.Managers
             _fileWriter?.Flush();
             _fileWriter?.Dispose();
             _fileWriter = null;
+        }
+
+        public static void ReloadEntriesFonts()
+        {
+            Entries.Select(c => {
+                c.Font = ProfileManager.CurrentProfile.JournalFont;
+                c.IsUnicode = ProfileManager.CurrentProfile.ForceUnicodeJournal;
+                return c;
+            }).ToList();
         }
 
         public void Clear()

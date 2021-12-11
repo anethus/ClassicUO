@@ -31,7 +31,6 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Xml;
 using ClassicUO.Configuration;
 using ClassicUO.Game.Data;
@@ -48,6 +47,8 @@ namespace ClassicUO.Game.UI.Gumps
     internal class JournalGump : Gump
     {
         private const int MENU_OPTIONS = 12;
+        private const int OPTIONS_BTN = 99;
+
         private const int _diffY = 22;
         private readonly ExpandableScroll _background;
         private readonly Checkbox[] _filters_chekboxes = new Checkbox[4];
@@ -56,7 +57,7 @@ namespace ClassicUO.Game.UI.Gumps
         private bool _isMinimized;
         private readonly RenderedTextList _journalEntries;
         private readonly ScrollFlag _scrollBar;
-        private readonly Button setup;
+        private readonly Button setupButton;
 
         public JournalGump() : base(0, 0)
         {
@@ -76,13 +77,13 @@ namespace ClassicUO.Game.UI.Gumps
             string str = ResGumps.DarkMode;
             int width = FontsLoader.Instance.GetWidthASCII(6, str);
 
-            setup = new Button(99, 0x7d6, 0x7d7)
+            setupButton = new Button(OPTIONS_BTN, 0x7d6, 0x7d7)
             {
                 X = _background.Width - width - 2,
                 Y = _diffY + 7,
                 ButtonAction = ButtonAction.Activate
             };
-            Add(setup);
+            Add(setupButton);
 
             Hue = (ushort) (ProfileManager.CurrentProfile.UseCustomJournalColor ? ProfileManager.CurrentProfile.JournalColor : 0);
 
@@ -214,8 +215,14 @@ namespace ClassicUO.Game.UI.Gumps
 
         public override void OnButtonClick(int buttonID)
         {
-            UIManager.GetGump<MacroGump>()?.Dispose();
-            GameActions.OpenSettings(MENU_OPTIONS);
+            if (buttonID == OPTIONS_BTN)
+            {
+                UIManager.GetGump<MacroGump>()?.Dispose();
+                GameActions.OpenSettings(MENU_OPTIONS);
+                return;
+            }
+
+            base.OnButtonClick(buttonID);
         }
 
         public override GumpType GumpType => GumpType.Journal;
