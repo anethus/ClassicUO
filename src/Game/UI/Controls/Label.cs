@@ -109,8 +109,18 @@ namespace ClassicUO.Game.UI.Controls
             }
         }
 
-
-        public byte Font => _gText.Font;
+        public byte Font
+        {
+            get => _gText.Font;
+            set
+            {
+                if (_gText.Font != value)
+                {
+                    _gText.Font = value;
+                    _gText.CreateTexture();
+                }
+            }
+        }
 
         public bool Unicode => _gText.IsUnicode;
 

@@ -69,6 +69,10 @@ namespace ClassicUO.Game.UI.Gumps
         private Checkbox _autoOpenDoors, _autoOpenCorpse, _skipEmptyCorpse, _disableTabBtn, _disableCtrlQWBtn, _disableDefaultHotkeys, _disableArrowBtn, _disableAutoMove, _overrideContainerLocation, _smoothDoors, _showTargetRangeIndicator, _customBars, _customBarsBBG, _saveHealthbars;
         private HSliderBar _cellSize;
         private Checkbox _containerScaleItems, _containerDoubleClickToLoot, _relativeDragAnDropItems, _useLargeContianersGumps, _highlightContainersWhenMouseIsOver;
+        private ClickableColorBox _journalColor;
+        private Checkbox _useCustomJournalColor;
+        private Checkbox _forceUnicodeJournal;
+        private FontSelectorCombobox _journalFont;
 
 
         // containers
@@ -89,7 +93,6 @@ namespace ClassicUO.Game.UI.Gumps
 
         // fonts
         private FontSelector _fontSelectorChat;
-        private Checkbox _forceUnicodeJournal;
         private InputField _gameWindowHeight;
 
         private Checkbox _gameWindowLock, _gameWindowFullsize;
@@ -3008,61 +3011,101 @@ namespace ClassicUO.Game.UI.Gumps
             int startX = 5;
             int startY = 5;
 
+            Label text;
+
+            DataBox box = new DataBox(startX, startY, rightArea.Width - 15, 1);
+            box.WantUpdateSize = true;
+            rightArea.Add(box);
+
+            SettingsSection section = AddSettingsSection(box, "Ultima Keys");
+
             _disableDefaultHotkeys = AddCheckBox
             (
-                rightArea,
+                null,
                 ResGumps.DisableDefaultUOHotkeys,
                 _currentProfile.DisableDefaultHotkeys,
                 startX,
                 startY
             );
 
-            startX += 40;
-            startY += _disableDefaultHotkeys.Height + 2;
+            section.Add(_disableDefaultHotkeys);
+
+            section.PushIndent();
 
             _disableArrowBtn = AddCheckBox
             (
-                rightArea,
+                null,
                 ResGumps.DisableArrowsPlayerMovement,
                 _currentProfile.DisableArrowBtn,
                 startX,
                 startY
             );
+            section.Add(_disableArrowBtn);
 
-            startY += _disableArrowBtn.Height + 2;
 
             _disableTabBtn = AddCheckBox
             (
-                rightArea,
+                null,
                 ResGumps.DisableTab,
                 _currentProfile.DisableTabBtn,
                 startX,
                 startY
             );
-
-            startY += _disableTabBtn.Height + 2;
+            section.Add(_disableTabBtn);
 
             _disableCtrlQWBtn = AddCheckBox
             (
-                rightArea,
+                null,
                 ResGumps.DisableMessageHistory,
                 _currentProfile.DisableCtrlQWBtn,
                 startX,
                 startY
             );
-
-            startY += _disableCtrlQWBtn.Height + 2;
+            section.Add(_disableCtrlQWBtn);
 
             _disableAutoMove = AddCheckBox
             (
-                rightArea,
+                null,
                 ResGumps.DisableClickAutomove,
                 _currentProfile.DisableAutoMove,
                 startX,
                 startY
             );
+            section.Add(_disableAutoMove);
+            section.PopIndent();
 
-            startY += _disableAutoMove.Height + 2;
+
+            SettingsSection section2 = AddSettingsSection(box, "Journal");
+            section2.Y = section.Bounds.Bottom + 10;
+
+            _useCustomJournalColor = AddCheckBox
+            (
+                null,
+                "Use custom journal color",
+                _currentProfile.UseCustomJournalColor,
+                startX,
+                startY
+            );
+            section2.Add(_useCustomJournalColor);
+
+            section2.PushIndent();
+
+            _journalColor = AddColorBox
+            (
+                null,
+                startX,
+                startY,
+                _currentProfile.JournalColor,
+                "Journal Color"
+            );
+
+            section2.Add(_journalColor);
+
+            text = AddLabel(null, "Journal Color", startX, startY);
+            section2.AddRight(text);
+
+            _journalFont = new FontSelectorCombobox(startX, startY, 200, _currentProfile.JournalFont);
+            section2.Add(_journalFont);
 
             Add(rightArea, PAGE);
         }
@@ -4075,6 +4118,10 @@ namespace ClassicUO.Game.UI.Gumps
             _currentProfile.OverrideContainerLocationSetting = _overrideContainerLocationSetting.SelectedIndex;
 
             _currentProfile.ShowTargetRangeIndicator = _showTargetRangeIndicator.IsChecked;
+
+            _currentProfile.JournalColor = _journalColor.Hue;
+            _currentProfile.JournalFont = _journalFont.SelectedIndex;
+            _currentProfile.UseCustomJournalColor = _useCustomJournalColor.IsChecked;
 
 
             bool updateHealthBars = _currentProfile.CustomBarsToggled != _customBars.IsChecked;

@@ -47,6 +47,7 @@ namespace ClassicUO.Game.UI.Gumps
 {
     internal class JournalGump : Gump
     {
+        private const int MENU_OPTIONS = 12;
         private const int _diffY = 22;
         private readonly ExpandableScroll _background;
         private readonly Checkbox[] _filters_chekboxes = new Checkbox[4];
@@ -55,6 +56,7 @@ namespace ClassicUO.Game.UI.Gumps
         private bool _isMinimized;
         private readonly RenderedTextList _journalEntries;
         private readonly ScrollFlag _scrollBar;
+        private readonly Button setup;
 
         public JournalGump() : base(0, 0)
         {
@@ -71,38 +73,18 @@ namespace ClassicUO.Game.UI.Gumps
                 }
             );
 
-            const ushort DARK_MODE_JOURNAL_HUE = 903;
-
             string str = ResGumps.DarkMode;
             int width = FontsLoader.Instance.GetWidthASCII(6, str);
 
-            Checkbox darkMode;
-
-            Add
-            (
-                darkMode = new Checkbox
-                (
-                    0x00D2,
-                    0x00D3,
-                    str,
-                    6,
-                    0x0288,
-                    false
-                )
-                {
-                    X = _background.Width - width - 2,
-                    Y = _diffY + 7,
-                    IsChecked = ProfileManager.CurrentProfile.JournalDarkMode
-                }
-            );
-
-            Hue = (ushort) (ProfileManager.CurrentProfile.JournalDarkMode ? DARK_MODE_JOURNAL_HUE : 0);
-
-            darkMode.ValueChanged += (sender, e) =>
+            setup = new Button(99, 0x7d6, 0x7d7)
             {
-                bool ok = ProfileManager.CurrentProfile.JournalDarkMode = !ProfileManager.CurrentProfile.JournalDarkMode;
-                Hue = (ushort) (ok ? DARK_MODE_JOURNAL_HUE : 0);
+                X = _background.Width - width - 2,
+                Y = _diffY + 7,
+                ButtonAction = ButtonAction.Activate
             };
+            Add(setup);
+
+            Hue = (ushort) (ProfileManager.CurrentProfile.UseCustomJournalColor ? ProfileManager.CurrentProfile.JournalColor : 0);
 
             _scrollBar = new ScrollFlag(-25, _diffY + 36, Height - _diffY, true);
 
@@ -230,6 +212,37 @@ namespace ClassicUO.Game.UI.Gumps
             World.Journal.EntryAdded += AddJournalEntry;
         }
 
+        public override void OnButtonClick(int buttonID)
+        {
+            UIManager.GetGump<MacroGump>()?.Dispose();
+            GameActions.OpenSettings(MENU_OPTIONS);
+        }
+
+        private void ChangeHues()
+        {
+            var lol = JournalManager.Entries.ToArray();
+            JournalManager.Entries.Clear();
+
+            foreach (var a in lol)
+            {
+                a.Font = ProfileManager.CurrentProfile.JournalFont;
+                JournalManager.Entries.AddToBack(a);
+            }
+
+            var gump = UIManager.GetGump<JournalGump>();
+            if (gump != null)
+            {
+                var x = gump.X;
+                var y = gump.Y;
+                gump?.Dispose();
+
+                UIManager.Add(new JournalGump(), true);
+                var newGump = UIManager.GetGump<JournalGump>();
+                newGump.X = x;
+                newGump.Y = y;
+            }
+        }
+
         public override GumpType GumpType => GumpType.Journal;
 
         public ushort Hue
@@ -293,6 +306,8 @@ namespace ClassicUO.Game.UI.Gumps
                 _filters_chekboxes[i].Y = _background.Height - _filters_chekboxes[i].Height - _diffY + 10;
             }
         }
+
+        public int SpecialHeight =>  _background.SpecialHeight;
 
         private void AddJournalEntry(object sender, JournalEntry entry)
         {

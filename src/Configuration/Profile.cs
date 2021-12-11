@@ -199,6 +199,9 @@ namespace ClassicUO.Configuration
         public NameOverheadTypeAllowed NameOverheadTypeAllowed { get; set; } = NameOverheadTypeAllowed.All;
         public bool NameOverheadToggled { get; set; } = false;
         public bool ShowTargetRangeIndicator { get; set; }
+        public bool UseCustomJournalColor { get; set; } = false;
+        public ushort JournalColor { get; set; } = 0;
+        public byte JournalFont { get; set; } = 0;
         public bool PartyInviteGump { get; set; }
         public bool CustomBarsToggled { get; set; }
         public bool CBBlackBGToggled { get; set; }
