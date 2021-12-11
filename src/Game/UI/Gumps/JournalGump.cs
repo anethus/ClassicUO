@@ -218,31 +218,6 @@ namespace ClassicUO.Game.UI.Gumps
             GameActions.OpenSettings(MENU_OPTIONS);
         }
 
-        private void ChangeHues()
-        {
-            var lol = JournalManager.Entries.ToArray();
-            JournalManager.Entries.Clear();
-
-            foreach (var a in lol)
-            {
-                a.Font = ProfileManager.CurrentProfile.JournalFont;
-                JournalManager.Entries.AddToBack(a);
-            }
-
-            var gump = UIManager.GetGump<JournalGump>();
-            if (gump != null)
-            {
-                var x = gump.X;
-                var y = gump.Y;
-                gump?.Dispose();
-
-                UIManager.Add(new JournalGump(), true);
-                var newGump = UIManager.GetGump<JournalGump>();
-                newGump.X = x;
-                newGump.Y = y;
-            }
-        }
-
         public override GumpType GumpType => GumpType.Journal;
 
         public ushort Hue
