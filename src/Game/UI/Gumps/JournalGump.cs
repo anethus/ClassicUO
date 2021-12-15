@@ -215,14 +215,14 @@ namespace ClassicUO.Game.UI.Gumps
 
         public override void OnButtonClick(int buttonID)
         {
-            if (buttonID == OPTIONS_BTN)
-            {
-                UIManager.GetGump<MacroGump>()?.Dispose();
-                GameActions.OpenSettings(MENU_OPTIONS);
-                return;
-            }
-
-            base.OnButtonClick(buttonID);
+            UIManager.Add(new ModernJournalGump());
+            //if (buttonID == OPTIONS_BTN)
+            //{
+            //    UIManager.GetGump<MacroGump>()?.Dispose();
+            //    GameActions.OpenSettings(MENU_OPTIONS);
+            //    return;
+            //}
+            //base.OnButtonClick(buttonID);
         }
 
         public override GumpType GumpType => GumpType.Journal;
@@ -355,7 +355,7 @@ namespace ClassicUO.Game.UI.Gumps
         }
 
 
-        private class RenderedTextList : Control
+        internal class RenderedTextList : Control
         {
             private readonly Deque<RenderedText> _entries, _hours;
             private readonly ScrollBarBase _scrollBar;

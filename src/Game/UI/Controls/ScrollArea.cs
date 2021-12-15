@@ -91,6 +91,11 @@ namespace ClassicUO.Game.UI.Controls
         }
 
 
+        public ScrollBarBase ScrollBar { get {
+                return _scrollBar;
+            }
+        }
+
         public int ScrollMaxHeight { get; set; } = -1;
         public ScrollbarBehaviour ScrollbarBehaviour { get; set; }
         public int ScrollValue => _scrollBar.Value;
